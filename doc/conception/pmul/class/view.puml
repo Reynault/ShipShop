@@ -1,0 +1,28 @@
+@startuml
+
+package view{
+
+    class StringConstant{
+
+    }
+
+    class GraphicConstant{
+
+    }
+
+    class TextureFactory{
+
+    }
+    note bottom: Class that provides images\nused on elements such as ship
+
+    class MainMenu{
+
+    }
+
+    class GameView{
+
+    }
+
+}
+
+@enduml

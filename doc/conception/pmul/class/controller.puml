@@ -1,0 +1,11 @@
+@startuml
+
+package controller{
+
+    class GameController{
+
+    }
+
+}
+
+@enduml

@@ -1,0 +1,59 @@
+@startuml
+
+package ship{
+
+    class Ship{
+        - x: int
+        - y: int
+        - hp: int
+        - ammo: int
+        - dmg: int
+        - nbTiles: int
+        - direction: Direction
+        + Ship(x: int, y: int, direction: Direction)
+        + {abstract} hit(Ship ship)
+        + {abstract} place(x: int, y:int)
+        + {abstract} takeDamage(value: int)
+    }
+
+
+    abstract FleetFactory{
+        - nbCruiser: int
+        - nbSubmarine: int
+        - nbTorpedo: int
+        - nbAircraft: int
+        + FleetFactory(nbc: int, nbs: int, nbt: int, nba: int)
+
+        + {static} getFleetFactory(era: Era, nbc: int, nbs: int, nbt: int, nba: int): FleetFactory
+
+        + hasCruiser(): boolean
+        + hasSubmarine(): boolean
+        + hasTorpedo(): boolean
+        + hasAircraft(): boolean
+
+        + {abstract} getCruiser(): Ship
+        + {abstract} getSubmarine(): Ship
+        + {abstract} getTorpedoBoat(): Ship
+        + {abstract} getAircraftCarrier(): Ship
+    }
+
+    class ModernFleet{
+        + getCruiser(): Ship
+        + getSubmarine(): Ship
+        + getTorpedoBoat(): Ship
+        + getAircraftCarrier(): Ship
+    }
+
+    class XVIFleet{
+        + getCruiser(): Ship
+        + getSubmarine(): Ship
+        + getTorpedoBoat(): Ship
+        + getAircraftCarrier(): Ship
+    }
+
+    ModernFleet --|> FleetFactory
+    XVIFleet --|> FleetFactory
+
+}
+
+@enduml

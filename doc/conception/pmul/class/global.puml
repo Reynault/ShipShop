@@ -1,0 +1,134 @@
+@startuml
+
+title Global diagram
+
+class Observer{
+
+}
+
+class Observable{
+
+}
+
+package model{
+
+    class ShipShop{
+        + createGame(era: Era, tactic: Tactic)
+        + saveCurrentGame()
+        + loadGame()
+    }
+
+    abstract Game{
+        - nextPlayer: Player
+        - currentPlayer: Player
+        + Game(era: Era)
+    }
+
+    class GameWithIA{
+        + Game(era: Era, tactic: Tactic)
+    }
+
+    class Army{
+
+    }
+
+    class SaveManager{
+
+    }
+
+    package ship{
+
+        class Ship{
+
+        }
+
+        abstract FleetFactory{
+
+        }
+
+        class ModernFleet{
+
+        }
+
+        class XVIFleet{
+
+        }
+
+    }
+
+
+    package era{
+
+        class Era{
+            - {final} name: String
+            - Era(name: String)
+            + getName(): String
+        }
+
+        class EraFactory{
+            + getModernEra()
+            + getXVIEra()
+        }
+
+    }
+
+    package player{
+
+        abstract Player{
+
+        }
+
+        class IA{
+
+        }
+
+        package Tactic{
+
+            interface Tactic{
+
+            }
+
+            class RandomTactic{
+
+            }
+
+            class CrossTactic{
+
+            }
+
+        }
+
+        class Human{
+
+        }
+
+    }
+
+}
+
+ShipShop --> "1" Game: - game
+ShipShop --> "1" SaveManager: -saveManager
+
+Game --> "1" Army: - current
+Game --> "1" Army: - next
+
+Army --> "1" Player: - player
+Army --> "1" FleetFactory: - fleet
+
+GameWithIA --|> Game
+
+EraFactory --> "1" Era: -modern
+EraFactory --> "1" Era: -XVI
+
+ModernFleet --|> FleetFactory
+XVIFleet --|> FleetFactory
+
+Human --|> Player
+IA --|> Player
+
+IA --> "1" Tactic: - tactic
+
+RandomTactic ..|> Tactic
+CrossTactic ..|> Tactic
+
+@enduml

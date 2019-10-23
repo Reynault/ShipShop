@@ -1,2 +1,0 @@
-# Idées de conception
-

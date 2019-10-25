@@ -10,6 +10,15 @@ package view{
 
     }
 
+    class MainObserver{
+
+    }
+
+
+    class LoadView{
+
+    }
+
     class TextureFactory{
 
     }
@@ -24,5 +33,19 @@ package view{
     }
 
 }
+
+class Observer{
+
+}
+
+class JPanel{
+
+}
+
+MainObserver -up-> "1" JPanel: - currentView
+
+MainMenu -up-|> JPanel
+LoadView -up-|> JPanel
+GameView -up-|> JPanel
 
 @enduml

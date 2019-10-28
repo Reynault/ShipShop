@@ -18,87 +18,118 @@ package model{
         + loadGame()
     }
 
-    abstract Game{
-        - nextPlayer: Player
-        - currentPlayer: Player
-        + Game(era: Era)
-    }
+    package game{
 
-    class GameWithIA{
-        + Game(era: Era, tactic: Tactic)
-    }
+        abstract Game{
+            - currentPlayer: int
+            + Game(era: Era)
+        }
 
-    class Army{
+        class GameWithIA{
+            + Game(era: Era, tactic: Tactic)
+        }
 
-    }
+        class ArmyFactory{
+            + getIAArmy()
+            + getHumanArmy()
+        }
 
-    class SaveManager{
-
-    }
-
-    package ship{
-
-        class Ship{
+        class Army{
 
         }
 
-        abstract FleetFactory{
+        abstract SaveManager{
 
         }
 
-        class ModernFleet{
+        class FileSaveManager{
 
         }
 
-        class XVIFleet{
+        package grid{
 
-        }
+            abstract Grid{
+            }
 
-    }
-
-
-    package era{
-
-        class Era{
-            - {final} name: String
-            - Era(name: String)
-            + getName(): String
-        }
-
-        class EraFactory{
-            + getModernEra()
-            + getXVIEra()
-        }
-
-    }
-
-    package player{
-
-        abstract Player{
-
-        }
-
-        class IA{
-
-        }
-
-        package Tactic{
-
-            interface Tactic{
+            class SimpleGrid{
 
             }
 
-            class RandomTactic{
-
+            abstract Tile{
+                - hasBeenHit: boolean
             }
 
-            class CrossTactic{
+            class SimpleTile{
 
             }
 
         }
 
-        class Human{
+        package ship{
+
+            class Ship{
+
+            }
+
+            abstract FleetFactory{
+
+            }
+
+            class ModernFleet{
+
+            }
+
+            class XVIFleet{
+
+            }
+
+        }
+
+
+        package era{
+
+            class Era{
+                - {final} name: String
+                - Era(name: String)
+                + getName(): String
+            }
+
+            class EraFactory{
+                + getModernEra()
+                + getXVIEra()
+            }
+
+        }
+
+        package player{
+
+            abstract Player{
+
+            }
+
+            class IA{
+
+            }
+
+            package Tactic{
+
+                interface Tactic{
+
+                }
+
+                class RandomTactic{
+
+                }
+
+                class CrossTactic{
+
+                }
+
+            }
+
+            class Human{
+
+            }
 
         }
 
@@ -109,11 +140,21 @@ package model{
 ShipShop --> "1" Game: - game
 ShipShop --> "1" SaveManager: -saveManager
 
-Game --> "1" Army: - current
-Game --> "1" Army: - next
+Game --> "*" Army: - armies
+
+Grid --> "*" Ship: - ships
+Grid --> "*" Tile
+
+FleetFactory ..> Ship: "create"
+
+SimpleGrid --|> Grid
+SimpleTile --|> Tile
+
+ArmyFactory ..>  Army: "create"
 
 Army --> "1" Player: - player
 Army --> "1" FleetFactory: - fleet
+Army --> "1" Grid: -grid
 
 GameWithIA --|> Game
 
@@ -130,5 +171,7 @@ IA --> "1" Tactic: - tactic
 
 RandomTactic ..|> Tactic
 CrossTactic ..|> Tactic
+
+FileSaveManager --|> SaveManager
 
 @enduml

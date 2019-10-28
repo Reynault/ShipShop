@@ -2,10 +2,6 @@
 
 title Global diagram
 
-class Observer{
-
-}
-
 class Observable{
 
 }
@@ -139,6 +135,7 @@ package model{
 
 ShipShop --> "1" Game: - game
 ShipShop --> "1" SaveManager: -saveManager
+ShipShop -up-|> Observable
 
 Game --> "*" Army: - armies
 

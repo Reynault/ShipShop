@@ -11,7 +11,7 @@ package view{
     }
 
     class MainObserver{
-
+        + changeCurrentView()
     }
 
 
@@ -42,7 +42,8 @@ class JPanel{
 
 }
 
-MainObserver -up-> "1" JPanel: - currentView
+MainObserver .up.|> Observer
+MainObserver --> "1" JPanel: - currentView
 
 MainMenu -up-|> JPanel
 LoadView -up-|> JPanel

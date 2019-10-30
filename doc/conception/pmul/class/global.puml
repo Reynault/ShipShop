@@ -10,15 +10,30 @@ package model{
 
     class ShipShop{
         + createGame(era: Era, tactic: Tactic)
+        + moveShip(x: int, y: int, ship: int)
+        + getCurrentPlayer(): int
+        + attack(assailant: int, x: int, y: int, numGrille: int)
+        + endTurn()
         + saveCurrentGame()
         + loadGame()
+    }
+
+    ShipShop --> "1" GameFactory: gameFactory
+    GameFactory ..> Game: create
+
+    class GameFactory{
+        + getPVEGame(): Game
+        + getPVPGame(): Game
+        + getEVEGame(): Game
     }
 
     package game{
 
         abstract Game{
             - currentPlayer: int
+            - association: Army[]
             + Game(era: Era)
+            + attack(assailant: int, x: int, y: int, numGrille: int)
         }
 
         class GameWithIA{
@@ -31,20 +46,19 @@ package model{
         }
 
         class Army{
-
+            - ship: Ship[]
+            + getDmg(ship: int): int
+            + getHit(x: int, y: int, dmg: int)
         }
 
-        abstract SaveManager{
-
-        }
-
-        class FileSaveManager{
+        class SaveManager{
 
         }
 
         package grid{
 
             abstract Grid{
+                + hitTile(x: int, y: int, dmg: int)
             }
 
             class SimpleGrid{
@@ -53,6 +67,7 @@ package model{
 
             abstract Tile{
                 - hasBeenHit: boolean
+                + hit(dmg: int)
             }
 
             class SimpleTile{
@@ -142,6 +157,8 @@ Game --> "*" Army: - armies
 Grid --> "*" Ship: - ships
 Grid --> "*" Tile
 
+Tile --> "1" Ship: -ship
+
 FleetFactory ..> Ship: "create"
 
 SimpleGrid --|> Grid
@@ -169,6 +186,5 @@ IA --> "1" Tactic: - tactic
 RandomTactic ..|> Tactic
 CrossTactic ..|> Tactic
 
-FileSaveManager --|> SaveManager
 
 @enduml

@@ -3,8 +3,6 @@
 package ship{
 
     class Ship{
-        - x: int
-        - y: int
         - hp: int
         - ammo: int
         - dmg: int

@@ -10,8 +10,8 @@ package model{
 
     class ShipShop{
         + createGame(era: Era, tactic: Tactic)
-        + moveShip(x: int, y: int, ship: int)
         + getCurrentPlayer(): int
+        + placeShip(x: int, y: int, ship: ShipType)
         + attack(assailant: int, x: int, y: int, numGrille: int)
         + endTurn()
         + saveCurrentGame()
@@ -27,6 +27,10 @@ package model{
         + getEVEGame(): Game
     }
 
+    class SaveManager{
+
+    }
+
     package game{
 
         abstract Game{
@@ -34,6 +38,7 @@ package model{
             - association: Army[]
             + Game(era: Era)
             + attack(assailant: int, x: int, y: int, numGrille: int)
+            + place(x: int, y: int, ship: ShipType)
         }
 
         class GameWithIA{
@@ -46,19 +51,16 @@ package model{
         }
 
         class Army{
-            - ship: Ship[]
             + getDmg(ship: int): int
             + getHit(x: int, y: int, dmg: int)
-        }
-
-        class SaveManager{
-
+            + place(x: int, y: int, ship: int)
         }
 
         package grid{
 
             abstract Grid{
-                + hitTile(x: int, y: int, dmg: int)
+                + hitShip(x: int, y: int, dmg: int)
+                + moveShip(x: int, y: int,
             }
 
             class SimpleGrid{
@@ -67,7 +69,6 @@ package model{
 
             abstract Tile{
                 - hasBeenHit: boolean
-                + hit(dmg: int)
             }
 
             class SimpleTile{
@@ -157,8 +158,6 @@ Game --> "*" Army: - armies
 Grid --> "*" Ship: - ships
 Grid --> "*" Tile
 
-Tile --> "1" Ship: -ship
-
 FleetFactory ..> Ship: "create"
 
 SimpleGrid --|> Grid
@@ -170,7 +169,7 @@ Army --> "1" Player: - player
 Army --> "1" FleetFactory: - fleet
 Army --> "1" Grid: -grid
 
-GameWithIA --|> Game
+GameWithIA -up-|> Game
 
 EraFactory --> "1" Era: -modern
 EraFactory --> "1" Era: -XVI

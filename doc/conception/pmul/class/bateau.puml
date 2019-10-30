@@ -9,9 +9,9 @@ package ship{
         - nbTiles: int
         - direction: Direction
         + Ship(x: int, y: int, direction: Direction)
-        + {abstract} hit(Ship ship)
-        + {abstract} place(x: int, y:int)
-        + {abstract} takeDamage(value: int)
+        + place(x: int, y:int)
+        + takeDamage(value: int)
+        + getDmg(): int
     }
 
 

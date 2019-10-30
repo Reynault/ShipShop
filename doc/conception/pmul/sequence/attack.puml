@@ -4,11 +4,16 @@ player -> GUI: Click on tile to attack
 GUI ->  ShipShop: attack(assaillant : int, x: int, y: int, numGrille: int)
 ShipShop -> Game: attack(assaillant : int, x: int, y: int, numGrille: int)
 Game -> Army: dmg = getDmg(assaillant: int)
-Game -> Game: army = getArmy(assaillant: int, numGrille: int)
+
+Army -> Grid : dmg = getDmg(assaillant: int)
+
+Grid -> Ship : dmg = getDmg()
+
+Game -> Game: army = getArmy(numGrille: int)
+
 Game -> Army: getHit(x: int, y: int, dmg: int)
-Army -> Grid: hitTile(x: int, y: int, dmg: int)
-Grid -> Tile: hit(dmg: int)
-Tile -> Ship: takeDamage(dmg: int)
+Army -> Grid: hitShip(x: int, y: int, dmg: int, ship: int)
+Grid -> Ship: takeDamage(dmg: int)
 
 ShipShop -> ShipShop: setChanged()
 ShipShop -> Observable: notifieObserver()

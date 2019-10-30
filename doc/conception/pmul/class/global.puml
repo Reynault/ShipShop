@@ -35,10 +35,10 @@ package model{
 
         abstract Game{
             - currentPlayer: int
-            - association: Army[]
             + Game(era: Era)
             + attack(assailant: int, x: int, y: int, numGrille: int)
             + place(x: int, y: int, ship: ShipType)
+            + getArmy(numGrille: int)
         }
 
         class GameWithIA{
@@ -53,14 +53,15 @@ package model{
         class Army{
             + getDmg(ship: int): int
             + getHit(x: int, y: int, dmg: int)
-            + place(x: int, y: int, ship: int)
+            + place(x: int, y: int, ship: ShipType)
         }
 
         package grid{
 
             abstract Grid{
-                + hitShip(x: int, y: int, dmg: int)
-                + moveShip(x: int, y: int,
+                + hitShip(x: int, y: int, dmg: int, ship: int)
+                + moveShip(x: int, y: int, ship: Ship)
+                + getDmg(ship: int): int
             }
 
             class SimpleGrid{

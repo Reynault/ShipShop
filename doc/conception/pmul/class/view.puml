@@ -28,7 +28,11 @@ package view{
 
     }
 
-    class GameView{
+    abstract GameView{
+
+    }
+
+    class GameViewIA{
 
     }
 
@@ -48,5 +52,7 @@ MainObserver --> "1" JPanel: - currentView
 MainMenu -up-|> JPanel
 LoadView -up-|> JPanel
 GameView -up-|> JPanel
+
+GameViewIA --|> GameView
 
 @enduml

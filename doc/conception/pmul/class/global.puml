@@ -10,16 +10,12 @@ package model{
 
     class ShipShop{
         + createGame(era: Era, tactic: Tactic)
-        + getCurrentPlayer(): int
-        + placeShip(x: int, y: int, ship: ShipType)
-        + attack(assailant: int, x: int, y: int, numGrille: int)
-        + endTurn()
+        + placeShip(x: int, y: int, direction: DirectionConstant, ship: ShipType): UUID
+        + placeShip(x: int, y: int, direction: DirectionConstant, id: UUID): UUID
+        + endTurn(assailant: UUID, x: int, y: int): boolean
         + saveCurrentGame()
         + loadGame()
     }
-
-    ShipShop --> "1" GameFactory: gameFactory
-    GameFactory ..> Game: create
 
     class GameFactory{
         + getPVEGame(): Game
@@ -31,37 +27,62 @@ package model{
 
     }
 
+    enum UpdateObserver{
+        ENDTURN
+        PLACESHIP
+        SAVE
+        LOAD
+        CHANGETACTIC
+    }
+
+    enum ShipType{
+        CRUISER
+        AIRCRAFT
+        TORPEDO
+        SUBMARINE
+    }
+
+    enum DirectionConstant{
+        UP
+        LEFT
+        RIGHT
+        DOWN
+    }
+
     package game{
 
         abstract Game{
-            - currentPlayer: int
             + Game(era: Era)
-            + attack(assailant: int, x: int, y: int, numGrille: int)
-            + place(x: int, y: int, ship: ShipType)
-            + getArmy(numGrille: int)
+            + endTurn(assailant: UUID, x: int, y: int): boolean
+            + place(x: int, y: int, direction: DirectionConstant, ship: ShipType): UUID
+            + place(x: int, y: int, direction: DirectionConstant, id: UUID): UUID
+            + endTurn()
         }
 
         class GameWithIA{
             + Game(era: Era, tactic: Tactic)
         }
 
-        class ArmyFactory{
-            + getIAArmy()
-            + getHumanArmy()
+        class PlayerFactory{
+            + getIA()
+            + getHuman()
         }
 
-        class Army{
-            + getDmg(ship: int): int
-            + getHit(x: int, y: int, dmg: int)
+        abstract Player{
+            + getDmg(id: UUID): int
+            + beAttacked(x: int, y: int, dmg: int): boolean
             + place(x: int, y: int, ship: ShipType)
+            + isDefeated(): boolean
+            + play()
         }
 
         package grid{
 
             abstract Grid{
-                + hitShip(x: int, y: int, dmg: int, ship: int)
+                + beAttacked(x: int, y: int, dmg: int): boolean
                 + moveShip(x: int, y: int, ship: Ship)
-                + getDmg(ship: int): int
+                + getDmg(id: UUID): int
+                + isDefeated(): boolean
             }
 
             class SimpleGrid{
@@ -116,10 +137,6 @@ package model{
 
         package player{
 
-            abstract Player{
-
-            }
-
             class IA{
 
             }
@@ -127,15 +144,15 @@ package model{
             package Tactic{
 
                 interface Tactic{
-
+                    + applyTactic(player: Player): (int, int, int)
                 }
 
                 class RandomTactic{
-
+                    + applyTactic(player: Player)
                 }
 
                 class CrossTactic{
-
+                    + applyTactic(player: Player)
                 }
 
             }
@@ -150,11 +167,16 @@ package model{
 
 }
 
+
+ShipShop --> "1" GameFactory: gameFactory
 ShipShop --> "1" Game: - game
 ShipShop --> "1" SaveManager: -saveManager
 ShipShop -up-|> Observable
 
-Game --> "*" Army: - armies
+GameFactory ..> Game: create
+
+Game --> "1" Player: - current
+Game --> "1" Player: - next
 
 Grid --> "*" Ship: - ships
 Grid --> "*" Tile
@@ -164,23 +186,22 @@ FleetFactory ..> Ship: "create"
 SimpleGrid --|> Grid
 SimpleTile --|> Tile
 
-ArmyFactory ..>  Army: "create"
+PlayerFactory ..>  Player: "create"
 
-Army --> "1" Player: - player
-Army --> "1" FleetFactory: - fleet
-Army --> "1" Grid: -grid
+Player --> "1" FleetFactory: - fleet
+Player --> "1" Grid: -grid
 
-GameWithIA -up-|> Game
+GameWithIA --|> Game
 
 EraFactory --> "1" Era: -modern
 EraFactory --> "1" Era: -XVI
 
-ModernFleet --|> FleetFactory
-XVIFleet --|> FleetFactory
+ModernFleet -up-|> FleetFactory
+XVIFleet -up-|> FleetFactory
 
 Human --|> Player
-IA --|> Player
 
+IA --|> Player
 IA --> "1" Tactic: - tactic
 
 RandomTactic ..|> Tactic

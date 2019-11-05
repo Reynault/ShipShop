@@ -1,22 +1,24 @@
 @startuml
 actor player
 player -> GUI: Click on tile to attack
-GUI ->  ShipShop: attack(assaillant : int, x: int, y: int, numGrille: int)
-ShipShop -> Game: attack(assaillant : int, x: int, y: int, numGrille: int)
-Game -> Army: dmg = getDmg(assaillant: int)
+GUI ->  ShipShop: attack(assaillant : int, x: int, y: int)
+ShipShop -> Game: attack(assaillant : int, x: int, y: int)
 
-Army -> Grid : dmg = getDmg(assaillant: int)
+Game -> "current: Army": dmg = getDmg(assaillant: int)
 
-Grid -> Ship : dmg = getDmg()
+"current: Army" -> "current: Grid" : dmg = getDmg(assaillant: int)
 
-Game -> Game: army = getArmy(numGrille: int)
+"current: Grid" -> "assaillant: Ship" : dmg = getDmg()
 
-Game -> Army: getHit(x: int, y: int, dmg: int)
-Army -> Grid: hitShip(x: int, y: int, dmg: int, ship: int)
-Grid -> Ship: takeDamage(dmg: int)
+
+Game -> "next: Army": getHit(x: int, y: int, dmg: int)
+"next: Army" -> "next: Grid": hitShip(x: int, y: int, dmg: int, ship: int)
+"next: Grid" -> "victim: Ship": takeDamage(dmg: int)
 
 ShipShop -> ShipShop: setChanged()
-ShipShop -> Observable: notifieObserver()
-Observable -> GUI: update()
+ShipShop -> ShipShop: notifieObserver()
+ShipShop -> GUI: update()
+
+GUI --> player: Flag on the tile
 
 @enduml

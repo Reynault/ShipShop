@@ -23,3 +23,10 @@
     - Main menu
     - Ingame
     - Save menu
+    
+    
+## Trucs à prendre en compte
+
+- Trouver la position d'un bateau dans une grille (Si il est placé)
+- Faire le lien entre les bateaux, et savoir quoi afficher pour chaque bateau
+- Pareil au niveau des ères

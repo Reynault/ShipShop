@@ -8,8 +8,10 @@ package ship{
         - dmg: int
         - nbTiles: int
         - direction: Direction
-        + Ship(x: int, y: int, direction: Direction)
-        + place(x: int, y:int)
+        - shiptype: ShipType
+        + Ship(x: int, y: int, direction: Direction, shiptype: ShipType)
+        + place(x: int, y:int, direction: Direction)
+        + canAttack(ship: UUID): boolean
         + takeDamage(value: int)
         + getDmg(): int
         + hasSunk(): boolean
@@ -31,7 +33,7 @@ package ship{
         + hasTorpedo(): boolean
         + hasAircraft(): boolean
 
-        + {abstract} getCruiser(): Ship
+        + {abstract} getCruiser(x: int, y: int, direction: GlobalDirection, ): Ship
         + {abstract} getSubmarine(): Ship
         + {abstract} getTorpedoBoat(): Ship
         + {abstract} getAircraftCarrier(): Ship

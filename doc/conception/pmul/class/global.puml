@@ -10,6 +10,7 @@ class Observable{
 package model{
 
     class Move{
+        {static} NONE_UUID: UUID
         x: int
         y: int
         direction: DirectionConstant
@@ -51,11 +52,12 @@ package model{
     }
 
     class ShipShop{
+        - requestedShip: UUID
         + createGame(era: Era, tactic: Tactic)
         + placeShip(move: Move): UUID
         + setTactic(player: int, tactic: Tactic)
         + getShipSprite(type: ShipType): Image
-        + play(attack: Attack): List<Attack>
+        + play(attack: Attack)
         + endPlacingShip()
         + save(file: File)
         + load(file: File): Game
@@ -87,25 +89,29 @@ package model{
         }
 
         class Game{
+            - {static} GRID_WIDTH: int
+            - {static} GRID_HEIGHT: int
             - currentPlayer: int
             + Game(era: Era, p1: Player, p2: Player)
             + setTactic(player: int, tactic: Tactic)
             + getShipSprite(type: ShipType): Image
             + endPlacingShip()
             + placeShip(move: Move): UUID
-            + play(attack: Attack)
+            + play(attack: Attack): List<Attack>
             - next()
         }
 
         package grid{
 
             class Grid{
-                - ennemyGrid: int[][]
-                + beAttacked(x: int, y: int, dmg: int): boolean
+                - ennemyGrid: int[GRID_WIDTH][GRID_HEIGHT]
                 + placeShip(move: Move)
+                + canAttack(ship: UUID): boolean
                 + getDmg(id: UUID): int
                 + isDefeated(): boolean
                 + isShip(x: int, y: int)
+                + crossTile(x: int, y: int)
+                + flagTile(x: int, y: int)
                 + hit(x: int, y: int)
             }
 
@@ -143,10 +149,11 @@ package model{
 
             abstract Player{
                 + getDmg(id: UUID): int
-                + beAttacked(x: int, y: int, dmg: int): boolean
+                + hit(x: int, y: int, dmg: int)
                 + placeShip(move: Move): UUID
                 + isDefeated(): boolean
                 + setTactic(tactic: Tactic)
+                + canAttack(ship: UUID): boolean
                 + {abstract} getBestMove(): Move
                 + {abstract} isHuman(): boolean
             }
@@ -214,6 +221,8 @@ CrossTactic ..|> Tactic
 
 Game --> "1" Era: - era
 EraFactory ..> Era: create
+
+ShipShop --> "*" Attack: - requestedAttack
 
 ModernEra --|> Era
 XVIEra --|> Era

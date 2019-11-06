@@ -1,0 +1,14 @@
+@startuml
+
+autonumber
+actor player
+
+player -> GUI: the player has ended the placing part
+
+GUI -> ShipShop: endPlaceShip()
+
+ShipShop -> Game: endPlaceShip()
+
+Game ->
+
+@enduml

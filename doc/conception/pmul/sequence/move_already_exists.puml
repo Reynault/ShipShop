@@ -9,36 +9,13 @@ player -> GUI: The player wants to move a ship
 
 GUI -> ShipShop: placeShip(move)
 
-note left
-move is an object with all
-the information needed to place a ship
-(x, y, direction, UUID, type)
-
-In this case UUID is equal to NONE_UUID,
-because the ship doesn't exist yet.
-end note
-
 ShipShop -> Game: placeShip(move)
 
 Game -> "current: Player": placeShip(move)
 
 "current: Player" -> "current: Grid": placeShip(move)
 
-"current: Grid" -> FleetFactory: hasCruiser()
-
-FleetFactory --> "current: Grid": cruiser
-
-opt cruiser == true
-
-    "current: Grid" -> FleetFactory: getCruiser(x, y, direction, shiptype)
-
-    create Ship
-    FleetFactory -> Ship: create
-
-    FleetFactory --> "current: Grid": Ship
-
-
-end
+"current: Grid" -> Ship: placeShip(move)
 
 "current: Grid" --> "current: Player": UUID
 

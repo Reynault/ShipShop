@@ -55,7 +55,8 @@ package model{
         + placeShip(move: Move): UUID
         + setTactic(player: int, tactic: Tactic)
         + getShipSprite(type: ShipType): Image
-        + play(attack: Attack)
+        + play(attack: Attack): List<Attack>
+        + endPlacingShip()
         + save(file: File)
         + load(file: File): Game
     }
@@ -90,6 +91,7 @@ package model{
             + Game(era: Era, p1: Player, p2: Player)
             + setTactic(player: int, tactic: Tactic)
             + getShipSprite(type: ShipType): Image
+            + endPlacingShip()
             + placeShip(move: Move): UUID
             + play(attack: Attack)
             - next()

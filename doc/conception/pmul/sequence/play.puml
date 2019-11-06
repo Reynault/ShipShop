@@ -1,0 +1,99 @@
+@startuml
+
+title What happens when a player is attacking
+
+autonumber
+actor player
+
+player -> GUI: Click on tile to attack
+
+GUI -> ShipShop: play(attack)
+
+note left
+The controller is creating an attack
+object which contains every information
+about the action of the player (target tile, and
+the ship that shoot)
+end note
+
+ShipShop -> Game: play(attack)
+
+
+note left
+UUID is an unique ID used
+to recognize the ship
+end note
+
+Game -> "next: Player": isShip(x, y)
+
+"next: Player" -> "next: Grid": isShip(x, y)
+
+"next: Grid" -> "next: Player": information
+
+"next: Player" -> Game: information
+
+alt information == true
+
+    Game -> "current: Player": canAttack(UUID)
+
+    "current: Player" -> "current: Grid": canAttack(UUID)
+
+    "current: Grid" -> Ship: canAttack()
+
+    Ship --> "current: Grid": information2
+
+    "current: Grid" --> "current: Player": information2
+
+    "current: Player" --> Game: information2
+
+    opt information2 == true
+
+        note left
+            checking if the ship can actually
+            shoot something (no ammo, has sunk)
+        end note
+
+        Game -> "current: Player": getDmg(UUID)
+
+        "current: Player" -> "current: Grid": getDmg(UUID)
+
+        "current: Grid" -> Ship: getDmg()
+
+        Ship --> "current: Grid": dmg
+
+        "current: Grid" --> "current: Player": dmg
+
+        "current: Player" --> Game: dmg
+
+        Game -> "next: Player": hit(x, y, dmg)
+
+        "next: Player" -> "next: Grid": hit(x, y, dmg)
+
+        "next: Grid" -> Ship: hasSunk()
+
+        Ship -> "next: Grid": information3
+
+        opt information3 == false
+
+            "next: Grid" -> Ship: hit(dmg)
+
+        end
+
+        Game -> "current: Player": flagTile(x, y)
+
+        "current: Player" -> "current: Grid": flagTile(x, y)
+
+    end
+
+else information == false
+
+    Game -> "current: Player": crossTile(x, y)
+
+    "current: Player" -> "current: Grid": crossTile(x, y)
+
+end
+
+
+GUI --> player: Flag on the tile
+
+@enduml

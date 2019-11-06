@@ -12,7 +12,7 @@ package ship{
         + place(x: int, y:int)
         + takeDamage(value: int)
         + getDmg(): int
-        + hasSank(): boolean
+        + hasSunk(): boolean
         + canShoot(): boolean
     }
 

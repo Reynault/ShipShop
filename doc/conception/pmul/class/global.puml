@@ -144,7 +144,6 @@ package model{
                 + beAttacked(x: int, y: int, dmg: int): boolean
                 + placeShip(move: Move): UUID
                 + isDefeated(): boolean
-                + play()
                 + setTactic(tactic: Tactic)
                 + {abstract} getBestMove(): Move
                 + {abstract} isHuman(): boolean

@@ -7,4 +7,10 @@ actor player
 
 player -> GUI: The player wants to move a ship
 
+GUI -> ShipShop: placeShip(move)
+
+ShipShop -> Game: placeShip(move)
+
+Game ->
+
 @enduml

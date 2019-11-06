@@ -151,7 +151,7 @@ opt both players have at least one ammunition and one ship alive
 
 end
 
-Game --> ShipShop: List<Move>
+Game --> ShipShop: List<Attack>
 
 note left
     Game is giving to ShipShop

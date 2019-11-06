@@ -26,8 +26,6 @@ package model{
     class GameFactory{
         + getPVEGame(era: Era): Game
         + getEVPGame(era: Era): Game
-        + getPVPGame(era: Era): Game
-        + getEVEGame(era: Era): Game
     }
 
     enum UpdateObserver{

@@ -1,0 +1,48 @@
+@startuml
+
+title Classes that extends Serializable
+
+class Serializable{
+}
+
+package model{
+    class Game{
+
+    }
+
+    class Grid{
+
+    }
+
+    class FleetFactory{
+
+    }
+
+    class Ship{
+
+    }
+
+    class Player{
+
+    }
+
+    class Era{
+
+    }
+
+    class Tactic{
+
+    }
+}
+
+Game --|> Serializable
+Grid --|> Serializable
+FleetFactory --|> Serializable
+Ship --|> Serializable
+Player --|> Serializable
+Era --|> Serializable
+Tactic --|> Serializable
+
+note left: All classes that are important \nto the game are saved
+
+@enduml

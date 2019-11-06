@@ -1,0 +1,26 @@
+@startuml
+
+title What happens when the player save the game
+
+autonumber
+actor player
+
+player -> GUI: Click on button for save
+
+GUI -> ShipShop: save(File)
+
+note left
+The player choose a file
+where to save the game
+end note
+
+ShipShop -> Game: save(File)
+
+Game -> Game: write(File)
+
+Game --> ShipShop : success
+ShipShop --> GUI : success
+
+GUI --> player: See a message \n the game is saved \n successfully
+
+@enduml

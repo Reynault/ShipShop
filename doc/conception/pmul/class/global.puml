@@ -3,28 +3,31 @@
 title Global diagram
 
 class Observable{
-
+    + setChanged()
+    + notifyObserver(arg: int)
 }
 
 package model{
 
-    class ShipShop{
-        + createGame(era: Era, tactic: Tactic)
-        + placeShip(x: int, y: int, direction: DirectionConstant, ship: ShipType): UUID
-        + placeShip(x: int, y: int, direction: DirectionConstant, id: UUID): UUID
-        + endTurn(assailant: UUID, x: int, y: int): boolean
-        + saveCurrentGame()
-        + loadGame()
+    class Move{
+        x: int
+        y: int
+        direction: DirectionConstant
+        type: ShipType
+        ship: UUID
+    }
+
+    class Attack{
+        x: int
+        y: int
+        ship: UUID
     }
 
     class GameFactory{
-        + getPVEGame(): Game
-        + getPVPGame(): Game
-        + getEVEGame(): Game
-    }
-
-    class SaveManager{
-
+        + getPVEGame(era: Era): Game
+        + getEVPGame(era: Era): Game
+        + getPVPGame(era: Era): Game
+        + getEVEGame(era: Era): Game
     }
 
     enum UpdateObserver{
@@ -49,53 +52,65 @@ package model{
         DOWN
     }
 
+    class ShipShop{
+        + createGame(era: Era, tactic: Tactic)
+        + placeShip(move: Move): UUID
+        + setTactic(player: int, tactic: Tactic)
+        + play(attack: Attack)
+        + save(file: File)
+        + load(file: File): Game
+    }
+
     package game{
 
-        abstract Game{
-            + Game(era: Era)
-            + endTurn(assailant: UUID, x: int, y: int): boolean
-            + place(x: int, y: int, direction: DirectionConstant, ship: ShipType): UUID
-            + place(x: int, y: int, direction: DirectionConstant, id: UUID): UUID
-            + endTurn()
+        package era{
+
+            class EraFactory{
+
+            }
+
+            abstract Era{
+                + {abstract} getFleetFactory(): FleetFactory
+                + {abstract} drawShip(type: ShipType, image: Image)
+            }
+
+            class ModernEra{
+                + getFleetFactory(): FleetFactory
+                + drawShip(type: ShipType, image: Image)
+            }
+
+            class XVIEra{
+                + getFleetFactory(): FleetFactory
+                + drawShip(type: ShipType, image: Image)
+            }
+
         }
 
-        class GameWithIA{
-            + Game(era: Era, tactic: Tactic)
-        }
-
-        class PlayerFactory{
-            + getIA()
-            + getHuman()
-        }
-
-        abstract Player{
-            + getDmg(id: UUID): int
-            + beAttacked(x: int, y: int, dmg: int): boolean
-            + place(x: int, y: int, ship: ShipType)
-            + isDefeated(): boolean
-            + play()
+        class Game{
+            - currentPlayer: int
+            + Game(era: Era, p1: Player, p2: Player)
+            + setTactic(player: int, tactic: Tactic)
+            + placeShip(move: Move): UUID
+            + play(attack: Attack)
+            - next()
         }
 
         package grid{
 
             abstract Grid{
+                - ennemyGrid: int[][]
                 + beAttacked(x: int, y: int, dmg: int): boolean
-                + moveShip(x: int, y: int, ship: Ship)
+                + placeShip(move: Move)
                 + getDmg(id: UUID): int
                 + isDefeated(): boolean
-            }
-
-            class SimpleGrid{
-
+                + isShip(x: int, y: int)
+                + hit(x: int, y: int)
             }
 
             abstract Tile{
                 - hasBeenHit: boolean
             }
 
-            class SimpleTile{
-
-            }
 
         }
 
@@ -120,25 +135,34 @@ package model{
         }
 
 
-        package era{
 
-            class Era{
-                - {final} name: String
-                - Era(name: String)
-                + getName(): String
-            }
-
-            class EraFactory{
-                + getModernEra()
-                + getXVIEra()
-            }
-
-        }
 
         package player{
 
-            class IA{
+            class PlayerFactory{
+                + getIA(era: Era)
+                + getHuman(era: Era)
+            }
 
+            abstract Player{
+                + getDmg(id: UUID): int
+                + beAttacked(x: int, y: int, dmg: int): boolean
+                + placeShip(move: Move): UUID
+                + isDefeated(): boolean
+                + play()
+                + setTactic(tactic: Tactic)
+                + {abstract} getBestMove(): Move
+                + {abstract} isHuman(): boolean
+            }
+
+            class Human{
+                + getBestMove(): Move
+                + isHuman(): boolean
+            }
+
+            class IA{
+                + getBestMove(): Move
+                + isHuman(): boolean
             }
 
             package Tactic{
@@ -157,10 +181,6 @@ package model{
 
             }
 
-            class Human{
-
-            }
-
         }
 
     }
@@ -170,34 +190,24 @@ package model{
 
 ShipShop --> "1" GameFactory: gameFactory
 ShipShop --> "1" Game: - game
-ShipShop --> "1" SaveManager: -saveManager
 ShipShop -up-|> Observable
 
 GameFactory ..> Game: create
 
-Game --> "1" Player: - current
-Game --> "1" Player: - next
+Game --> "2" Player: - players
 
 Grid --> "*" Ship: - ships
 Grid --> "*" Tile
 
 FleetFactory ..> Ship: "create"
 
-SimpleGrid --|> Grid
-SimpleTile --|> Tile
-
 PlayerFactory ..>  Player: "create"
 
 Player --> "1" FleetFactory: - fleet
-Player --> "1" Grid: -grid
+Player --> "1" Grid: - grid
 
-GameWithIA --|> Game
-
-EraFactory --> "1" Era: -modern
-EraFactory --> "1" Era: -XVI
-
-ModernFleet -up-|> FleetFactory
-XVIFleet -up-|> FleetFactory
+ModernFleet --|> FleetFactory
+XVIFleet --|> FleetFactory
 
 Human --|> Player
 
@@ -207,5 +217,10 @@ IA --> "1" Tactic: - tactic
 RandomTactic ..|> Tactic
 CrossTactic ..|> Tactic
 
+Game --> "1" Era: - era
+EraFactory ..> Era: create
+
+ModernEra --|> Era
+XVIEra --|> Era
 
 @enduml

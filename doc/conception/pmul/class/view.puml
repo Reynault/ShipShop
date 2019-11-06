@@ -19,27 +19,30 @@ package view{
 
     }
 
-    class TextureFactory{
-
-    }
-    note bottom: Class that provides images\nused on elements such as ship
-
     class MainMenu{
 
     }
 
-    abstract GameView{
+    class GameView{
 
     }
 
-    class GameViewIA{
+    class TacticView{
+
+    }
+
+    class EraView{
 
     }
 
 }
 
-class Observer{
+class JFrame{
 
+}
+
+class Observer{
+    update()
 }
 
 class JPanel{
@@ -48,11 +51,12 @@ class JPanel{
 
 MainObserver .up.|> Observer
 MainObserver --> "1" JPanel: - currentView
+MainObserver --> "1" JFrame: - frame
 
 MainMenu -up-|> JPanel
 LoadView -up-|> JPanel
 GameView -up-|> JPanel
-
-GameViewIA --|> GameView
+TacticView -up-|> JPanel
+EraView -up-|> JPanel
 
 @enduml

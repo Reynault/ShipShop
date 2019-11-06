@@ -93,6 +93,31 @@ else information == false
 
 end
 
+Game -> Game: next()
+
+Game -> "next: Player": isHuman()
+
+"next: Player" --> Game: human
+
+opt human == false
+
+    Game -> "next: Player": getBestMove()
+
+    "next: Player" -> Tactic: applyTactic(next)
+
+    Tactic --> "next: Player": bestMove
+
+    "next: Player" --> Game: bestMove
+
+    Game -> Game: Play(bestMove)
+
+end
+
+ShipShop -> ShipShop: setChanged()
+
+ShipShop -> ShipShop: updateObserver( PLAY )
+
+ShipShop --> GUI: the gui is updated by the observable
 
 GUI --> player: Flag on the tile
 

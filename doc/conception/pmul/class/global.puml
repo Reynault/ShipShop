@@ -162,15 +162,15 @@ package model{
             package Tactic{
 
                 interface Tactic{
-                    + applyTactic(player: Player): (int, int, int)
+                    + applyTactic(player: Player): Move
                 }
 
                 class RandomTactic{
-                    + applyTactic(player: Player)
+                    + applyTactic(player: Player): Move
                 }
 
                 class CrossTactic{
-                    + applyTactic(player: Player)
+                    + applyTactic(player: Player): Move
                 }
 
             }

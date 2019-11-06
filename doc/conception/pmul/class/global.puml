@@ -56,6 +56,7 @@ package model{
         + createGame(era: Era, tactic: Tactic)
         + placeShip(move: Move): UUID
         + setTactic(player: int, tactic: Tactic)
+        + getShipSprite(type: ShipType): Image
         + play(attack: Attack)
         + save(file: File)
         + load(file: File): Game
@@ -71,17 +72,17 @@ package model{
 
             abstract Era{
                 + {abstract} getFleetFactory(): FleetFactory
-                + {abstract} drawShip(type: ShipType, image: Image)
+                + {abstract} drawShip(type: ShipType): Image
             }
 
             class ModernEra{
                 + getFleetFactory(): FleetFactory
-                + drawShip(type: ShipType, image: Image)
+                + drawShip(type: ShipType): Image
             }
 
             class XVIEra{
                 + getFleetFactory(): FleetFactory
-                + drawShip(type: ShipType, image: Image)
+                + drawShip(type: ShipType): Image
             }
 
         }
@@ -90,6 +91,7 @@ package model{
             - currentPlayer: int
             + Game(era: Era, p1: Player, p2: Player)
             + setTactic(player: int, tactic: Tactic)
+            + getShipSprite(type: ShipType): Image
             + placeShip(move: Move): UUID
             + play(attack: Attack)
             - next()

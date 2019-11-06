@@ -14,12 +14,9 @@ The player choose a file
 where to save the game
 end note
 
-ShipShop -> Game: save(File)
 
-Game -> Game: write(File)
+ShipShop -> ObjectOutputStream: writeObject(game)
 
-Game --> ShipShop : success
-ShipShop --> GUI : success
 
 GUI --> player: See a message \n the game is saved \n successfully
 

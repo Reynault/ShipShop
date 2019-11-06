@@ -1,11 +1,11 @@
 @startuml
 
-title What happens when a player is attacking
+title When a player is ending is turn
 
 autonumber
 actor player
 
-player -> GUI: Click on tile to attack
+player -> GUI: Click to end his turn
 
 GUI -> ShipShop: play(attack)
 
@@ -93,25 +93,70 @@ else information == false
 
 end
 
-Game -> Game: next()
+Game -> Game: isFinished()
 
-Game -> "next: Player": isHuman()
+note left
+    Checking if the game
+    is finished
+end note
 
-"next: Player" --> Game: human
+Game -> "current: Player": isDefeated()
 
-opt human == false
+"current: Player" -> "current: Grid": isDefeated()
 
-    Game -> "next: Player": getBestMove()
+loop for each ship
 
-    "next: Player" -> Tactic: applyTactic(next)
+    "current: Grid" -> Ship: sunk = hasSunk()
 
-    Tactic --> "next: Player": bestMove
-
-    "next: Player" --> Game: bestMove
-
-    Game -> Game: Play(bestMove)
+    "current: Grid" -> Ship: shoot = canShoot()
 
 end
+
+"current: Grid" --> "current: Player": defeat
+
+"current: Player" --> Game: defeat
+
+note left
+    Same thing for the next
+    player
+end note
+
+
+opt both players have at least one ammunition and one ship alive
+
+    Game -> Game: next()
+
+    note left
+        Changing the current player,
+        if it's an IA, it plays
+    end note
+
+    Game -> "next: Player": isHuman()
+
+    "next: Player" --> Game: human
+
+    opt human == false
+
+        Game -> "next: Player": getBestMove()
+
+        "next: Player" -> Tactic: applyTactic(next)
+
+        Tactic --> "next: Player": bestMove
+
+        "next: Player" --> Game: bestMove
+
+        Game -> Game: Play(bestMove)
+
+    end
+
+end
+
+Game --> ShipShop: List<Move>
+
+note left
+    Game is giving to ShipShop
+    a list of the moves
+end note
 
 ShipShop -> ShipShop: setChanged()
 

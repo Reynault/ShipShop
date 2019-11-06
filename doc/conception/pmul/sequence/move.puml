@@ -1,0 +1,10 @@
+@startuml
+
+title When a player move a ship on his grid
+
+autonumber
+actor player
+
+player -> GUI: The player wants to move a ship
+
+@enduml

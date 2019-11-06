@@ -97,7 +97,7 @@ package model{
 
         package grid{
 
-            abstract Grid{
+            class Grid{
                 - ennemyGrid: int[][]
                 + beAttacked(x: int, y: int, dmg: int): boolean
                 + placeShip(move: Move)
@@ -106,11 +106,6 @@ package model{
                 + isShip(x: int, y: int)
                 + hit(x: int, y: int)
             }
-
-            abstract Tile{
-                - hasBeenHit: boolean
-            }
-
 
         }
 
@@ -197,7 +192,6 @@ GameFactory ..> Game: create
 Game --> "2" Player: - players
 
 Grid --> "*" Ship: - ships
-Grid --> "*" Tile
 
 FleetFactory ..> Ship: "create"
 

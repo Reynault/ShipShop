@@ -1,0 +1,32 @@
+@startuml
+
+title What happens when the player load a game
+
+autonumber
+actor player
+
+player -> GUI: Click on button for \n load a game
+
+GUI -> ShipShop: load(File)
+
+note left
+The player choose
+a save file for
+load a game
+end note
+
+
+ShipShop -> ObjectInputStream: readObject(game)
+
+ObjectInputStream --> ShipShop: Game
+
+ShipShop -> ShipShop : updateObserver(LOAD)
+
+note left
+LOAD is enumeration of
+all data of a game
+end note
+
+GUI --> player: See a message \n the game is loaded \n successfully
+
+@enduml

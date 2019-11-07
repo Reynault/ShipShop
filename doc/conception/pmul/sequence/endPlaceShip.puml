@@ -9,6 +9,31 @@ GUI -> ShipShop: endPlaceShip()
 
 ShipShop -> Game: endPlaceShip()
 
-Game ->
+Game -> "next: Player": isHuman()
+
+"next: Player" --> Game: human
+
+alt the first player is ready && human == true
+
+    note left
+        If the first player is already ready,
+        it means that we can start the game
+    end note
+
+    Game -> ShipShop : true
+
+    ShipShop -> ShipShop : setChanged()
+
+    ShipShop -> ShipShop : updateObserver(LAUNCH)
+
+else
+
+    Game -> ShipShop : false
+
+end
+
+GUI --> player : the GUI is updated depending if the other player is ready 
+
+
 
 @enduml

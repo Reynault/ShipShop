@@ -1,0 +1,24 @@
+@startuml
+title When a new game is requested
+
+autonumber
+actor player
+
+player -> GUI: Click on play
+
+GUI -> GUI: era = selectEra()
+player -> GUI: Click on Era
+
+GUI -> GUI: tc = selectTactic()
+player -> GUI: Click on tactic
+
+GUI -> GUI: fp = selectFirstPlayer()
+player -> GUI: Click on first player
+
+
+GUI -> ShipShop: createGame(era, tc)
+ShipShop -> GameFactory: game = getPvEGame()
+
+GameFactory -> Game:  game = game(Era era, Player p1, Player p2)
+GameFactory -> Game: setTactic(Player p2, Tactic tc)
+@enduml

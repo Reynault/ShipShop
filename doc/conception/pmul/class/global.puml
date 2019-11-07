@@ -152,20 +152,18 @@ package model{
                 + hit(x: int, y: int, dmg: int)
                 + placeShip(move: Move): UUID
                 + isDefeated(): boolean
-                + setTactic(tactic: Tactic)
                 + canAttack(ship: UUID): boolean
-                + {abstract} getBestMove(): Move
                 + {abstract} isHuman(): boolean
             }
 
             class Human{
-                + getBestMove(): Move
                 + isHuman(): boolean
             }
 
             class IA{
                 + getBestMove(): Move
                 + isHuman(): boolean
+                + setTactic(tactic: Tactic)
             }
 
             package Tactic{

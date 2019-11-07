@@ -24,13 +24,13 @@ UUID is an unique ID used
 to recognize the ship
 end note
 
-Game -> "next: Player": isShip(x, y)
+Game -> "next: IA": isShip(x, y)
 
-"next: Player" -> "next: Grid": isShip(x, y)
+"next: IA" -> "next: Grid": isShip(x, y)
 
-"next: Grid" -> "next: Player": information
+"next: Grid" -> "next: IA": information
 
-"next: Player" -> Game: information
+"next: IA" -> Game: information
 
 alt information == true
 
@@ -65,9 +65,9 @@ alt information == true
 
         "current: Player" --> Game: dmg
 
-        Game -> "next: Player": hit(x, y, dmg)
+        Game -> "next: IA": hit(x, y, dmg)
 
-        "next: Player" -> "next: Grid": hit(x, y, dmg)
+        "next: IA" -> "next: Grid": hit(x, y, dmg)
 
         "next: Grid" -> Ship: hasSunk()
 
@@ -131,19 +131,19 @@ opt both players have at least one ammunition and one ship alive
         if it's an IA, it plays
     end note
 
-    Game -> "next: Player": isHuman()
+    Game -> "next: IA": isHuman()
 
-    "next: Player" --> Game: human
+    "next: IA" --> Game: human
 
     opt human == false
 
-        Game -> "next: Player": getBestMove()
+        Game -> "next: IA": getBestMove()
 
-        "next: Player" -> Tactic: applyTactic(next)
+        "next: IA" -> Tactic: applyTactic(next)
 
-        Tactic --> "next: Player": bestMove
+        Tactic --> "next: IA": bestMove
 
-        "next: Player" --> Game: bestMove
+        "next: IA" --> Game: bestMove
 
         Game -> Game: Play(bestMove)
 

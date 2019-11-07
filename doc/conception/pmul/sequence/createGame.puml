@@ -27,4 +27,13 @@ ShipShop -> GameFactory: game = getPvEGame()
 
 GameFactory -> Game:  game = game(Era era, Player p1, Player p2)
 ShipShop -> Game: setTactic(Player p2, Tactic tc)
+Game -> Player: setTactic(Tactic tc)
+
+Game -> Era: getFleetFactory()
+
+GUI -> Era: drawShip()
+note left
+Drawing of each ship in regard
+of the Era
+end note
 @enduml

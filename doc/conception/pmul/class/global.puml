@@ -53,7 +53,7 @@ package model{
 
     class ShipShop{
         - requestedShip: UUID
-        + createGame(era: Era, tactic: Tactic)
+        + createGame(era: Era, tactic: Tactic, humanIsFirst: boolean)
         + placeShip(move: Move): UUID
         + setTactic(player: int, tactic: Tactic)
         + getShipSprite(type: ShipType): Image

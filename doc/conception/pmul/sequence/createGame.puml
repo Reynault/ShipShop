@@ -16,9 +16,15 @@ GUI -> GUI: fp = selectFirstPlayer()
 player -> GUI: Click on first player
 
 
-GUI -> ShipShop: createGame(era, tc)
+GUI -> ShipShop: createGame(era, tc, true)
+
+note left
+In this case, the human plays
+first.
+end note
+
 ShipShop -> GameFactory: game = getPvEGame()
 
 GameFactory -> Game:  game = game(Era era, Player p1, Player p2)
-GameFactory -> Game: setTactic(Player p2, Tactic tc)
+ShipShop -> Game: setTactic(Player p2, Tactic tc)
 @enduml

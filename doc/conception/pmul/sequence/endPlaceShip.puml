@@ -13,7 +13,7 @@ Game -> "next: Player": p1 : isHuman()
 
 "next: Player" --> Game: True / False
 
-alt the first player is ready && human == true
+alt the first player is ready && p1 == True
 
     note left
         If the first player is already ready,

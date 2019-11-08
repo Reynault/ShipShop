@@ -31,9 +31,22 @@ Game -> Player: setTactic(Tactic tc)
 
 Game -> Era: getFleetFactory()
 
-GUI -> Era: drawShip()
+GUI -> ShipShop: drawShip( SHIP_TYPE )
+
 note left
 Drawing of each ship in regard
 of the Era
 end note
+
+
+ShipShop -> Game: drawShip( SHIP_TYPE )
+
+Game -> Era: drawShip( SHIP_TYPE )
+
+Era --> Game : image
+
+Game --> ShipShop : image
+
+ShipShop --> GUI : image
+
 @enduml

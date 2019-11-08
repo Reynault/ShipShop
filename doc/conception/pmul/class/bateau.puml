@@ -16,6 +16,8 @@ package ship{
         + getDmg(): int
         + hasSunk(): boolean
         + canShoot(): boolean
+        + getAmmo(): int
+        + getHp(): int
     }
 
 

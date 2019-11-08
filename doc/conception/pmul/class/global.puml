@@ -61,6 +61,7 @@ package model{
         + endPlacingShip()
         + save(file: File)
         + load(file: File): Game
+        + getShip(uuid: UUID): Ship
     }
 
     package game{
@@ -98,6 +99,7 @@ package model{
             + endPlacingShip()
             + placeShip(move: Move): UUID
             + play(attack: Attack): List<Attack>
+            + getShip(uuid: UUID): Ship
             - next()
         }
 
@@ -109,7 +111,8 @@ package model{
                 + canAttack(ship: UUID): boolean
                 + getDmg(id: UUID): int
                 + isDefeated(): boolean
-                + isShip(x: int, y: int)
+                + isShip(x: int, y: int): boolean
+                + getShip(uuid: UUID): Ship
                 + crossTile(x: int, y: int)
                 + flagTile(x: int, y: int)
                 + hit(x: int, y: int)
@@ -148,7 +151,6 @@ package model{
             }
 
             abstract Player{
-                + getDmg(id: UUID): int
                 + hit(x: int, y: int, dmg: int)
                 + placeShip(move: Move): UUID
                 + isDefeated(): boolean
@@ -156,6 +158,8 @@ package model{
                 + {abstract} isHuman(): boolean
                 + getBestMove(): Move
                 + setTactic(tactic: Tactic)
+                + getDmg(id: UUID): int
+                + getShip(uuid: UUID): Ship
             }
 
             class Human{

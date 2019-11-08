@@ -8,4 +8,11 @@ package controller{
 
 }
 
+package model{
+    class ShipShop{
+
+    }
+}
+
+GameController --> "1" ShipShop: - model
 @enduml

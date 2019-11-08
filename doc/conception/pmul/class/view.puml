@@ -1,5 +1,11 @@
 @startuml
 
+package controller{
+    class GameController{
+
+    }
+}
+
 package view{
 
     class StringConstant{
@@ -48,6 +54,8 @@ class Observer{
 class JPanel{
 
 }
+
+MainObserver --> "1" GameController: - controller
 
 MainObserver .up.|> Observer
 MainObserver --> "1" JPanel: - currentView

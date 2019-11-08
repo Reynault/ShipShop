@@ -154,6 +154,8 @@ package model{
                 + isDefeated(): boolean
                 + canAttack(ship: UUID): boolean
                 + {abstract} isHuman(): boolean
+                + getBestMove(): Move
+                + setTactic(tactic: Tactic)
             }
 
             class Human{
@@ -212,7 +214,7 @@ XVIFleet --|> FleetFactory
 Human --|> Player
 
 IA --|> Player
-IA --> "1" Tactic: - tactic
+Player --> "1" Tactic: - tactic
 
 RandomTactic ..|> Tactic
 CrossTactic ..|> Tactic

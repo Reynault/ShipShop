@@ -27,6 +27,10 @@ LOAD is enumeration of
 all data of a game
 end note
 
-GUI --> player: See a message \n the game is loaded \n successfully
+alt load successfully
+    GUI --> player: See a message \n the game is loaded \n successfully
+else
+    GUI --> player: See a message \n the game isn't loaded \n successfully
+end
 
 @enduml

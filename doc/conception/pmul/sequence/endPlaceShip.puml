@@ -9,9 +9,9 @@ GUI -> ShipShop: endPlaceShip()
 
 ShipShop -> Game: endPlaceShip()
 
-Game -> "next: Player": isHuman()
+Game -> "next: Player": p1 : isHuman()
 
-"next: Player" --> Game: human
+"next: Player" --> Game: True / False
 
 alt the first player is ready && human == true
 

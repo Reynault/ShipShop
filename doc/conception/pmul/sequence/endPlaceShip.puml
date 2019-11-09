@@ -13,22 +13,27 @@ Game -> "next: Player": p1 : isHuman()
 
 "next: Player" --> Game: True / False
 
-alt the first player is ready && p1 == True
+Game -> "next: Player": ready : isReady()
 
-    note left
-        If the first player is already ready,
-        it means that we can start the game
-    end note
+"next: Player" --> Game: True / False
+
+note left
+    If the other player is a human and is not ready,
+    the game will not change. If it's an IA, or if
+    the other player is ready, we can launch the game
+end note
+
+alt p1 == False && ready == False
+
+    Game -> ShipShop : false
+
+else
 
     Game -> ShipShop : true
 
     ShipShop -> ShipShop : setChanged()
 
     ShipShop -> ShipShop : updateObserver(LAUNCH)
-
-else
-
-    Game -> ShipShop : false
 
 end
 

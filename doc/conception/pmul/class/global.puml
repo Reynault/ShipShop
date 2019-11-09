@@ -151,6 +151,7 @@ package model{
             }
 
             abstract Player{
+                - ready: boolean
                 + hit(x: int, y: int, dmg: int)
                 + placeShip(move: Move): UUID
                 + isDefeated(): boolean
@@ -160,6 +161,8 @@ package model{
                 + setTactic(tactic: Tactic)
                 + getDmg(id: UUID): int
                 + getShip(uuid: UUID): Ship
+                + isReady(): boolean
+                + setReady(val: boolean)
             }
 
             class Human{

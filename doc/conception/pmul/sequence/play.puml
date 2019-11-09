@@ -1,6 +1,6 @@
 @startuml
 
-title When a player is ending is turn
+title When a player is ending his turn
 
 autonumber
 actor player

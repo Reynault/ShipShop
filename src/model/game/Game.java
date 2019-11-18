@@ -25,7 +25,7 @@ public class Game {
     }
 
     public void setTactic(int player, Tactic tactic){
-
+        players[player].setTactic(tactic);
     }
 
     public Image drawShip(ShipType type){

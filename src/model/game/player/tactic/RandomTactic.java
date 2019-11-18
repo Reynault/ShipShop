@@ -1,4 +1,13 @@
 package model.game.player.tactic;
 
-public class RandomTactic {
+import model.Move;
+import model.game.player.Player;
+
+public class RandomTactic implements Tactic{
+
+    @Override
+    public Move applyTactic(Player player) {
+        return null;
+    }
+
 }

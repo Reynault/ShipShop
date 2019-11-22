@@ -2,6 +2,7 @@ package model.game.player;
 
 import model.Move;
 import model.game.grid.Grid;
+import model.game.grid.GridFactory;
 import model.game.player.tactic.Tactic;
 import model.game.ship.FleetFactory;
 
@@ -14,8 +15,10 @@ public abstract class Player {
     protected Grid grid;
     protected  Tactic tactic;
 
-    public Player() {
+    public Player(FleetFactory fleetFactory) {
+        this.fleetFactory = fleetFactory;
         this.ready = false;
+        this.grid = GridFactory.getSimpleGrid();
     }
 
     public void hit(int x, int y, int dmg){

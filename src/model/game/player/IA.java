@@ -2,11 +2,14 @@ package model.game.player;
 
 import model.Move;
 import model.game.player.tactic.Tactic;
+import model.game.ship.FleetFactory;
 
 public class IA extends Player{
 
-    public IA() {
-        super();
+    private Tactic tactic;
+
+    public IA(FleetFactory fleetFactory) {
+        super(fleetFactory);
     }
 
     public Move getBestMove(){

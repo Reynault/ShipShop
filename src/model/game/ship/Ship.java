@@ -11,22 +11,25 @@ public class Ship {
     private int ammo;
     private int dmg;
     private int nbTiles;
+
     /**
      * DirectionConstant is giving the direction of the ship (UP, LEFT ...)
      */
     private DirectionConstant direction;
+
     /**
      * ShipType is a parameter that indicate the type of the ship (Submarine, cruiser etc...)
      */
     private ShipType shipType;
 
     /**
-     * @param hp
-     * @param ammo
-     * @param dmg
-     * @param nbTiles
-     * @param direction
-     * @param shipType
+     * Default constructor for Ship with all properties provided
+     * @param hp the number of health point remaining
+     * @param ammo the number of ammunition
+     * @param dmg the damage done by the ship
+     * @param nbTiles the number of tiles took by the ship
+     * @param direction the direction toward the ship is looking
+     * @param shipType the ship type
      */
     public Ship(int hp, int ammo, int dmg, int nbTiles, DirectionConstant direction, ShipType shipType) {
         this.hp = hp;

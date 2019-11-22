@@ -4,12 +4,12 @@ import model.game.era.Era;
 
 public class PlayerFactory {
 
-    public IA getIA(Era era){
-        return null;
+    public static IA getIA(Era era) {
+        return new IA(era.getFleetFactory());
     }
 
-    public Human getHuman(Era era){
-        return null;
+    public static Human getHuman(Era era) {
+        return new Human(era.getFleetFactory());
     }
 
 }

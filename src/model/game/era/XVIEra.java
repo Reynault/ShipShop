@@ -5,7 +5,7 @@ import model.game.ship.FleetFactory;
 
 import java.awt.*;
 
-public class XVIEra {
+public class XVIEra extends Era{
 
 
     public FleetFactory getFleetFactory(){

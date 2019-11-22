@@ -25,7 +25,13 @@ public class ShipShop extends Observable {
     }
 
     public void createGame(Era era, Tactic tactic, boolean humanFirst){
-
+        if(humanFirst){
+            game = GameFactory.getPVEGame(era, tactic);
+            game.setTactic(2, tactic);
+        }else{
+            game = GameFactory.getEVPGame(era, tactic);
+            game.setTactic(1, tactic);
+        }
     }
 
     public UUID placeShip(Move move){

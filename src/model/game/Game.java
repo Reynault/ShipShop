@@ -13,11 +13,11 @@ import java.util.UUID;
 
 public class Game {
 
-    protected static int GRID_WIDTH;
-    protected static int GRID_HEIGHT;
-    protected int currentPlayer;
-    protected Era era;
-    protected Player[] players;
+    private static int GRID_WIDTH;
+    private static int GRID_HEIGHT;
+    private int currentPlayer;
+    private Era era;
+    private Player[] players;
 
 
     public Game(Era era, Player p1, Player p2) {

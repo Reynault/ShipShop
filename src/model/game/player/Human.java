@@ -1,9 +1,11 @@
 package model.game.player;
 
+import model.game.ship.FleetFactory;
+
 public class Human extends Player{
 
-    public Human() {
-        super();
+    public Human(FleetFactory fleetFactory) {
+        super(fleetFactory);
     }
 
     @Override

@@ -13,8 +13,8 @@ import java.util.UUID;
 
 public class Game {
 
-    private static int GRID_WIDTH;
-    private static int GRID_HEIGHT;
+    public static int GRID_WIDTH;
+    public static int GRID_HEIGHT;
     private int currentPlayer;
     private Era era;
     private Player[] players;

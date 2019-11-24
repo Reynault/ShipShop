@@ -7,6 +7,8 @@ import java.awt.*;
 
 public abstract class Era {
 
+
+
     public abstract FleetFactory getFleetFactory();
 
     public abstract Image drawShip(ShipType type);

@@ -17,6 +17,9 @@ public class ShipShop extends Observable {
     protected GameFactory gameFactory;
     protected Game game;
 
+    public ShipShop() {
+    }
+
     public ShipShop(UUID requestedShip, Attack requestAttack, GameFactory gameFactory, Game game) {
         this.requestedShip = requestedShip;
         this.requestAttack = requestAttack;
@@ -27,10 +30,10 @@ public class ShipShop extends Observable {
     public void createGame(Era era, Tactic tactic, boolean humanFirst){
         if(humanFirst){
             game = GameFactory.getPVEGame(era, tactic);
-            game.setTactic(2, tactic);
+            game.setTactic(1, tactic);
         }else{
             game = GameFactory.getEVPGame(era, tactic);
-            game.setTactic(1, tactic);
+            game.setTactic(0, tactic);
         }
     }
 
@@ -43,15 +46,15 @@ public class ShipShop extends Observable {
     }
 
     public Image drawShip(ShipType type){
-        return null;
+        return game.drawShip(type);
     }
 
     public void play(Attack attack){
 
     }
 
-    public void endPlacingShip(){
-
+    public void endPlaceShip(){
+        game.endPlaceShip();
     }
 
     public void save(File file){

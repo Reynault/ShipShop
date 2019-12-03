@@ -6,7 +6,7 @@ import model.game.player.tactic.Tactic;
 import model.game.ship.Ship;
 
 import java.awt.*;
-import java.io.File;
+import java.io.*;
 import java.util.Observable;
 import java.util.UUID;
 
@@ -57,11 +57,16 @@ public class ShipShop extends Observable {
         game.endPlaceShip();
     }
 
-    public void save(File file){
-
+    public void save(File file) throws IOException {
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
+        oos.writeObject(game);
+        oos.close();
     }
 
-    public Game load(File file){
+    public Game load(File file) throws IOException, ClassNotFoundException {
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+        Game g = (Game)ois.readObject();
+        //TODO
         return null;
     }
 

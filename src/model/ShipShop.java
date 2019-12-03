@@ -10,6 +10,8 @@ import java.io.File;
 import java.util.Observable;
 import java.util.UUID;
 
+import static model.UpdateObserver.LAUNCH;
+
 public class ShipShop extends Observable {
 
     protected UUID requestedShip;
@@ -27,45 +29,52 @@ public class ShipShop extends Observable {
         this.game = game;
     }
 
-    public void createGame(Era era, Tactic tactic, boolean humanFirst){
-        if(humanFirst){
+    public void createGame(Era era, Tactic tactic, boolean humanFirst) {
+        if (humanFirst) {
             game = GameFactory.getPVEGame(era, tactic);
             game.setTactic(1, tactic);
-        }else{
+        } else {
             game = GameFactory.getEVPGame(era, tactic);
             game.setTactic(0, tactic);
         }
     }
 
-    public UUID placeShip(Move move){
+    public UUID placeShip(Move move) {
         return null;
     }
 
-    public void setTactic(int player, Tactic tactic){
+    public void setTactic(int player, Tactic tactic) {
 
     }
 
-    public Image drawShip(ShipType type){
+    public Image drawShip(ShipType type) {
         return game.drawShip(type);
     }
 
-    public void play(Attack attack){
+    public void play(Attack attack) {
 
     }
 
-    public void endPlaceShip(){
-        game.endPlaceShip();
+    /**
+     * EndPlaceShip is a method that verify is the place
+     * step is finished, if it is, it updates its observers
+     */
+    public void endPlaceShip() {
+        if (game.endPlaceShip()) {
+            this.setChanged();
+            this.notifyObservers(LAUNCH);
+        }
     }
 
-    public void save(File file){
+    public void save(File file) {
 
     }
 
-    public Game load(File file){
+    public Game load(File file) {
         return null;
     }
 
-    public Ship getShip(UUID uuid){
+    public Ship getShip(UUID uuid) {
         return null;
     }
 

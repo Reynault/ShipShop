@@ -7,6 +7,7 @@ public class CrossTactic implements Tactic{
 
     @Override
     public Move applyTactic(Player player) {
+        player.setTactic(this);
         return null;
     }
 

@@ -5,6 +5,7 @@ import model.game.grid.Grid;
 import model.game.grid.GridFactory;
 import model.game.player.tactic.Tactic;
 import model.game.ship.FleetFactory;
+import model.game.ship.Ship;
 
 import java.util.UUID;
 
@@ -33,8 +34,11 @@ public abstract class Player {
         return false;
     }
 
-    public boolean canAttack(UUID ship){
-        return false;
+    public boolean canAttack(UUID id){
+        if(grid.getShip(id).canAttack())
+            return true;
+        else
+            return false;
     }
 
     public abstract boolean isHuman();
@@ -48,11 +52,11 @@ public abstract class Player {
     }
 
     public int getDmg(UUID id){
-        return 0;
+        return grid.getDmg(id);
     }
 
-    public UUID geShip(UUID id){
-        return null;
+    public Ship getShip(UUID id){
+        return grid.getShip(id);
     }
 
     public boolean isReady(){

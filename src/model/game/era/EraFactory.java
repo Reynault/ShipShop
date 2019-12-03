@@ -5,7 +5,7 @@ public class EraFactory {
     public static Era modernEra;
     public static Era xviEra;
 
-    public static Era GetModernEra(){
+    public static Era getModernEra(){
         if(modernEra == null){
             modernEra = new ModernEra();
         }

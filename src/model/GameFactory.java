@@ -12,14 +12,14 @@ public class GameFactory {
         return new Game(
                 era,
                 PlayerFactory.getHuman(era),
-                PlayerFactory.getIA(era, tactic)
+                PlayerFactory.getIA(era)
         );
     }
 
     public static Game getEVPGame(Era era, Tactic tactic){
         return new Game(
                 era,
-                PlayerFactory.getIA(era, tactic),
+                PlayerFactory.getIA(era),
                 PlayerFactory.getHuman(era)
         );
     }

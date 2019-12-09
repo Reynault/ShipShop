@@ -1,6 +1,7 @@
 package model.game;
 
 import model.Attack;
+import model.Move;
 import model.ShipType;
 import model.game.era.Era;
 import model.game.player.Player;
@@ -59,8 +60,8 @@ public class Game {
 
     }
 
-    public UUID placeShip(){
-        return null;
+    public UUID placeShip(Move move){
+        return players[currentPlayer].placeShip(move);
     }
 
     public List<Attack> play(Attack attack){

@@ -2,22 +2,25 @@ package model.game.grid;
 
 import model.Move;
 import model.game.Game;
+import model.game.ship.FleetFactory;
 import model.game.ship.Ship;
 
+import java.util.Collection;
 import java.util.UUID;
 
 public class Grid {
 
     protected int[][] ennemyGrid = new int[Game.GRID_WIDTH][Game.GRID_HEIGHT];
 
+    protected Collection<Ship> ships;
 
     public Grid(){
 
     }
 
 
-    public void placeShip(Move move){
-
+    public UUID placeShip(Move move){
+        return null;
     }
 
     public boolean canAttack(UUID ship){

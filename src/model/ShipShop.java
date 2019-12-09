@@ -10,7 +10,7 @@ import java.io.*;
 import java.util.Observable;
 import java.util.UUID;
 
-import static model.UpdateObserver.LAUNCH;
+import static model.UpdateObserver.*;
 
 public class ShipShop extends Observable {
 
@@ -40,7 +40,10 @@ public class ShipShop extends Observable {
     }
 
     public UUID placeShip(Move move) {
-        return null;
+        UUID uuid = game.placeShip(move);
+        setChanged();
+        notifyObservers(PLACESHIP);
+        return uuid;
     }
 
     public void setTactic(int player, Tactic tactic) {
@@ -75,8 +78,9 @@ public class ShipShop extends Observable {
     public Game load(File file) throws IOException, ClassNotFoundException {
         ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
         Game g = (Game)ois.readObject();
-        //TODO
-        return null;
+        setChanged();
+        notifyObservers(LOAD);
+        return g;
     }
 
     public Ship getShip(UUID uuid) {

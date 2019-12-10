@@ -1,5 +1,6 @@
 package view;
 
+import controller.GameController;
 import view.constant.GraphicConstant;
 import view.constant.StringConstant;
 
@@ -14,41 +15,14 @@ import java.util.Observer;
  */
 public class MainObserver implements Observer {
 
-    // Current view
-    private JPanel currentView;
 
-    private JFrame frame;
+    // Controller
+    private GameController controller;
 
-    public MainObserver() {
-        currentView = ViewFactory.getMainMenu();
-        // Building frame
-        frame = new JFrame(StringConstant.NAME_APPLICATION);
-        buildFrame();
-    }
 
-    /**
-     * BuildFrame is instantiating the main frame of the application
-     * by adding the current view into it
-     */
-    private void buildFrame(){
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JPanel contentPane = (JPanel) frame.getContentPane();
-
-        // Setting dimensions
-        frame.setPreferredSize(new Dimension(
-                GraphicConstant.WIDTH,
-                GraphicConstant.HEIGHT
-        ));
-
-        // Adding the current view to the frame
-        contentPane.add(currentView);
-
-        frame.pack();
-        frame.setVisible(true);
-    }
-
-    public void changeCurrentView(JPanel view){
-        currentView = view;
+    public MainObserver(GameController controller) {
+        this.controller = controller;
+        ViewFactory.getMainMenu(controller);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package view.panel;
 
-import javax.swing.*;
+public class LoadView implements PanelView {
+    @Override
+    public void update(Object arg) {
 
-public class LoadView extends JPanel {
+    }
 }

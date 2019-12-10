@@ -1,6 +1,8 @@
 package view.panel;
 
-import javax.swing.*;
+public class GameView implements PanelView {
+    @Override
+    public void update(Object arg) {
 
-public class GameView extends JPanel {
+    }
 }

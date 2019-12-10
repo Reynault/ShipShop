@@ -1,6 +1,8 @@
 package view.panel;
 
-import javax.swing.*;
+public class TacticView implements PanelView {
+    @Override
+    public void update(Object arg) {
 
-public class TacticView extends JPanel {
+    }
 }

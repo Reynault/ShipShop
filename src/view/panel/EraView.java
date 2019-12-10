@@ -1,6 +1,9 @@
 package view.panel;
 
-import javax.swing.*;
+public class EraView implements PanelView {
 
-public class EraView extends JPanel {
+    @Override
+    public void update(Object arg) {
+
+    }
 }

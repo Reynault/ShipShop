@@ -8,7 +8,7 @@ import model.game.player.tactic.Tactic;
 
 public class GameFactory {
 
-    public static Game getPVEGame(Era era, Tactic tactic){
+    public static Game getPVEGame(Era era){
         return new Game(
                 era,
                 PlayerFactory.getHuman(era),
@@ -16,7 +16,7 @@ public class GameFactory {
         );
     }
 
-    public static Game getEVPGame(Era era, Tactic tactic){
+    public static Game getEVPGame(Era era){
         return new Game(
                 era,
                 PlayerFactory.getIA(era),

@@ -1,11 +1,7 @@
 package view;
 
 import controller.GameController;
-import view.constant.GraphicConstant;
-import view.constant.StringConstant;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 

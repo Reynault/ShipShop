@@ -30,6 +30,11 @@ public class Game {
         this.players = new Player[2];
         this.players[0] = this.p1;
         this.players[1] = this.p2;
+        if (p1.isHuman()){
+            currentPlayer = 0;
+        }else{
+            currentPlayer = 1;
+        }
     }
 
     public void setTactic(int player, Tactic tactic){

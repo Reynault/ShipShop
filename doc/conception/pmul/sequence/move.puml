@@ -28,7 +28,7 @@ Game -> "current: Player": placeShip(move)
 
 FleetFactory --> "current: Grid": cruiser
 
-opt cruiser == true
+opt cruiser == false
 
     "current: Grid" -> FleetFactory: getCruiser(x, y, direction, shiptype)
 

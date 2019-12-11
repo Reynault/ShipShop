@@ -69,10 +69,16 @@ public class ShipShop extends Observable {
         }
     }
 
+    //A faire
     public void save(File file) throws IOException {
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
+        if(!file.exists()){
+            file.createNewFile();
+        }
+        FileOutputStream fos = new FileOutputStream(file);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(game);
         oos.close();
+        fos.close();
     }
 
     public Game load(File file) throws IOException, ClassNotFoundException {

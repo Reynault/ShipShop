@@ -50,7 +50,7 @@ public class ShipShop extends Observable {
     }
 
     public void play(Attack attack){
-
+        game.play(attack);
     }
 
     public void endPlaceShip(){

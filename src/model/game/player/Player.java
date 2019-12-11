@@ -23,7 +23,7 @@ public abstract class Player {
     }
 
     public void hit(int x, int y, int dmg){
-
+        grid.hit(x, y, dmg);
     }
 
     public UUID placeShip(Move move){
@@ -35,10 +35,7 @@ public abstract class Player {
     }
 
     public boolean canAttack(UUID id){
-        if(grid.getShip(id).canAttack())
-            return true;
-        else
-            return false;
+        return grid.getShip(id).canAttack();
     }
 
     public abstract boolean isHuman();
@@ -65,6 +62,10 @@ public abstract class Player {
 
     public void setReady(boolean val){
         this.ready = val;
+    }
+
+    public Grid getGrid(){
+        return grid;
     }
 
 }

@@ -40,6 +40,10 @@ public class Grid {
         return null;
     }
 
+    public Ship getShip(int x, int y){
+        return null;
+    }
+
     public void crossTile(int x, int y){
 
     }
@@ -48,8 +52,14 @@ public class Grid {
 
     }
 
-    public void hit(int x, int y){
-
+    public void hit(int x, int y, int hit){
+        //Test de si la case est un bateau
+        if(isShip(y, y)){
+            //On récupère le bateau par les coordonnées
+            if(!getShip(x, y).hasSunk()){
+                getShip(x, y).hit(hit);
+            }
+        }
     }
 
 

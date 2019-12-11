@@ -3,6 +3,7 @@ package model.game;
 import model.Attack;
 import model.ShipType;
 import model.game.era.Era;
+import model.game.player.IA;
 import model.game.player.Player;
 import model.game.player.tactic.Tactic;
 import model.game.ship.Ship;
@@ -50,15 +51,31 @@ public class Game {
     }
 
     public List<Attack> play(Attack attack){
+        Player otherCurrentPlayer = next();
+        if(otherCurrentPlayer.getGrid().isShip(attack.getX(),attack.getY())){
+            if(players[currentPlayer].canAttack(attack.getShip())){
+                int dmg = players[currentPlayer].getDmg(attack.getShip());
+                otherCurrentPlayer.hit(attack.getX(),attack.getY(),dmg);
+                players[currentPlayer].getGrid().flagTile(attack.getX(),attack.getY());
+            }else{
+                //Le joueur 2 ne peut pas attaquer la cible (bateau coulé ou case déjà touché)
+            }
+        }else{
+            //Le joueur 2 n'a pas de bateau à l'endroit cible
+            players[currentPlayer].getGrid().crossTile(attack.getX(),attack.getY());
+        }
         return null;
     }
 
-    public Ship getship(UUID uuid){
+    public Ship getShip(UUID uuid){
         return null;
     }
 
-    private void next(){
-
+    /**
+     * Methode qui retourne le joueur suivant du joueur actuel
+     */
+    private Player next(){
+        return players[(currentPlayer == 0)?1:0];
     }
 
 }

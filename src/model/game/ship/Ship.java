@@ -63,4 +63,8 @@ public class Ship {
     public int getHp() {
         return hp;
     }
+
+    public void hit(int dmg){
+        hp=-dmg;
+    }
 }

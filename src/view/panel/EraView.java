@@ -1,6 +1,7 @@
 package view.panel;
 
 import controller.GameController;
+import controller.ScreenController;
 import javafx.stage.Stage;
 import model.ShipShop;
 
@@ -9,7 +10,7 @@ import java.util.ResourceBundle;
 
 public class EraView implements PanelView {
 
-    public EraView(GameController controller, ShipShop model, Stage primaryStage) {
+    public EraView(GameController controller, ShipShop model, ScreenController primaryStage) {
     }
 
     @Override

@@ -1,15 +1,12 @@
 package view.panel;
 
 import controller.GameController;
+import controller.ScreenController;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
 import model.ShipShop;
 import view.ViewFactory;
 
-import java.io.IOException;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
@@ -18,10 +15,9 @@ import java.util.ResourceBundle;
  */
 public class MainMenu implements PanelView {
 
-    private Stage primaryStage;
-
     private GameController controller;
     private ShipShop model;
+    private ScreenController screen;
 
     @FXML
     private Button exit;
@@ -32,11 +28,10 @@ public class MainMenu implements PanelView {
     @FXML
     private Button loadGame;
 
-
-    public MainMenu(GameController controller, ShipShop model, Stage primaryStage) {
+    public MainMenu(ShipShop model, GameController controller, ScreenController screen) {
         this.controller = controller;
         this.model = model;
-        this.primaryStage = primaryStage;
+        this.screen = screen;
     }
 
     @Override
@@ -46,14 +41,8 @@ public class MainMenu implements PanelView {
 
     @FXML
     public void newGameBehavior(){
-        PanelView eraView = ViewFactory.getEraView(controller, model, primaryStage);
-
-        try {
-            primaryStage.setScene(new Scene(
-                    FXMLLoader.load(getClass().getResource("fxml/loadView.fxml"))));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        PanelView view = ViewFactory.getEraView(controller, model, screen);
+        screen.load(ScreenController.ERA_VIEW, view);
     }
 
     @FXML

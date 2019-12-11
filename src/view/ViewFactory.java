@@ -1,6 +1,8 @@
 package view;
 
 import controller.GameController;
+import controller.ScreenController;
+import view.panel.MainMenu;
 import javafx.stage.Stage;
 import model.ShipShop;
 import view.panel.*;
@@ -10,11 +12,11 @@ import view.panel.*;
  */
 public class ViewFactory {
 
-    public static PanelView getMainMenu(GameController controller, ShipShop shipShop, Stage primaryStage) {
-        return new MainMenu(controller, shipShop, primaryStage);
+    public static PanelView getMainMenu(ShipShop model, GameController controller, ScreenController screenController) {
+        return new MainMenu(model, controller, screenController);
     }
 
-    public static PanelView getEraView(GameController controller, ShipShop model, Stage primaryStage) {
+    public static PanelView getEraView(GameController controller, ShipShop model, ScreenController primaryStage) {
         return new EraView(controller, model, primaryStage);
     }
 

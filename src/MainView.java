@@ -1,38 +1,65 @@
 import controller.GameController;
+import controller.ScreenController;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.ShipShop;
 import view.ViewFactory;
-import view.panel.*;
+import view.panel.PanelView;
 
 public class MainView extends Application {
 
     static GameController controller;
-    static ShipShop shipShop;
+    static ShipShop model;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         // init Views
-        FXMLLoader loader = new FXMLLoader();
-        PanelView mainMenu = ViewFactory.getMainMenu(controller, shipShop, primaryStage);
+        primaryStage.setScene(new Scene(new Pane()));
+        ScreenController screenController = new ScreenController(primaryStage);
 
-        loader.setLocation(getClass().getResource("fxml/mainMenu.fxml"));
-        loader.setControllerFactory(IC -> mainMenu);
+        PanelView mainMenu = ViewFactory.getMainMenu(model, controller, screenController);
+        screenController.load(ScreenController.MAIN_MENU, mainMenu);
 
-        primaryStage.setTitle("ShipShop");
-        primaryStage.setScene(new Scene(loader.load()));
         primaryStage.show();
 
-        shipShop.addObserver(mainMenu);
+//        FXMLLoader loader = new FXMLLoader();
+//
+//        ScreenController screenController = new ScreenController(
+//                primaryStage.getScene(),
+//                loader
+//        );
+//
+//        screenController.addScreen(
+//                ScreenController.MAIN_MENU,
+//                loader.load(getClass().getResource("fxml/main_menu.fxml")),
+//                new MainMenu(controller, model)
+//        );
+//
+////        PanelView mainMenu = ViewFactory.getMainMenu(controller, model, primaryStage);
+////
+////        loader.setLocation(getClass().getResource("fxml/mainMenu.fxml"));
+////        loader.setControllerFactory(IC -> mainMenu);
+////
+////        primaryStage.setTitle("ShipShop");
+////        primaryStage.setScene(new Scene(loader.load()));
+////        primaryStage.show();
+////
+////        model.addObserver(mainMenu);
+////        FXMLLoader loader = new FXMLLoader();
+////        loader.setLocation(getClass().getResource("fxml/mainMenu.fxml"));
+////        primaryStage.setTitle("ShipShop");
+////        primaryStage.setScene(new Scene(loader.load()));
+////        primaryStage.show();
     }
 
     public static void main(String[] args) {
         // Model initialisation
-        shipShop = new ShipShop();
-        controller = new GameController(shipShop);
+        model = new ShipShop();
+        controller = new GameController(model);
 
-        launch(args);
+        // View initialisation
+        launch();
     }
 }

@@ -4,22 +4,26 @@ import model.Move;
 import model.game.Game;
 import model.game.ship.FleetFactory;
 import model.game.ship.Ship;
-
-import java.util.Collection;
+import java.util.Map;
 import java.util.UUID;
 
 public class Grid {
 
     protected int[][] ennemyGrid = new int[Game.GRID_WIDTH][Game.GRID_HEIGHT];
 
-    protected Collection<Ship> ships;
+    protected Map<UUID, Ship> ships;
 
     public Grid(){
 
     }
 
+    public UUID placeShip(Move move, FleetFactory fleetFactory){
+        if(fleetFactory.hasShip(move.getType())){
+            return move.getShip();
+        }else{
+            Ship ship = fleetFactory.getShip(move.getType());
 
-    public UUID placeShip(Move move){
+        }
         return null;
     }
 

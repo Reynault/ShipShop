@@ -47,7 +47,7 @@ public class ShipShop extends Observable {
     }
 
     public void setTactic(int player, Tactic tactic) {
-
+        game.setTactic(player, tactic);
     }
 
     public Image drawShip(ShipType type) {

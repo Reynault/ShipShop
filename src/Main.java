@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Launching game ...");
         ShipShop shipShop = new ShipShop();
-        shipShop.createGame(EraFactory.getModernEra(), new RandomTactic(), false);
+        shipShop.createGame(EraFactory.getModernEra(), new RandomTactic(), true);
         shipShop.drawShip(ShipType.TORPEDO);
     }
 }

@@ -31,10 +31,10 @@ public class ShipShop extends Observable {
 
     public void createGame(Era era, Tactic tactic, boolean humanFirst) {
         if (humanFirst) {
-            game = GameFactory.getPVEGame(era, tactic);
+            game = GameFactory.getPVEGame(era);
             game.setTactic(1, tactic);
         } else {
-            game = GameFactory.getEVPGame(era, tactic);
+            game = GameFactory.getEVPGame(era);
             game.setTactic(0, tactic);
         }
     }

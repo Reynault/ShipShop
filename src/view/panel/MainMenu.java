@@ -1,10 +1,7 @@
 package view.panel;
 
 import controller.GameController;
-import model.game.Game;
-import view.constant.StringConstant;
 
-import javax.swing.*;
 
 /**
  * Main menu of the game, which includes buttons

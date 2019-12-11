@@ -1,5 +1,8 @@
 package view.panel;
 
-public interface PanelView {
-    void update(Object arg);
+import java.util.Observer;
+import java.util.ResourceBundle;
+
+public interface PanelView extends Observer {
+    void initialize(ResourceBundle resources);
 }

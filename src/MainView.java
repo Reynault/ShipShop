@@ -1,28 +1,37 @@
 import controller.GameController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.ShipShop;
-import view.MainObserver;
+import view.ViewFactory;
+import view.panel.*;
 
 public class MainView extends Application {
 
+    static GameController controller;
+    static ShipShop shipShop;
+
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+    public void start(Stage primaryStage) throws Exception {
+        // init Views
+        FXMLLoader loader = new FXMLLoader();
+        PanelView mainMenu = ViewFactory.getMainMenu(controller, shipShop, primaryStage);
+
+        loader.setLocation(getClass().getResource("fxml/mainMenu.fxml"));
+        loader.setControllerFactory(IC -> mainMenu);
+
+        primaryStage.setTitle("ShipShop");
+        primaryStage.setScene(new Scene(loader.load()));
         primaryStage.show();
+
+        shipShop.addObserver(mainMenu);
     }
 
     public static void main(String[] args) {
-        ShipShop shipShop = new ShipShop();
-        GameController controller = new GameController(shipShop);
-        MainObserver mainObserver = new MainObserver(controller);
-
-        shipShop.addObserver(mainObserver);
+        // Model initialisation
+        shipShop = new ShipShop();
+        controller = new GameController(shipShop);
 
         launch(args);
     }

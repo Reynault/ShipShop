@@ -1,20 +1,21 @@
 package view;
 
 import controller.GameController;
+import javafx.stage.Stage;
+import model.ShipShop;
 import view.panel.*;
-
-import javax.swing.*;
 
 /**
  * Factory that create all the views
  */
 public class ViewFactory {
-    public static PanelView getMainMenu(GameController controller) {
-        return new MainMenu(controller);
+
+    public static PanelView getMainMenu(GameController controller, ShipShop shipShop, Stage primaryStage) {
+        return new MainMenu(controller, shipShop, primaryStage);
     }
 
-    public static PanelView getEraView(GameController controller) {
-        return new EraView();
+    public static PanelView getEraView(GameController controller, ShipShop model, Stage primaryStage) {
+        return new EraView(controller, model, primaryStage);
     }
 
     public static PanelView getGameView(GameController controller) {

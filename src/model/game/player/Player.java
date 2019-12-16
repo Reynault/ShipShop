@@ -27,7 +27,7 @@ public abstract class Player {
     }
 
     public UUID placeShip(Move move){
-        return null;
+        return grid.placeShip(move, fleetFactory);
     }
 
     public boolean isDefeated(){

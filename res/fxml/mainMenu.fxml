@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.panel.MainMenu">
+   <children>
+      <BorderPane prefHeight="400.0" prefWidth="600.0">
+         <top>
+            <Label prefHeight="92.0" prefWidth="101.0" text="ShipShop" textAlignment="CENTER" BorderPane.alignment="CENTER">
+               <font>
+                  <Font size="24.0" />
+               </font></Label>
+         </top>
+         <center>
+            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="newGame" layoutX="187.0" layoutY="52.0" mnemonicParsing="false" onAction="#newGameBehavior" prefHeight="45.0" prefWidth="227.0" text="New game" />
+                  <Button fx:id="loadGame" layoutX="187.0" layoutY="132.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="227.0" text="Load game" />
+                  <Button fx:id="exit" layoutX="187.0" layoutY="211.0" mnemonicParsing="false" onAction="#exitBehavior" prefHeight="45.0" prefWidth="227.0" text="Exit" />
+               </children>
+            </Pane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

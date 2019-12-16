@@ -1,6 +1,7 @@
 package model.game;
 
 import model.Attack;
+import model.Move;
 import model.ShipType;
 import model.game.era.Era;
 import model.game.player.IA;
@@ -30,6 +31,11 @@ public class Game {
         this.players = new Player[2];
         this.players[0] = this.p1;
         this.players[1] = this.p2;
+        if (p1.isHuman()){
+            currentPlayer = 0;
+        }else{
+            currentPlayer = 1;
+        }
     }
 
     public void setTactic(int player, Tactic tactic){
@@ -40,14 +46,28 @@ public class Game {
         return era.drawShip(type);
     }
 
-    public void endPlaceShip(){
-        if (p1.isHuman() && p1.isReady()){
-            //TODO: faut revoir ce qu'on fait ici
+    /**
+     * Method that end the place step of the game
+     * @return a boolean that is true if the step is finished
+     */
+    public boolean endPlaceShip(){
+        Player next = players[(currentPlayer + 1) % 2];
+        // Setting the current player
+        players[currentPlayer].setReady(true);
+
+        // If the other player is a human and isn't ready
+        if (next.isHuman() && !next.isReady()){
+            // Then, it means that the step isn't finished
+            return false;
+        }else{
+            // Else, the user isn't human, or is ready
+            return true;
         }
+
     }
 
-    public UUID placeShip(){
-        return null;
+    public UUID placeShip(Move move){
+        return players[currentPlayer].placeShip(move);
     }
 
     public List<Attack> play(Attack attack){

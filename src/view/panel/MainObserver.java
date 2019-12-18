@@ -19,7 +19,7 @@ public class MainObserver implements Observer {
         views.put(Views.TACTIC, new TacticView(this));
         views.put(Views.MAIN, new MainView(this));
 
-        setCurrent(Views.MENU);
+        setCurrent(Views.ERA);
     }
 
     public void setCurrent(Views current) {

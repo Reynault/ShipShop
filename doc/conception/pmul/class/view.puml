@@ -6,7 +6,7 @@ package controller{
     }
 }
 
-package view{
+package trash.view{
 
     class StringConstant{
 

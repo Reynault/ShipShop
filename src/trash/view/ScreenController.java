@@ -1,10 +1,10 @@
-package controller;
+package trash.view;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import view.panel.PanelView;
+import trash.view.panel.PanelView;
 
 import java.io.IOException;
 import java.util.HashMap;

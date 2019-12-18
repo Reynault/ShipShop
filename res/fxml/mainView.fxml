@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane prefHeight="850.0" prefWidth="593.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.panel.MainMenu">
+<AnchorPane prefHeight="850.0" prefWidth="593.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trash.view.panel.MainMenu">
    <children>
       <GridPane layoutX="-2.0" layoutY="-1.0" prefHeight="850.0" prefWidth="600.0">
         <columnConstraints>

@@ -1,11 +1,9 @@
-package view;
+package trash.view;
 
 import controller.GameController;
-import controller.ScreenController;
-import view.panel.MainMenu;
-import javafx.stage.Stage;
+import trash.view.panel.MainMenu;
 import model.ShipShop;
-import view.panel.*;
+import trash.view.panel.*;
 
 /**
  * Factory that create all the views

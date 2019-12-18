@@ -1,21 +1,27 @@
 package view.panel;
 
-import controller.GameController;
-import controller.ScreenController;
-import javafx.stage.Stage;
-import model.ShipShop;
+import view.constant.GraphicConstant;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.Observable;
-import java.util.ResourceBundle;
 
-public class EraView implements PanelView {
+public class EraView extends PanelView {
 
-    public EraView(GameController controller, ShipShop model, ScreenController primaryStage) {
-    }
+    private JLabel title;
 
-    @Override
-    public void initialize(ResourceBundle resources) {
+    public EraView(MainObserver mainObserver) {
+        super(mainObserver);
 
+        // Setting prefered size
+        this.setPreferredSize(
+                new Dimension(GraphicConstant.WIDTH_ERA_TACTIC, GraphicConstant.HEIGHT_ERA_TACTIC)
+        );
+
+        // Setting title
+
+
+        this.buildFrame();
     }
 
     @Override

@@ -1,12 +1,12 @@
+package trash.view;
+
 import controller.GameController;
-import controller.ScreenController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.ShipShop;
-import view.ViewFactory;
-import view.panel.PanelView;
+import trash.view.panel.PanelView;
 
 public class MainView extends Application {
 

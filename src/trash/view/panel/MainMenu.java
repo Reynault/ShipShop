@@ -1,11 +1,11 @@
-package view.panel;
+package trash.view.panel;
 
 import controller.GameController;
-import controller.ScreenController;
+import trash.view.ScreenController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import model.ShipShop;
-import view.ViewFactory;
+import trash.view.ViewFactory;
 
 import java.util.Observable;
 import java.util.ResourceBundle;

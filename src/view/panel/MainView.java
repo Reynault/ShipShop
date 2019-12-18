@@ -2,9 +2,8 @@ package view.panel;
 
 import java.util.Observable;
 
-public class TacticView extends PanelView{
-
-    public TacticView(MainObserver mainObserver) {
+public class MainView extends PanelView{
+    public MainView(MainObserver mainObserver) {
         super(mainObserver);
     }
 

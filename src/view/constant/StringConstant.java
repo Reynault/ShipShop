@@ -12,4 +12,11 @@ public class StringConstant {
     public static String CONTINUE_BUTTON = "Continue";
     public static String NEW_BUTTON = "New game";
 
+    // Era title
+    public static final String ERA_TITLE = "Choose the era";
+
+    // General
+    public static final String CANCEL_BUTTON = "Cancel";
+    public static final String VALIDATE_BUTTON = "Validate";
+
 }

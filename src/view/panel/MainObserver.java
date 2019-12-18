@@ -1,6 +1,5 @@
 package view.panel;
 
-import view.constant.GraphicConstant;
 import view.constant.Views;
 
 import java.util.HashMap;
@@ -20,16 +19,16 @@ public class MainObserver implements Observer {
         views.put(Views.TACTIC, new TacticView(this));
         views.put(Views.MAIN, new MainView(this));
 
-//        setCurrent(views.get(Views.MENU));
+        setCurrent(Views.MENU);
     }
 
-    public void setCurrent(PanelView current) {
+    public void setCurrent(Views current) {
         if(this.current != null) {
             this.current.close();
         }
 
-        if(current != null) {
-            this.current = current;
+        if(this.views.containsKey(current)) {
+            this.current = this.views.get(current);
             this.current.open();
         }
     }

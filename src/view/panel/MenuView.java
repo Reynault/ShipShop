@@ -1,6 +1,8 @@
 package view.panel;
 
+import sun.applet.Main;
 import view.constant.GraphicConstant;
+import view.constant.Views;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,7 +76,8 @@ public class MenuView extends PanelView {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            MainObserver mainObserver = getMainObserver();
+            mainObserver.setCurrent(Views.ERA);
         }
     }
 

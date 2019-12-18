@@ -36,4 +36,8 @@ public abstract class PanelView extends JPanel {
     }
 
     public abstract void update(Observable o, Object arg);
+
+    public MainObserver getMainObserver() {
+        return mainObserver;
+    }
 }

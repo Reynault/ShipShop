@@ -5,7 +5,6 @@ import view.constant.StringConstant;
 import view.constant.Views;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -85,7 +84,7 @@ public class EraView extends PanelView {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            getMainObserver().setCurrent(Views.MAIN);
+            getMainObserver().setCurrent(Views.TACTIC);
         }
     }
 }

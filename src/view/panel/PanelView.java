@@ -15,6 +15,7 @@ public abstract class PanelView extends JPanel {
     }
 
     public void open(){
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 

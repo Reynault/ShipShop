@@ -23,19 +23,35 @@ public class MainObserver implements Observer {
     }
 
     public void setCurrent(Views current) {
-        if(this.current != null) {
-            this.current.close();
+        for (Views view : views.keySet()) {
+            views.get(view).close();
         }
 
-        if(this.views.containsKey(current)) {
+        if (this.views.containsKey(current)) {
             this.current = this.views.get(current);
             this.current.open();
         }
     }
 
+    public void openView(Views view) {
+        if (this.views.containsKey(view)) {
+            this.views.get(view).open();
+        }
+    }
+
+    public void closeView(Views view) {
+        if (this.views.containsKey(view)) {
+            this.views.get(view).close();
+        }
+    }
+
+    public boolean isCurrentView(Views view) {
+        return current == views.get(view);
+    }
+
     @Override
     public void update(Observable o, Object arg) {
-        if(current != null){
+        if (current != null) {
             current.update(o, arg);
         }
     }

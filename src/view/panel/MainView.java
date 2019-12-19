@@ -61,6 +61,7 @@ public class MainView extends PanelView {
         menuBar.add(menu);
 
         changeTactic = new JMenuItem(StringConstant.CHANGE_TACTIC);
+        changeTactic.addActionListener(new ChangeTacticListener());
         save = new JMenuItem(StringConstant.SAVE_GAME);
         exit = new JMenuItem(StringConstant.EXIT_GAME);
         exit.addActionListener(new ExitListener());
@@ -199,6 +200,15 @@ public class MainView extends PanelView {
         public void actionPerformed(ActionEvent e) {
             getMainObserver().setCurrent(Views.MENU);
         }
+    }
+
+    public class ChangeTacticListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            getMainObserver().openView(Views.TACTIC);
+        }
+
     }
 
 }

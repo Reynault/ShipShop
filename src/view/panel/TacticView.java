@@ -76,7 +76,12 @@ public class TacticView extends PanelView{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            getMainObserver().setCurrent(Views.MENU);
+            MainObserver o = getMainObserver();
+            if(o.isCurrentView(Views.MAIN)){
+                o.closeView(Views.TACTIC);
+            }else {
+                o.setCurrent(Views.MENU);
+            }
         }
     }
 
@@ -84,7 +89,12 @@ public class TacticView extends PanelView{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            getMainObserver().setCurrent(Views.MAIN);
+            MainObserver o = getMainObserver();
+            if(o.isCurrentView(Views.MAIN)){
+                o.closeView(Views.TACTIC);
+            }else {
+                o.setCurrent(Views.MAIN);
+            }
         }
     }
 }

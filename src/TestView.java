@@ -1,5 +1,3 @@
-package view;
-
 import controller.GameController;
 import model.ShipShop;
 import view.panel.MainObserver;

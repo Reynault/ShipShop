@@ -1,0 +1,45 @@
+<project name="ShipShop" basedir="." default="all">
+
+    <target name="all" depends="init, clean, compile, jar, run"/>
+
+    <!-- Naming all used properties -->
+    <target name="init">
+        <property name="app.name" value="ShipShop"/>
+        <property name="src.path" value="src"/>
+        <property name="res.path" value="res"/>
+        <property name="build.path" value="build"/>
+        <property name="class.path" value="${build.path}/class"/>
+        <property name="jar.path" value="${build.path}/jar"/>
+        <property name="app.main" value="TestView"/>
+    </target>
+
+    <!-- Cleaning build directory-->
+    <target name="clean" depends="init">
+        <delete dir="${class.path}"/>
+        <mkdir dir="${class.path}"/>
+        <mkdir dir="${jar.path}"/>
+    </target>
+
+    <!-- Compiling -->
+    <target name="compile" depends="clean">
+        <javac srcdir="${src.path}"
+               destdir="${class.path}"
+               classpath="${class.path}"/>
+    </target>
+
+    <!-- Creating jar -->
+    <target name="jar" depends="compile">
+        <jar jarfile="${jar.path}/${app.name}.jar" basedir="${class.path}">
+            <manifest>
+                <attribute name="Main-class" value="${app.main}"/>
+            </manifest>
+            <fileset dir="${res.path}" />
+        </jar>
+    </target>
+
+    <!-- Running jar -->
+    <target name="run" depends="jar">
+        <java jar="${jar.path}/${app.name}.jar" fork="true"/>
+    </target>
+
+</project>

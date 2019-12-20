@@ -10,8 +10,11 @@ public class Move {
 	ShipType type;
 	UUID ship;
 
-	public Move(){
-
+	public Move(int x, int y, DirectionConstant direction, ShipType type) {
+		this.x = x;
+		this.y = y;
+		this.direction = direction;
+		this.type = type;
 	}
 
 	public int getX() {

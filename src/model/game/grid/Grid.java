@@ -14,7 +14,7 @@ public class Grid {
     protected Map<UUID, Ship> ships;
 
     public Grid(){
-
+        ships = new HashMap<>();
     }
 
     public UUID placeShip(Move move, FleetFactory fleetFactory){
@@ -24,7 +24,7 @@ public class Grid {
             Ship ship = fleetFactory.getShip(move.getType());
 
         }
-        return null;
+        return move.getShip();
     }
 
     public boolean canAttack(UUID ship){
@@ -44,7 +44,10 @@ public class Grid {
     }
 
     public Ship getShip(UUID uuid){
-        return null;
+        for (Map.Entry<UUID, Ship> entry : ships.entrySet()) {
+            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+        }
+        return ships.get(uuid);
     }
 
     public Ship getShip(int x, int y){
@@ -70,5 +73,11 @@ public class Grid {
     }
 
 
+    public String getGridSizeY() {
+        return ""+ennemyGrid[0].length;
+    }
 
+    public String getGridSizeX() {
+        return ""+ennemyGrid.length;
+    }
 }

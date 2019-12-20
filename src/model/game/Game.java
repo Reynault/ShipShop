@@ -15,8 +15,8 @@ import java.util.UUID;
 
 public class Game {
 
-    public static int GRID_WIDTH;
-    public static int GRID_HEIGHT;
+    public static int GRID_WIDTH = 20;
+    public static int GRID_HEIGHT = 20;
     private int currentPlayer;
     private Era era;
     private final Player p1;
@@ -72,17 +72,28 @@ public class Game {
 
     public List<Attack> play(Attack attack){
         Player otherCurrentPlayer = next();
+        System.out.println("Attack start at (X,Y) by player : "+ players[currentPlayer] + " ");
+        System.out.println("Attack on position ("+ attack.getX()+ "," +  attack.getY() + ")");
         if(otherCurrentPlayer.getGrid().isShip(attack.getX(),attack.getY())){
+            System.out.println("Other Player have a ship at the position.");
             if(players[currentPlayer].canAttack(attack.getShip())){
+                System.out.println("The Player can attack! Fire!");
                 int dmg = players[currentPlayer].getDmg(attack.getShip());
+                System.out.println("The attack make "+ players[currentPlayer].getDmg(attack.getShip())+" damage.");
                 otherCurrentPlayer.hit(attack.getX(),attack.getY(),dmg);
+                System.out.println("The attack hit the ennemy ship ! "+otherCurrentPlayer.getGrid().getShip(attack.getX(), attack.getY()).getHp()+" hp left.");
                 players[currentPlayer].getGrid().flagTile(attack.getX(),attack.getY());
+                System.out.println("The tile at position ("+ attack.getX()+","+attack.getY()+") was flag as hit");
+
             }else{
                 //Le joueur 2 ne peut pas attaquer la cible (bateau coulé ou case déjà touché)
+                System.out.println("The tile at position ("+ attack.getX()+","+attack.getY()+") was already flag as hit... Please choose an other one");
+
             }
         }else{
             //Le joueur 2 n'a pas de bateau à l'endroit cible
             players[currentPlayer].getGrid().crossTile(attack.getX(),attack.getY());
+            System.out.println("The attack at position ("+ attack.getX()+","+attack.getY()+") miss...\n");
         }
         return null;
     }

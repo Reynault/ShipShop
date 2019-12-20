@@ -1,5 +1,6 @@
 package view.panel;
 
+import controller.GameController;
 import view.constant.GraphicConstant;
 import view.constant.StringConstant;
 import view.constant.Views;
@@ -18,7 +19,8 @@ public class TacticView extends PanelView{
     private JButton cancel;
     private JButton validate;
 
-    public TacticView(MainObserver mainObserver) {super(mainObserver);
+    public TacticView(MainObserver mainObserver, GameController controller) {
+        super(mainObserver, controller);
 
         // Setting prefered size
         this.setPreferredSize(

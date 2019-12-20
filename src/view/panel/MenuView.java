@@ -1,5 +1,6 @@
 package view.panel;
 
+import controller.GameController;
 import sun.applet.Main;
 import view.constant.GraphicConstant;
 import view.constant.Views;
@@ -23,8 +24,8 @@ public class MenuView extends PanelView {
     private final int NB_ROWS = 4;
     private final int NB_COL = 1;
 
-    public MenuView(MainObserver mainObserver) {
-        super(mainObserver);
+    public MenuView(MainObserver mainObserver, GameController controller) {
+        super(mainObserver, controller);
 
         // Setting prefered size
         this.setPreferredSize(

@@ -1,6 +1,5 @@
 package view.constant;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class GraphicConstant {
@@ -11,6 +10,8 @@ public class GraphicConstant {
     public static int HEIGHT_ERA_TACTIC = 200;
     public static final int HEIGHT_MAIN = 600;
     public static final int WIDTH_MAIN = 1200;
+    public static final int WIDTH_END_GAME = 500;
+    public static final int HEIGHT_END_GAME = 250;
 
     // Colors
     public static final Color GRID_COLOR = Color.BLACK;

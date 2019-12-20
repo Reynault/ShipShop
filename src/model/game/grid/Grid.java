@@ -63,6 +63,9 @@ public class Grid implements Serializable {
      */
     public UUID placeShip(Move move, FleetFactory fleetFactory) {
 
+        System.out.println("fleetffactory : "+ fleetFactory);
+        System.out.println("move : "+ move);
+
         // Checking if in objects are null
         if (move == null || fleetFactory == null) {
             return null;
@@ -81,6 +84,7 @@ public class Grid implements Serializable {
 
         // Checking if we can place the ship in the grid
         if (x >= 0 && x < grid_width && y >= 0 && y < grid_height && fleetFactory.hasShip(move.getType())) {
+
 
             // Then checking if the ship is overflowing the grid
             boolean overflow;
@@ -145,7 +149,7 @@ public class Grid implements Serializable {
             }
 
         }
-
+        System.out.println("UUID GRID : "+res);
         return res;
     }
 
@@ -166,6 +170,7 @@ public class Grid implements Serializable {
     }
 
     public boolean isShip(UUID uuid){
+        System.out.println(Arrays.asList(positions));
         return positions.containsKey(uuid);
     }
 

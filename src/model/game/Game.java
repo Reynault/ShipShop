@@ -67,7 +67,9 @@ public class Game implements Serializable {
     }
 
     public UUID placeShip(Move move){
-        return players[currentPlayer].placeShip(move);
+        UUID uuid = players[currentPlayer].placeShip(move);
+        System.out.println("PlaceShip Game : "+ uuid);
+        return uuid;
     }
 
     public List<Attack> play(Attack attack){

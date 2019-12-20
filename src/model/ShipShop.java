@@ -45,6 +45,7 @@ public class ShipShop extends Observable {
 
     public UUID placeShip(Move move) {
         UUID uuid = game.placeShip(move);
+        System.out.println("PlaceShip Shipshop : "+ uuid);
         setChanged();
         notifyObservers(PLACESHIP);
         return uuid;

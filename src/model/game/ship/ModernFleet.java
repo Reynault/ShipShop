@@ -7,31 +7,29 @@ import java.io.Serializable;
 
 public class ModernFleet extends FleetFactory implements Serializable {
 
-    private static int HP_SUBMARINE = 3;
-    private static int HP_AIRCRAFT = 5;
-    private static int HP_TORPEDO = 2;
-    private static int HP_CRUISER = 4;
-
-
-    private static int AMMO_SUBMARINE = 5;
-    private static int AMMO_AIRCRAFT = 5;
-    private static int AMMO_TORPEDO = 5;
-    private static int AMMO_CRUISER = 5;
-
-
-    private static int DMG_SUBMARINE = 2;
-    private static int DMG_AIRCRAFT = 4;
-    private static int DMG_TORPEDO = 1;
-    private static int DMG_CRUISER = 3;
-
-
-    private static int NBTILES_SUBMARINE = 3;
-    private static int NBTILES_AIRCRAFT = 5;
-    private static int NBTILES_TORPEDO = 2;
-    private static int NBTILES_CRUISER = 4;
-
     public ModernFleet(int nbCruiser, int nbSubmarine, int nbTorpedo, int nbAircraft) {
         super(nbCruiser, nbSubmarine, nbTorpedo, nbAircraft);
+
+        // Setting values
+        HP_SUBMARINE = 3;
+        HP_AIRCRAFT = 5;
+        HP_TORPEDO = 2;
+        HP_CRUISER = 4;
+
+        AMMO_SUBMARINE = 5;
+        AMMO_AIRCRAFT = 5;
+        AMMO_TORPEDO = 5;
+        AMMO_CRUISER = 5;
+
+        DMG_SUBMARINE = 2;
+        DMG_AIRCRAFT = 4;
+        DMG_TORPEDO = 1;
+        DMG_CRUISER = 3;
+
+        NBTILES_SUBMARINE = 3;
+        NBTILES_AIRCRAFT = 5;
+        NBTILES_TORPEDO = 2;
+        NBTILES_CRUISER = 4;
     }
 
     @Override
@@ -83,5 +81,10 @@ public class ModernFleet extends FleetFactory implements Serializable {
                 break;
         }
         return res;
+    }
+
+    @Override
+    public int getSize(ShipType shipType) {
+        return 0;
     }
 }

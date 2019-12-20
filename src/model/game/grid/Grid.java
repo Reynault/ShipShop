@@ -1,32 +1,146 @@
 package model.game.grid;
 
+import javafx.geometry.Pos;
+import model.DirectionConstant;
 import model.Move;
+import model.ShipType;
 import model.game.Game;
 import model.game.ship.FleetFactory;
 import model.game.ship.Ship;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.UUID;
 
+import java.util.*;
+
+/**
+ * Class grid that represent the grids of a player
+ */
 public class Grid implements Serializable {
 
-    protected int[][] ennemyGrid = new int[Game.GRID_WIDTH][Game.GRID_HEIGHT];
+    // Three constants that define if the tile has been shot, and if and ennemy/ship has been discovered
+    private static final int NONE = 100;
+    private static final int HIT = 200;
+    private static final int TOUCHED = 300;
 
-    protected Map<UUID, Ship> ships;
+    private int[][] ennemyGrid;
+    private int[][] playerGrid;
 
+    private Map<UUID, Ship> ships;
+    private Map<UUID, List<Position>> positions;
+
+    /**
+     * Default constructor that initialise everything
+     */
     public Grid(){
+        ennemyGrid = new int[Game.GRID_WIDTH][Game.GRID_HEIGHT];
+        playerGrid = new int[Game.GRID_WIDTH][Game.GRID_HEIGHT];
 
-    }
-
-    public UUID placeShip(Move move, FleetFactory fleetFactory){
-        if(fleetFactory.hasShip(move.getType())){
-            return move.getShip();
-        }else{
-            Ship ship = fleetFactory.getShip(move.getType());
+        for(int i = 0 ; i < Game.GRID_WIDTH; i++){
+            for(int j = 0; j < Game.GRID_HEIGHT; j++){
+                ennemyGrid[i][j] = NONE;
+                playerGrid[i][j] = NONE;
+            }
 
         }
-        return null;
+
+        ships = new HashMap<>();
+        positions = new HashMap<>();
+    }
+
+    /**
+     * Place ship is a method that place the wanted ship
+     * in the grid, it returns a null object if it can't, otherwise
+     * it's the uuid of the new ship
+     * @param move the move that place the ship
+     * @param fleetFactory the fleet factory that create the ship
+     * @return the uuid
+     */
+    public UUID placeShip(Move move, FleetFactory fleetFactory){
+
+        // Checking if in objects are null
+        if(move == null || fleetFactory == null){
+            return null;
+        }
+
+        // Getting needed values
+        UUID res = null;
+        Ship ship;
+        int x = move.getX();
+        int y = move.getY();
+        DirectionConstant direction = move.getDirection();
+        ShipType shipType = move.getType();
+
+        // Getting size
+        int size = fleetFactory.getSize(shipType);
+
+        // Checking if we can place the ship in the grid
+        if(x >= 0 && x < Game.GRID_WIDTH && y >= 0 && y < Game.GRID_HEIGHT && fleetFactory.hasShip(move.getType())){
+
+            // Then checking if the ship is overflowing the grid
+            boolean overflow;
+            Iterator<UUID> iterator;
+            List<Position> check ,pos;
+            pos = new ArrayList<>();
+
+            switch (direction){
+                case LEFT:
+                    overflow = (x-size) < 0;
+                    for(int i = 0 ; i  < size; i++){
+                        pos.add(new Position(x-i, y));
+                    }
+                    break;
+                case UP:
+                    overflow = (y-size) < 0;
+                    for(int i = 0 ; i  < size; i++){
+                        pos.add(new Position(x, y-i));
+                    }
+                    break;
+                case RIGHT:
+                    overflow = (x+size) >= Game.GRID_WIDTH;
+                    for(int i = 0 ; i  < size; i++){
+                        pos.add(new Position(x+i, y));
+                    }
+                    break;
+                case DOWN:
+                    overflow = (y+size) >= Game.GRID_HEIGHT;
+                    for(int i = 0 ; i  < size; i++){
+                        pos.add(new Position(x, y+1));
+                    }
+                    break;
+                default:
+                    overflow = true;
+                    break;
+            }
+
+            if(!overflow){
+
+                // Then checking if the ship is on another ship
+                iterator = positions.keySet().iterator();
+                boolean exist = false;
+
+                while(iterator.hasNext() && !exist){
+                    check = positions.get(iterator.next());
+
+                    for(Position p: check){
+                        if(pos.contains(p)){
+                            exist = true;
+                        }
+                    }
+
+                }
+
+                // If no current ship exists, creating ship
+                if(!exist) {
+                    res = new UUID(64, 64);
+                    ship = fleetFactory.getShip(move.getType());
+                    ships.put(res, ship);
+                    positions.put(res, pos);
+                }
+            }
+
+        }
+
+        return res;
     }
 
     public boolean canAttack(UUID ship){

@@ -12,7 +12,7 @@ import java.util.UUID;
 
 import static model.UpdateObserver.BAD_LOAD;
 import static model.UpdateObserver.LAUNCH;
-import static model.UpdateObserver.PLACESHIP;
+import static model.UpdateObserver.PLACE_SHIP;
 
 public class ShipShop extends Observable {
     private String SAVE_PATH = "save.ser";
@@ -45,7 +45,7 @@ public class ShipShop extends Observable {
     public UUID placeShip(Move move) {
         UUID uuid = game.placeShip(move);
         setChanged();
-        notifyObservers(PLACESHIP);
+        notifyObservers(PLACE_SHIP);
         return uuid;
     }
 

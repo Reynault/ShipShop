@@ -122,6 +122,9 @@ public class Grid implements Serializable {
                     break;
             }
 
+            System.out.println("Position : "+Arrays.asList(pos));
+            System.out.println("Overflow ?  : "+overflow);
+
             if (!overflow) {
 
                 // Then checking if the ship is on another ship
@@ -158,7 +161,7 @@ public class Grid implements Serializable {
     }
 
     public int getDmg(UUID id) {
-        return 0;
+        return getShip(id).getDmg();
     }
 
     public boolean isDefeated() {
@@ -166,21 +169,45 @@ public class Grid implements Serializable {
     }
 
     public boolean isShip(int x, int y) {
+        Iterator iterator = positions.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry mapentry = (Map.Entry) iterator.next();
+            List<Position> positionList = (List<Position>) mapentry.getValue();
+            for (Position p: positionList) {
+                if(p.getX() == x && p.getY() == y) return true;
+            }
+        }
         return false;
     }
 
+    /**
+     * Methode pour le debugage et les tests
+     * @param uuid
+     * @return
+     */
     public boolean isShip(UUID uuid){
-        System.out.println(Arrays.asList(positions));
         return positions.containsKey(uuid);
     }
 
     public Ship getShip(UUID uuid){
-        System.out.println(Arrays.asList(ships)); // method 1
         return ships.get(uuid);
     }
 
     public Ship getShip(int x, int y) {
-        return null;
+        Iterator iterator = positions.entrySet().iterator();
+        UUID shipUUID = null;
+        boolean isFound = false;
+        while (iterator.hasNext() || !isFound) {
+            Map.Entry mapentry = (Map.Entry) iterator.next();
+            List<Position> positionList = (List<Position>) mapentry.getValue();
+            for (Position p: positionList) {
+                if(p.getX() == x && p.getY() == y) {
+                    isFound = true;
+                    shipUUID = (UUID)mapentry.getKey();
+                }
+            }
+        }
+        return getShip(shipUUID);
     }
 
     public void crossTile(int x, int y) {
@@ -193,9 +220,9 @@ public class Grid implements Serializable {
 
     public void hit(int x, int y, int hit) {
         //Test de si la case est un bateau
-        if (isShip(y, y)) {
+        if (isShip(x, y)) {
             //On récupère le bateau par les coordonnées
-            if (!getShip(x, y).hasSunk()) {
+            if (getShip(x, y).hasSunk()) {
                 getShip(x, y).hit(hit);
             }
         }
@@ -214,5 +241,13 @@ public class Grid implements Serializable {
         return "Grid{" +
                 "positions=" + positions +
                 '}';
+    }
+
+    public int getAmmo(UUID ship) {
+        return getShip(ship).getAmmo();
+    }
+
+    public void decreaseAmmo(UUID ship) {
+        getShip(ship).decreaseAmmo();
     }
 }

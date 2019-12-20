@@ -9,11 +9,11 @@ import model.game.ship.Ship;
 
 import java.awt.*;
 import java.io.*;
-import java.io.File;
 import java.util.Observable;
 import java.util.UUID;
 
-import static model.UpdateObserver.*;
+import static model.UpdateObserver.LAUNCH;
+import static model.UpdateObserver.PLACESHIP;
 
 public class ShipShop extends Observable {
     private String SAVE_PATH = "save.ser";
@@ -112,11 +112,10 @@ public class ShipShop extends Observable {
         this.game = game;
     }
 
-    public Ship getShip(UUID uuid) {
-        return null;
-    }
-
-
+    /**
+     * Function used for get the Game
+     * @return
+     */
     public Game getGame() {
         return this.game;
     }
@@ -126,5 +125,9 @@ public class ShipShop extends Observable {
         return "ShipShop{" +
                 "game=" + game +
                 '}';
+    }
+
+    public Ship getShip(UUID uuid) {
+        return game.getShip(uuid);
     }
 }

@@ -28,35 +28,31 @@ public class Main {
                 printEmptyLine();
 
         //Test du changement de joueur
-        shipShop.getGame().setNext();
-
-        shipShop.getGame().setNext();
-
-        shipShop.getGame().setNext();
 
                 printEmptyLine();
 
         //Test de la fonction play
 
+        System.out.println("CURRENT PLAYER : "+shipShop.getGame().getCurrentPlayer());
         Move move = new Move(5,5, DirectionConstant.UP, ShipType.TORPEDO);
         UUID uuid = shipShop.placeShip(move);
         System.out.println("UUID : "+ uuid);
+
+        Move move2 = new Move(12,5, DirectionConstant.UP, ShipType.TORPEDO);
+        UUID uuid2 = shipShop.placeShip(move2);
+
         System.out.println("List of ship in the grid : "+shipShop.getGame().getPlayer()[0].getGrid().isShip(uuid));
-        System.out.println("List of ship in the grid : "+shipShop.getGame().getPlayer()[1].getGrid().isShip(uuid));
-
-//        shipShop.getGame().setNext();
-//
-//        Move move2 = new Move(12,5, DirectionConstant.UP, ShipType.TORPEDO);
-//        UUID uuid2 = shipShop.placeShip(move2);
-
-//        System.out.println("List of ship in the grid : "+shipShop.getGame().getPlayer()[0].getGrid().isShip(uuid2));
-//        System.out.println("List of ship in the grid : "+shipShop.getGame().getPlayer()[1].getGrid().isShip(uuid2));
+        System.out.println("List of ship in the grid : "+shipShop.getGame().getPlayer()[0].getGrid().isShip(uuid2));
 
 
-//        shipShop.play(new Attack(12,5, uuid));
-//        shipShop.play(new Attack(5,5, uuid));
-//        shipShop.play(new Attack(2,1, uuid));
-//        shipShop.play(new Attack(3,1, uuid));
+        for(int i = 0; i < shipShop.getGame().getPlayer()[1].getGrid().getGrid_width(); i++){
+            for(int y = 0; y<shipShop.getGame().getPlayer()[1].getGrid().getGrid_height(); y++){
+                shipShop.play(new Attack(i, y, uuid));
+            }
+        }
+
+        printEmptyLine();
+
 
     }
 

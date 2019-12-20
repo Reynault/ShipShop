@@ -71,4 +71,26 @@ public abstract class Player implements Serializable {
         return grid;
     }
 
+
+    /**
+     * Function used for decrease the ammo after a fire
+     * @param ship
+     */
+    public void decreaseAmmo(UUID ship) {
+        grid.decreaseAmmo(ship);
+    }
+
+
+    //////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+
+    /**
+     * A debug Function used for get the ammo left of a Ship
+     * @param ship
+     * @return
+     */
+    public int getAmmo(UUID ship){
+        return grid.getAmmo(ship);
+    }
 }

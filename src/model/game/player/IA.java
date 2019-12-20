@@ -3,7 +3,6 @@ package model.game.player;
 import model.DirectionConstant;
 import model.Move;
 import model.ShipType;
-import model.game.Game;
 import model.game.player.tactic.Tactic;
 import model.game.ship.FleetFactory;
 

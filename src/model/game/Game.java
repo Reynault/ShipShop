@@ -10,7 +10,6 @@ import model.game.ship.Ship;
 
 import java.awt.*;
 import java.io.Serializable;
-import java.util.List;
 import java.util.UUID;
 
 public class Game implements Serializable {
@@ -72,32 +71,58 @@ public class Game implements Serializable {
         return uuid;
     }
 
-    public List<Attack> play(Attack attack){
+    /**
+     * funtion used for launch an attck on an ennemy ship
+     * @param attack
+     */
+    public void play(Attack attack){
+        //Get the next player (Who play after the current)
         Player otherCurrentPlayer = whosNext();
+
         System.out.println("Attack start at (X,Y) by player : "+ players[currentPlayer] + " ");
         System.out.println("Attack on position ("+ attack.getX()+ "," +  attack.getY() + ")");
+
+        //Test if the target at X and Y position is a ship
         if(otherCurrentPlayer.getGrid().isShip(attack.getX(),attack.getY())){
             System.out.println("Other Player have a ship at the position.");
-            if(players[currentPlayer].canAttack(attack.getShip())){
-                System.out.println("The Player can attack! Fire!");
-                int dmg = players[currentPlayer].getDmg(attack.getShip());
-                System.out.println("The attack make "+ players[currentPlayer].getDmg(attack.getShip())+" damage.");
-                otherCurrentPlayer.hit(attack.getX(),attack.getY(),dmg);
-                System.out.println("The attack hit the ennemy ship ! "+otherCurrentPlayer.getGrid().getShip(attack.getX(), attack.getY()).getHp()+" hp left.");
-                players[currentPlayer].getGrid().flagTile(attack.getX(),attack.getY());
-                System.out.println("The tile at position ("+ attack.getX()+","+attack.getY()+") was flag as hit");
+
+            //Test if the Ship is sunk or not
+            if(otherCurrentPlayer.getGrid().getShip(attack.getX(), attack.getY()).hasSunk()) {
+                System.out.println("Other Player ship's have "+ otherCurrentPlayer.getGrid().getShip(attack.getX(),attack.getY()).getHp() + " hp.");
+
+                //Test if the current Player Ship can fire
+                if(players[currentPlayer].canAttack(attack.getShip())){
+                    System.out.println("The Player can attack! Fire!");
+
+                    System.out.println("The attack make " + players[currentPlayer].getDmg(attack.getShip()) + " damage.");
+                    //Hit the ennemy Ship (decrease his hp of the global ship)
+                    otherCurrentPlayer.hit(attack.getX(), attack.getY(), players[currentPlayer].getDmg(attack.getShip()));
+
+                    //Decrease ammo of the ship who fire
+                    players[currentPlayer].decreaseAmmo(attack.getShip());
+                    System.out.println("The Player ship have "+players[currentPlayer].getAmmo(attack.getShip())+" ammo left.");
+
+                    System.out.println("The attack hit the ennemy ship ! " + otherCurrentPlayer.getGrid().getShip(attack.getX(), attack.getY()).getHp() + " hp left.");
+
+                    //Flag the tile who just be the target (you can't target it anymore)
+                    players[currentPlayer].getGrid().flagTile(attack.getX(), attack.getY());
+                    System.out.println("The tile at position (" + attack.getX() + "," + attack.getY() + ") was flag as hit\n");
+
+                }else{
+                    //Test display if the target tile was already shoot
+                    System.out.println("The tile at position ("+ attack.getX()+","+attack.getY()+") was already flag as hit... or you don't have ammo\n");
+                }
 
             }else{
-                //Le joueur 2 ne peut pas attaquer la cible (bateau coulé ou case déjà touché)
-                System.out.println("The tile at position ("+ attack.getX()+","+attack.getY()+") was already flag as hit... Please choose an other one");
-
+                //Test display if ship is already sunk
+                System.out.println("The ennemy Ship is already sunk...\n");
             }
         }else{
-            //Le joueur 2 n'a pas de bateau à l'endroit cible
+            //If the next player doesn't have a Ship in the target tile, the tile is flag as already hit
+            //The tile can't be target anymore
             players[currentPlayer].getGrid().crossTile(attack.getX(),attack.getY());
             System.out.println("The attack at position ("+ attack.getX()+","+attack.getY()+") miss...\n");
         }
-        return null;
     }
 
     public Ship getShip(UUID uuid){
@@ -122,9 +147,6 @@ public class Game implements Serializable {
 
     }
 
-    public Player[] getPlayer(){
-        return players;
-    }
 
     @Override
     public String toString() {
@@ -134,5 +156,28 @@ public class Game implements Serializable {
                 ", p1=" + p1 +
                 ", p2=" + p2 +
                 '}';
+    }
+
+
+
+
+    /////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+    /**
+     * Methode de debugage pour récupérer les 2 joueurs
+     * @return
+     */
+    public Player[] getPlayer(){
+        return players;
+    }
+
+
+    /**
+     * Methode de debugage pour afficher le joueur courrant
+     * @return
+     */
+    public int getCurrentPlayer(){
+        return currentPlayer;
     }
 }

@@ -4,7 +4,6 @@ import model.DirectionConstant;
 import model.ShipType;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 /**
  * Ship is a model class that represent a ship and its properties
@@ -25,7 +24,7 @@ public class Ship implements Serializable {
      */
     private ShipType shipType;
 
-    final static UUID NONE_UUID = new UUID(0,0);
+//    final static UUID NONE_UUID = new UUID(0,0);
 
     /**
      * Default constructor for Ship with all properties provided
@@ -50,7 +49,7 @@ public class Ship implements Serializable {
     }
 
     public boolean hasSunk(){
-        return hp <= 0;
+        return hp > 0;
     }
 
     public boolean canShoot(){
@@ -58,7 +57,7 @@ public class Ship implements Serializable {
     }
 
     public boolean canAttack(){
-        return !hasSunk() && canShoot();
+        return hasSunk() && canShoot();
     }
 
     public int getAmmo() {
@@ -70,6 +69,14 @@ public class Ship implements Serializable {
     }
 
     public void hit(int dmg){
-        hp=-dmg;
+        hp = hp - dmg;
+    }
+
+    public void decreaseAmmo(){
+        ammo = ammo -1;
+    }
+
+    public int getDmg() {
+        return dmg;
     }
 }

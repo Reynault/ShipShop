@@ -2,6 +2,7 @@ package view.panel;
 
 import model.DirectionConstant;
 import view.constant.StringConstant;
+import view.constant.TextureFactory;
 import view.constant.Views;
 
 import javax.imageio.ImageIO;
@@ -13,7 +14,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Observable;
@@ -113,7 +113,7 @@ public class MainView extends PanelView {
         // Setting ennemy grid
         ennemyGrid = new JPanel();
         ennemyGrid.setLayout(new GridLayout(WIDTH_PANEL, HEIGHT_PANEL));
-        ennemyGrid.setBorder(new EmptyBorder(10,10,10,10));
+        ennemyGrid.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         right.add(ennemyGrid, BorderLayout.CENTER);
         right.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -140,7 +140,7 @@ public class MainView extends PanelView {
         // Setting player grid
         playerGrid = new JPanel();
         playerGrid.setLayout(new GridLayout(WIDTH_PANEL, HEIGHT_PANEL));
-        playerGrid.setBorder(new EmptyBorder(10,10,10,10));
+        playerGrid.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         left.add(playerGrid, BorderLayout.CENTER);
         left.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -257,21 +257,16 @@ public class MainView extends PanelView {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(select){
+            if (select) {
                 BufferedImage tmp;
 
-                BufferedImage resizedImage = new BufferedImage(RANGE_X *width_cell, RANGE_Y *height_cell, BufferedImage.TYPE_INT_ARGB);
+                BufferedImage resizedImage = new BufferedImage(RANGE_X * width_cell, RANGE_Y * height_cell, BufferedImage.TYPE_INT_ARGB);
                 Graphics2D g = resizedImage.createGraphics();
-                g.drawImage(cursorImage, 0, 0, RANGE_X *width_cell, RANGE_Y *height_cell, null);
+                g.drawImage(cursorImage, 0, 0, RANGE_X * width_cell, RANGE_Y * height_cell, null);
                 g.dispose();
 
-                System.out.println("x : "+ x);
-                System.out.println("x-range : "+  (x - RANGE_Y));
-                System.out.println("y : "+ y);
-                System.out.println("y-range : "+ (y + RANGE_X));
-
                 // Checking if we can add the ship in the grid
-                if((x - RANGE_Y + 1) >= 0 && (x - RANGE_Y + 1) <  (player.length + 1) &&
+                if ((x - RANGE_Y + 1) >= 0 && (x - RANGE_Y + 1) < (player.length + 1) &&
                         (y + RANGE_X) >= 0 && (y + RANGE_X) <= player[x].length) {
 
                     // Setting ship in the grid
@@ -293,11 +288,27 @@ public class MainView extends PanelView {
                         }
                     }
 
+                    select = false;
+                    setCursor(Cursor.getDefaultCursor());
+
                 }
+            }else{
+                ImageIcon imageIcon = (ImageIcon) player[x][y].getIcon();
 
-                select = false;
-                setCursor(Cursor.getDefaultCursor());
+                if(imageIcon != null) {
+                    BufferedImage tmp = (BufferedImage) imageIcon.getImage();
 
+                    Graphics2D g = (Graphics2D) tmp.getGraphics();
+
+                    g.drawImage(
+                            TextureFactory.getInstance().getCross_ennemy(),
+                            0,
+                            0,
+                            tmp.getWidth(),
+                            tmp.getHeight(),
+                            null
+                    );
+                }
             }
         }
     }
@@ -333,27 +344,27 @@ public class MainView extends PanelView {
             // If a ship is selected
             if (select) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                    toward = (toward+1) % 4;
+                    toward = (toward + 1) % 4;
 
                     Toolkit toolkit = Toolkit.getDefaultToolkit();
 
                     // Rotating the form
-                    double theta = Math.PI/2;
+                    double theta = Math.PI / 2;
                     double cos = Math.abs(Math.cos(theta));
                     double sin = Math.abs(Math.sin(theta));
-                    double width  = cursorImage.getWidth();
+                    double width = cursorImage.getWidth();
                     double height = cursorImage.getHeight();
-                    int w = (int)(width * cos + height * sin);
-                    int h = (int)(width * sin + height * cos);
+                    int w = (int) (width * cos + height * sin);
+                    int h = (int) (width * sin + height * cos);
 
                     BufferedImage out = new BufferedImage(w, h, cursorImage.getType());
 
                     Graphics2D g2 = out.createGraphics();
-                    double x = w/2;
-                    double y = h/2;
+                    double x = w / 2;
+                    double y = h / 2;
                     AffineTransform at = AffineTransform.getRotateInstance(theta, x, y);
-                    x = (w - width)/2;
-                    y = (h - height)/2;
+                    x = (w - width) / 2;
+                    y = (h - height) / 2;
                     at.translate(x, y);
                     g2.drawRenderedImage(cursorImage, at);
                     g2.dispose();

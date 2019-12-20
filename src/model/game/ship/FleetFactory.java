@@ -3,7 +3,14 @@ package model.game.ship;
 import model.EraConstant;
 import model.ShipType;
 
-public abstract class FleetFactory {
+import java.io.Serializable;
+
+public abstract class FleetFactory implements Serializable {
+    private int nbCruiser;
+    private int nbSubmarine;
+    private int nbTorpedo;
+    private int nbAircraft;
+
     static int HP_SUBMARINE;
     static int HP_AIRCRAFT ;
     static int HP_TORPEDO ;
@@ -23,11 +30,6 @@ public abstract class FleetFactory {
     static int NBTILES_AIRCRAFT;
     static int NBTILES_TORPEDO;
     static int NBTILES_CRUISER;
-
-    private int nbCruiser;
-    private int nbSubmarine;
-    private int nbTorpedo;
-    private int nbAircraft;
 
     public FleetFactory(int nbCruiser, int nbSubmarine, int nbTorpedo, int nbAircraft) {
         this.nbCruiser = nbCruiser;

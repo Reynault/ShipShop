@@ -8,8 +8,10 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 
-public class XVIEra extends Era{
+public class XVIEra extends Era implements Serializable {
+
     public FleetFactory getFleetFactory(){
         return new XVIFleet(2,1,2,1);
     }

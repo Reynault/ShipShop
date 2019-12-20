@@ -96,7 +96,7 @@ public class ShipShop extends Observable {
         }
     }
 
-    public Game load(){
+    public void load(){
         Game game = null;
         try {
             FileInputStream stream = new FileInputStream(new File(SAVE_PATH));
@@ -105,9 +105,10 @@ public class ShipShop extends Observable {
             object.close();
             stream.close();
         }catch (Exception e){
+            e.printStackTrace();
             createGame(EraFactory.getModernEra(), new RandomTactic(), true);
         }
-        return game;
+        this.game = game;
     }
 
     public Ship getShip(UUID uuid) {

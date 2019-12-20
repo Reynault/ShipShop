@@ -93,27 +93,27 @@ public class Grid implements Serializable {
 
             switch (direction){
                 case LEFT:
-                    overflow = (x-size) < 0;
+                    overflow = ((x-size)+1) < 0;
                     for(int i = 0 ; i  < size; i++){
                         pos.add(new Position(x-i, y));
                     }
                     break;
                 case UP:
-                    overflow = (y-size) < 0;
+                    overflow = ((y-size)+1) < 0;
                     for(int i = 0 ; i  < size; i++){
                         pos.add(new Position(x, y-i));
                     }
                     break;
                 case RIGHT:
-                    overflow = (x+size) >= grid_width;
+                    overflow = ((x+size)-1) >= grid_width;
                     for(int i = 0 ; i  < size; i++){
                         pos.add(new Position(x+i, y));
                     }
                     break;
                 case DOWN:
-                    overflow = (y+size) >= grid_height;
+                    overflow = ((y+size)-1) >= grid_height;
                     for(int i = 0 ; i  < size; i++){
-                        pos.add(new Position(x, y+1));
+                        pos.add(new Position(x, y+i));
                     }
                     break;
                 default:
@@ -172,7 +172,7 @@ public class Grid implements Serializable {
     }
 
     public Ship getShip(UUID uuid){
-        return null;
+        return ships.get(uuid);
     }
 
     public Ship getShip(int x, int y){

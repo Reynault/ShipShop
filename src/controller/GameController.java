@@ -1,5 +1,7 @@
 package controller;
 
+import model.Attack;
+import model.Move;
 import model.ShipShop;
 import model.game.era.Era;
 import model.game.era.EraFactory;
@@ -50,24 +52,22 @@ public class GameController {
     }
 
     public void loadGame(){
-        // TODO
+        model.load();
     }
 
     public void saveGame(){
         model.save(model.getGame());
     }
 
-    public void placeShip(){
-        // Need a move object
-//        model.placeShip();
+    public void placeShip(Move move){
+        model.placeShip(move);
     }
 
     public void endShipPlacement(){
         model.endPlaceShip();
     }
 
-    public void play(){
-        // Neef an attack object
-//        model.play();
+    public void play(Attack attack){
+        model.play(attack);
     }
 }

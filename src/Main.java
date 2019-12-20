@@ -1,4 +1,5 @@
 import model.*;
+import model.game.Game;
 import model.game.era.EraFactory;
 import model.game.grid.Grid;
 import model.game.player.Player;
@@ -30,6 +31,6 @@ public class Main {
         System.out.println("Loading game done ...");
         ModernFleet modernFleet = new ModernFleet(2,2,2,2);
         Ship ship = new Ship(5, 5, 0, 2, DirectionConstant.UP, ShipType.TORPEDO);
-        Grid grid = new Grid();
+        Grid grid = new Grid(Game.GRID_WIDTH, Game.GRID_HEIGHT);
     }
 }

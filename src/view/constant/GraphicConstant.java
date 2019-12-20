@@ -13,7 +13,7 @@ public class GraphicConstant {
     public static final int WIDTH_END_GAME = 500;
     public static final int HEIGHT_END_GAME = 250;
     public static final int HEIGHT_BAD_LOAD = 200;
-    public static final int WIDTH_BAD_LOAD = 250;
+    public static final int WIDTH_BAD_LOAD = 400;
 
     // Colors
     public static final Color GRID_COLOR = Color.BLACK;

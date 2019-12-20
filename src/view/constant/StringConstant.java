@@ -41,5 +41,6 @@ public class StringConstant {
     // General
     public static final String CANCEL_BUTTON = "Cancel";
     public static final String VALIDATE_BUTTON = "Validate";
+    public static final String BAD_LOAD = "There is no save";
 
 }

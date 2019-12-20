@@ -65,7 +65,7 @@ public class MenuView extends PanelView {
         UpdateObserver val = (UpdateObserver)arg;
         switch (val){
             case BAD_LOAD:
-
+                mainObserver.setCurrent(Views.BAD_LOAD);
                 break;
         }
     }

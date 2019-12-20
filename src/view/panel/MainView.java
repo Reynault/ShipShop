@@ -318,13 +318,19 @@ public class MainView extends PanelView {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("x : "+x);
-            System.out.println("y : "+y);
             if (select) {
                 BufferedImage tmp, resizedImage;
                 Graphics2D g;
 
                 // Creating move
+                int xGrid = y;
+                int yGrid = 9 - x;
+                DirectionConstant constant = direction[toward];
+                System.out.println(constant);
+                System.out.println("x : "+x);
+                System.out.println("y : "+y);
+                System.out.println("xGrid : "+xGrid);
+                System.out.println("yGrid : "+yGrid);
 
                 // Setting image depending on the direction
                 switch (direction[toward]) {

@@ -228,7 +228,7 @@ public class MainView extends PanelView {
             try {
                 Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-                cursorImage = ImageIO.read(ClassLoader.getSystemResource("sprite/submarine.png"));
+                cursorImage = ImageIO.read(ClassLoader.getSystemResource("sprite/aircraft.png"));
 
                 RANGE_Y = 4;
                 RANGE_X = 1;
@@ -265,10 +265,14 @@ public class MainView extends PanelView {
                 g.drawImage(cursorImage, 0, 0, RANGE_X *width_cell, RANGE_Y *height_cell, null);
                 g.dispose();
 
-                System.out.println();
+                System.out.println("x : "+ x);
+                System.out.println("x-range : "+  (x - RANGE_Y));
+                System.out.println("y : "+ y);
+                System.out.println("y-range : "+ (y + RANGE_X));
+
                 // Checking if we can add the ship in the grid
-                if((x - RANGE_Y) >= 0 && (x - RANGE_Y) <  player.length &&
-                        (y + RANGE_X) >= 0 && (y + RANGE_X) < player[x].length) {
+                if((x - RANGE_Y + 1) >= 0 && (x - RANGE_Y + 1) <  (player.length + 1) &&
+                        (y + RANGE_X) >= 0 && (y + RANGE_X) <= player[x].length) {
 
                     // Setting ship in the grid
                     for (int i = 0; i < RANGE_Y; i++) {

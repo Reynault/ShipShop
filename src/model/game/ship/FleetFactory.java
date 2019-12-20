@@ -1,15 +1,16 @@
 package model.game.ship;
 
+import model.DirectionConstant;
 import model.EraConstant;
 import model.ShipType;
 
 import java.io.Serializable;
 
 public abstract class FleetFactory implements Serializable {
-    int nbCruiser;
-    int nbSubmarine;
-    int nbTorpedo;
-    int nbAircraft;
+    private int nbCruiser;
+    private int nbSubmarine;
+    private int nbTorpedo;
+    private int nbAircraft;
 
     int HP_SUBMARINE;
     int HP_AIRCRAFT ;
@@ -74,7 +75,59 @@ public abstract class FleetFactory implements Serializable {
         return res;
     }
 
-    public abstract Ship getShip(ShipType shipType);
+    public Ship getShip(ShipType shipType, DirectionConstant direction){
+        Ship res;
+        switch (shipType) {
+            case SUBMARINE:
+                nbSubmarine --;
+                res = new Ship(
+                        HP_SUBMARINE,
+                        AMMO_SUBMARINE,
+                        DMG_SUBMARINE,
+                        NBTILES_SUBMARINE,
+                        DirectionConstant.UP,
+                        ShipType.SUBMARINE
+                );
+                break;
+            case AIRCRAFT:
+                nbAircraft --;
+                res = new Ship(
+                        HP_AIRCRAFT,
+                        AMMO_AIRCRAFT,
+                        DMG_AIRCRAFT,
+                        NBTILES_AIRCRAFT,
+                        DirectionConstant.UP,
+                        ShipType.AIRCRAFT
+                );
+                break;
+            case TORPEDO:
+                nbTorpedo --;
+                res = new Ship(
+                        HP_TORPEDO,
+                        AMMO_TORPEDO,
+                        DMG_TORPEDO,
+                        NBTILES_TORPEDO,
+                        DirectionConstant.UP,
+                        ShipType.TORPEDO
+                );
+                break;
+            case CRUISER:
+                nbCruiser --;
+                res = new Ship(
+                        HP_CRUISER,
+                        AMMO_CRUISER,
+                        DMG_CRUISER,
+                        NBTILES_CRUISER,
+                        DirectionConstant.UP,
+                        ShipType.CRUISER
+                );
+                break;
+            default:
+                res = null;
+                break;
+        }
+        return res;
+    }
 
     public int getSize(ShipType shipType) {
         int size;

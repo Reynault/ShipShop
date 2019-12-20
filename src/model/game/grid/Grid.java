@@ -137,7 +137,7 @@ public class Grid implements Serializable {
                 // If no current ship exists, creating ship
                 if (!exist) {
                     res = UUID.randomUUID();
-                    ship = fleetFactory.getShip(move.getType());
+                    ship = fleetFactory.getShip(move.getType(), move.getDirection());
                     ships.put(res, ship);
                     positions.put(res, pos);
                 }

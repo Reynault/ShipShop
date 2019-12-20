@@ -8,6 +8,7 @@ import model.game.player.tactic.Tactic;
 import model.game.ship.FleetFactory;
 
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * An IA is a player that is controled by the computer with a specific tactic
@@ -25,6 +26,7 @@ public class IA extends Player{
 
         Random rand = new Random();
         Move move;
+        UUID uid;
 
         // Filling the list of ships
         for(ShipType ship: ShipType.values()){
@@ -35,14 +37,16 @@ public class IA extends Player{
                         DirectionConstant.getRandomDirection(),
                         ship
                 );
-
-                while(grid.placeShip(move, fleetFactory) == null) {
+                uid = grid.placeShip(move, fleetFactory);
+                while(uid != null) {
                     move = new Move(
                             rand.nextInt(grid.getGrid_width()),
                             rand.nextInt(grid.getGrid_height()),
                             DirectionConstant.getRandomDirection(),
                             ship
                     );
+
+                    uid = grid.placeShip(move, fleetFactory);
                 }
             }
         }

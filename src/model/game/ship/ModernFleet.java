@@ -26,10 +26,10 @@ public class ModernFleet extends FleetFactory implements Serializable {
         DMG_TORPEDO = 1;
         DMG_CRUISER = 3;
 
-        NBTILES_SUBMARINE = 3;
-        NBTILES_AIRCRAFT = 5;
-        NBTILES_TORPEDO = 2;
-        NBTILES_CRUISER = 4;
+        this.NBTILES_SUBMARINE = 3;
+        this.NBTILES_AIRCRAFT = 5;
+        this.NBTILES_TORPEDO = 2;
+        this.NBTILES_CRUISER = 4;
     }
 
     @Override
@@ -81,10 +81,5 @@ public class ModernFleet extends FleetFactory implements Serializable {
                 break;
         }
         return res;
-    }
-
-    @Override
-    public int getSize(ShipType shipType) {
-        return 0;
     }
 }

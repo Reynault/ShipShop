@@ -11,25 +11,25 @@ public abstract class FleetFactory implements Serializable {
     private int nbTorpedo;
     private int nbAircraft;
 
-    static int HP_SUBMARINE;
-    static int HP_AIRCRAFT ;
-    static int HP_TORPEDO ;
-    static int HP_CRUISER ;
+    public int HP_SUBMARINE;
+    public int HP_AIRCRAFT ;
+    public int HP_TORPEDO ;
+    public int HP_CRUISER ;
 
-    static int AMMO_SUBMARINE;
-    static int AMMO_AIRCRAFT;
-    static int AMMO_TORPEDO;
-    static int AMMO_CRUISER;
+    public int AMMO_SUBMARINE;
+    public int AMMO_AIRCRAFT;
+    public int AMMO_TORPEDO;
+    public int AMMO_CRUISER;
 
-    static int DMG_SUBMARINE;
-    static int DMG_AIRCRAFT;
-    static int DMG_TORPEDO;
-    static int DMG_CRUISER;
+    public int DMG_SUBMARINE;
+    public int DMG_AIRCRAFT;
+    public int DMG_TORPEDO;
+    public int DMG_CRUISER;
 
-    static int NBTILES_SUBMARINE;
-    static int NBTILES_AIRCRAFT;
-    static int NBTILES_TORPEDO;
-    static int NBTILES_CRUISER;
+    public int NBTILES_SUBMARINE;
+    public int NBTILES_AIRCRAFT;
+    public int NBTILES_TORPEDO;
+    public int NBTILES_CRUISER;
 
     public FleetFactory(int nbCruiser, int nbSubmarine, int nbTorpedo, int nbAircraft) {
         this.nbCruiser = nbCruiser;
@@ -80,16 +80,16 @@ public abstract class FleetFactory implements Serializable {
         int size;
         switch (shipType){
             case TORPEDO:
-                size = NBTILES_TORPEDO;
+                size = this.NBTILES_TORPEDO;
                 break;
             case CRUISER:
-                size = NBTILES_CRUISER;
+                size = this.NBTILES_CRUISER;
                 break;
             case AIRCRAFT:
-                size = NBTILES_AIRCRAFT;
+                size = this.NBTILES_AIRCRAFT;
                 break;
             case SUBMARINE:
-                size = NBTILES_SUBMARINE;
+                size = this.NBTILES_SUBMARINE;
                 break;
             default:
                 size = -1;

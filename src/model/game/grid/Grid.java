@@ -197,4 +197,11 @@ public class Grid implements Serializable {
     public int getGrid_height() {
         return grid_height;
     }
+
+    @Override
+    public String toString() {
+        return "Grid{" +
+                "positions=" + positions +
+                '}';
+    }
 }

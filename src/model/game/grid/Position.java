@@ -1,13 +1,13 @@
 package model.game.grid;
 
-import java.util.Objects;
+import java.io.Serializable;
 
 /**
  * class that represent a position in the game providing the information
  * of were a ship is
  */
-public final class Position {
-    private final int x,y;
+public final class Position implements Serializable {
+    private final int x, y;
 
     public Position(int x, int y) {
         this.x = x;
@@ -29,5 +29,13 @@ public final class Position {
         Position position = (Position) o;
         return x == position.x &&
                 y == position.y;
+    }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 }

@@ -19,6 +19,9 @@ public class TacticView extends PanelView{
     private JButton cancel;
     private JButton validate;
 
+    public static final String RANDOM = "Random";
+    public static final String CROSS = "Cross";
+
     public TacticView(MainObserver mainObserver, GameController controller) {
         super(mainObserver, controller);
 
@@ -33,7 +36,7 @@ public class TacticView extends PanelView{
         title.setBorder(new EmptyBorder(10,10,40,10));
 
         // Setting JComboBox
-        String[] choicesString = {"Random", "Cross"};
+        String[] choicesString = {RANDOM, CROSS};
         choices = new JComboBox<>(choicesString);
 
         // List renderer

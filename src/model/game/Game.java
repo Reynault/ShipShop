@@ -16,8 +16,8 @@ import java.util.UUID;
 
 public class Game implements Serializable {
 
-    public static int GRID_WIDTH;
-    public static int GRID_HEIGHT;
+    public static int GRID_WIDTH = 10;
+    public static int GRID_HEIGHT = 10;
     private int currentPlayer;
     private Era era;
     private final Player p1;

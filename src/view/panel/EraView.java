@@ -19,6 +19,9 @@ public class EraView extends PanelView {
     private JButton cancel;
     private JButton validate;
 
+    public static final String MODERN = "Modern";
+    public static final String XVI = "XVI";
+
     public EraView(MainObserver mainObserver, GameController controller) {
         super(mainObserver, controller);
 
@@ -33,7 +36,7 @@ public class EraView extends PanelView {
         title.setBorder(new EmptyBorder(10,10,40,10));
 
         // Setting JComboBox
-        String[] choicesString = {"Modern", "XIV"};
+        String[] choicesString = {MODERN, XVI};
         choices = new JComboBox<>(choicesString);
 
         // List renderer

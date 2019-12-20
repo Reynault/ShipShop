@@ -1,15 +1,12 @@
 package model.game.grid;
 
-import javafx.geometry.Pos;
 import model.DirectionConstant;
 import model.Move;
 import model.ShipType;
-import model.game.Game;
 import model.game.ship.FleetFactory;
 import model.game.ship.Ship;
 
 import java.io.Serializable;
-
 import java.util.*;
 
 /**
@@ -29,6 +26,7 @@ public class Grid implements Serializable {
     private int grid_height;
 
     private Map<UUID, Ship> ships;
+
     private Map<UUID, List<Position>> positions;
 
     /**
@@ -171,10 +169,12 @@ public class Grid implements Serializable {
         return false;
     }
 
+    public boolean isShip(UUID uuid){
+        return positions.containsKey(uuid);
+    }
+
     public Ship getShip(UUID uuid){
-        for (Map.Entry<UUID, Ship> entry : ships.entrySet()) {
-            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-        }
+        System.out.println(Arrays.asList(ships)); // method 1
         return ships.get(uuid);
     }
 

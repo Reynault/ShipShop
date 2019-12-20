@@ -1,14 +1,8 @@
 import model.*;
-import model.game.Game;
 import model.game.era.EraFactory;
-import model.game.grid.Grid;
-import model.game.player.Player;
 import model.game.player.tactic.CrossTactic;
 import model.game.player.tactic.RandomTactic;
-import model.game.ship.ModernFleet;
-import model.game.ship.Ship;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -43,22 +37,19 @@ public class Main {
                 printEmptyLine();
 
         //Test de la fonction play
-        ModernFleet modernFleet = new ModernFleet(2,2,2,2);
-        Ship ship = modernFleet.getShip(ShipType.TORPEDO);
-        Grid grid = new Grid();
-        Move move = new Move(5,5, DirectionConstant.UP, ShipType.TORPEDO);
+
+        Move move = new Move(0,0, DirectionConstant.RIGHT, ShipType.TORPEDO);
         UUID uuid = shipShop.placeShip(move);
-        System.out.println("Size of grid is : " + grid.getGridSizeX()+", " + grid.getGridSizeY());
-        System.out.println("List of ship in the grid : "+grid.getShip(uuid));
+        System.out.println("List of ship in the grid : "+shipShop.getGame().getPlayer()[0].getGrid().isShip(uuid));
+        System.out.println("List of ship in the grid : "+shipShop.getGame().getPlayer()[1].getGrid().isShip(uuid));
 
         shipShop.getGame().setNext();
 
-        Grid grid2 = new Grid();
         Move move2 = new Move(12,5, DirectionConstant.UP, ShipType.TORPEDO);
-        UUID uuid2 = shipShop.placeShip(move);
+        UUID uuid2 = shipShop.placeShip(move2);
 
-        System.out.println("Size of grid2 is : " + grid2.getGridSizeX()+", " + grid2.getGridSizeY());
-        System.out.println("List of ship in the grid2 : "+grid2.getShip(uuid));
+        System.out.println("List of ship in the grid : "+shipShop.getGame().getPlayer()[0].getGrid().isShip(uuid2));
+        System.out.println("List of ship in the grid : "+shipShop.getGame().getPlayer()[1].getGrid().isShip(uuid2));
 
 
         shipShop.play(new Attack(12,5, uuid));

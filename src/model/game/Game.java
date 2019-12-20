@@ -119,6 +119,11 @@ public class Game implements Serializable {
         System.out.println("Current Player after next : "+currentPlayer);
 
     }
+
+    public Player[] getPlayer(){
+        return players;
+    }
+
     @Override
     public String toString() {
         return "Game{" +

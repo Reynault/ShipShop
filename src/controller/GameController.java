@@ -13,6 +13,8 @@ import view.panel.TacticView;
 public class GameController {
     ShipShop model;
 
+
+
     public GameController(ShipShop model) {
         this.model = model;
     }
@@ -69,5 +71,22 @@ public class GameController {
 
     public void play(Attack attack){
         model.play(attack);
+    }
+
+    public void setTactic(String stringTactic){
+        Tactic tactic;
+        // Choose tactic
+        switch (stringTactic){
+            case TacticView.RANDOM:
+                tactic = TacticFactory.getRandomTactic();
+                break;
+            case TacticView.CROSS:
+                tactic = TacticFactory.getCrossTactic();
+                break;
+            default:
+                tactic = TacticFactory.getRandomTactic();
+                break;
+        }
+        model.setTactic(1,tactic);
     }
 }

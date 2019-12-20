@@ -14,6 +14,8 @@ import java.util.Observable;
 
 public class TacticView extends PanelView{
 
+    private String chosenTactic;
+
     private JLabel title;
     private JComboBox<String> choices;
     private JButton cancel;
@@ -81,11 +83,10 @@ public class TacticView extends PanelView{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            MainObserver o = getMainObserver();
-            if(o.isCurrentView(Views.MAIN)){
-                o.closeView(Views.TACTIC);
+            if(mainObserver.isCurrentView(Views.MAIN)){
+                mainObserver.closeView(Views.TACTIC);
             }else {
-                o.setCurrent(Views.MENU);
+                mainObserver.setCurrent(Views.MENU);
             }
         }
     }
@@ -94,11 +95,15 @@ public class TacticView extends PanelView{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            MainObserver o = getMainObserver();
-            if(o.isCurrentView(Views.MAIN)){
-                o.closeView(Views.TACTIC);
+            chosenTactic = (String) choices.getSelectedItem();
+            mainObserver.setChosenTactic(chosenTactic);
+
+            if(mainObserver.isCurrentView(Views.MAIN)){
+                controller.setTactic(chosenTactic);
+                mainObserver.closeView(Views.TACTIC);
             }else {
-                o.setCurrent(Views.MAIN);
+                controller.createGame(mainObserver.getChosenEra(), chosenTactic);
+                mainObserver.setCurrent(Views.MAIN);
             }
         }
     }

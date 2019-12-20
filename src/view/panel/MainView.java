@@ -1,7 +1,9 @@
 package view.panel;
 
 import controller.GameController;
+import model.Attack;
 import model.DirectionConstant;
+import model.Move;
 import view.constant.StringConstant;
 import view.constant.TextureFactory;
 import view.constant.Views;
@@ -25,6 +27,9 @@ import static view.constant.GraphicConstant.WIDTH_MAIN;
 public class MainView extends PanelView {
 
     // Data
+    private Attack currentAttack;
+    private Move currentMove;
+
     private final int width_cell, height_cell;
 
     private boolean select;
@@ -100,6 +105,7 @@ public class MainView extends PanelView {
         changeTactic = new JMenuItem(StringConstant.CHANGE_TACTIC);
         changeTactic.addActionListener(new ChangeTacticListener());
         save = new JMenuItem(StringConstant.SAVE_GAME);
+        save.addActionListener(new SaveListener());
         exit = new JMenuItem(StringConstant.EXIT_GAME);
         exit.addActionListener(new ExitListener());
 
@@ -312,9 +318,13 @@ public class MainView extends PanelView {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            System.out.println("x : "+x);
+            System.out.println("y : "+y);
             if (select) {
                 BufferedImage tmp, resizedImage;
                 Graphics2D g;
+
+                // Creating move
 
                 // Setting image depending on the direction
                 switch (direction[toward]) {
@@ -414,7 +424,6 @@ public class MainView extends PanelView {
                         break;
                 }
 
-
             }else{
                 ImageIcon imageIcon = (ImageIcon) player[x][y].getIcon();
 
@@ -440,7 +449,7 @@ public class MainView extends PanelView {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            getMainObserver().setCurrent(Views.MENU);
+            mainObserver.setCurrent(Views.MENU);
         }
     }
 
@@ -448,7 +457,7 @@ public class MainView extends PanelView {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            getMainObserver().openView(Views.TACTIC);
+            mainObserver.openView(Views.TACTIC);
         }
 
     }
@@ -521,4 +530,10 @@ public class MainView extends PanelView {
         }
     }
 
+    private class SaveListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            controller.saveGame();
+        }
+    }
 }

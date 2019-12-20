@@ -47,7 +47,7 @@ public class EndGameView extends PanelView {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            getMainObserver().setCurrent(Views.MENU);
+            mainObserver.setCurrent(Views.MENU);
         }
     }
 }

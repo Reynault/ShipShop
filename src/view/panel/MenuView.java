@@ -1,6 +1,7 @@
 package view.panel;
 
 import controller.GameController;
+import model.UpdateObserver;
 import view.constant.GraphicConstant;
 import view.constant.Views;
 
@@ -61,7 +62,12 @@ public class MenuView extends PanelView {
 
     @Override
     public void update(Observable o, Object arg) {
+        UpdateObserver val = (UpdateObserver)arg;
+        switch (val){
+            case BAD_LOAD:
 
+                break;
+        }
     }
 
     class ExitListener implements ActionListener {
@@ -76,7 +82,6 @@ public class MenuView extends PanelView {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            MainObserver mainObserver = getMainObserver();
             mainObserver.setCurrent(Views.ERA);
         }
     }
@@ -85,7 +90,7 @@ public class MenuView extends PanelView {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            controller.loadGame();
         }
     }
 }

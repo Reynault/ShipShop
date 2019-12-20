@@ -19,6 +19,8 @@ public class EraView extends PanelView {
     private JButton cancel;
     private JButton validate;
 
+    private String chosenEra;
+
     public static final String MODERN = "Modern";
     public static final String XVI = "XVI";
 
@@ -80,7 +82,7 @@ public class EraView extends PanelView {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            getMainObserver().setCurrent(Views.MENU);
+            mainObserver.setCurrent(Views.MENU);
         }
     }
 
@@ -88,7 +90,9 @@ public class EraView extends PanelView {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            getMainObserver().setCurrent(Views.TACTIC);
+            chosenEra = (String)choices.getSelectedItem();
+            mainObserver.setChosenEra(chosenEra);
+            mainObserver.setCurrent(Views.TACTIC);
         }
     }
 }

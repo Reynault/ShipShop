@@ -11,31 +11,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 
-public class EndGameView extends PanelView {
+import static javax.swing.SwingConstants.CENTER;
+
+public class BadLoadView extends PanelView{
 
     private JLabel message;
-    private JButton exit;
+    private JButton cancel;
 
-    public EndGameView(MainObserver mainObserver, GameController controller) {
+    public BadLoadView(MainObserver mainObserver, GameController controller) {
         super(mainObserver, controller);
 
         // Setting prefered size
         this.setPreferredSize(
-                new Dimension(GraphicConstant.WIDTH_END_GAME, GraphicConstant.HEIGHT_END_GAME)
+                new Dimension(GraphicConstant.WIDTH_BAD_LOAD, GraphicConstant.HEIGHT_BAD_LOAD)
         );
 
         this.setLayout(new BorderLayout());
 
-        message = new JLabel(StringConstant.END_GAME_TITLE+"win", SwingConstants.CENTER);
+        message = new JLabel(StringConstant.BAD_LOAD, CENTER);
         message.setFont(new Font("Dialog", Font.PLAIN, 35));
 
+        cancel = new JButton(StringConstant.EXIT_BUTTON);
+        cancel.addActionListener(new CancelListener());
+
         this.add(message, BorderLayout.CENTER);
+        this.add(cancel, BorderLayout.SOUTH);
 
-        exit = new JButton(StringConstant.EXIT_BUTTON);
-
-        this.add(exit, BorderLayout.SOUTH);
-
-        this.buildFrame();
+        buildFrame();
     }
 
     @Override
@@ -43,8 +45,7 @@ public class EndGameView extends PanelView {
 
     }
 
-    public class ExitListener implements ActionListener{
-
+    private class CancelListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             mainObserver.setCurrent(Views.MENU);

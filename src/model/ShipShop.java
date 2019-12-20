@@ -2,16 +2,16 @@ package model;
 
 import model.game.Game;
 import model.game.era.Era;
-import model.game.era.EraFactory;
-import model.game.player.tactic.RandomTactic;
 import model.game.player.tactic.Tactic;
 import model.game.ship.Ship;
 
 import java.awt.*;
 import java.io.*;
+import java.io.File;
 import java.util.Observable;
 import java.util.UUID;
 
+import static model.UpdateObserver.BAD_LOAD;
 import static model.UpdateObserver.LAUNCH;
 import static model.UpdateObserver.PLACESHIP;
 
@@ -45,7 +45,6 @@ public class ShipShop extends Observable {
 
     public UUID placeShip(Move move) {
         UUID uuid = game.placeShip(move);
-        System.out.println("PlaceShip Shipshop : "+ uuid);
         setChanged();
         notifyObservers(PLACESHIP);
         return uuid;
@@ -59,7 +58,7 @@ public class ShipShop extends Observable {
         return game.drawShip(type);
     }
 
-    public void play(Attack attack){
+    public void play(Attack attack) {
         game.play(attack);
     }
 
@@ -74,10 +73,10 @@ public class ShipShop extends Observable {
         }
     }
 
-    public void save(Game game){
+    public void save(Game game) {
         File file = new File(SAVE_PATH);
-        try{
-            if (!file.exists()){
+        try {
+            if (!file.exists()) {
                 file.createNewFile();
             }
         } catch (IOException e) {
@@ -97,17 +96,17 @@ public class ShipShop extends Observable {
         }
     }
 
-    public void load(){
+    public void load() {
         Game game = null;
         try {
             FileInputStream stream = new FileInputStream(new File(SAVE_PATH));
             ObjectInputStream object = new ObjectInputStream(stream);
-            game = (Game)object.readObject();
+            game = (Game) object.readObject();
             object.close();
             stream.close();
-        }catch (Exception e){
-            e.printStackTrace();
-            createGame(EraFactory.getModernEra(), new RandomTactic(), true);
+        } catch (Exception e) {
+            this.setChanged();
+            this.notifyObservers(BAD_LOAD);
         }
         this.game = game;
     }

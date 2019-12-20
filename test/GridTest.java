@@ -119,7 +119,7 @@ class GridTest {
             void place_ship_down_wall(){
 
                 Move move = new Move(
-                        0,fleetFactory.getSize(ShipType.CRUISER)-1, DirectionConstant.UP, ShipType.CRUISER
+                        0,fleetFactory.getSize(ShipType.CRUISER)-1, DirectionConstant.DOWN, ShipType.CRUISER
                 );
 
                 UUID uuid = grid.placeShip(move, fleetFactory);

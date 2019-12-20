@@ -11,10 +11,12 @@ public class MainObserver implements Observer {
     private PanelView current;
     private GameController controller;
     private HashMap<Views, PanelView> views;
+    private HashMap<String, Object> data;
 
     public MainObserver(GameController controller) {
         this.controller = controller;
 
+        data = new HashMap<>();
         views = new HashMap<>();
 
         views.put(Views.MENU, new MenuView(this, controller));

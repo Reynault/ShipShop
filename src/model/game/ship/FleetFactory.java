@@ -3,7 +3,9 @@ package model.game.ship;
 import model.EraConstant;
 import model.ShipType;
 
-public abstract class FleetFactory {
+import java.io.Serializable;
+
+public abstract class FleetFactory implements Serializable {
     private int nbCruiser;
     private int nbSubmarine;
     private int nbTorpedo;

@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         System.out.println("Launching game ...");
         ShipShop shipShop = new ShipShop();
-        shipShop.createGame(EraFactory.getModernEra(), new RandomTactic(), true);
+        shipShop.createGame(EraFactory.getXVIEra(), new RandomTactic(), true);
         shipShop.drawShip(ShipType.TORPEDO);
         System.out.println("Game launched and Tropedo drawed !");
         System.out.println("Changing tactic for IA ...");

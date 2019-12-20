@@ -4,7 +4,6 @@ import model.Attack;
 import model.Move;
 import model.ShipType;
 import model.game.era.Era;
-import model.game.player.IA;
 import model.game.player.Player;
 import model.game.player.tactic.Tactic;
 import model.game.ship.Ship;
@@ -72,7 +71,7 @@ public class Game implements Serializable {
     }
 
     public List<Attack> play(Attack attack){
-        Player otherCurrentPlayer = next();
+        Player otherCurrentPlayer = whosNext();
         System.out.println("Attack start at (X,Y) by player : "+ players[currentPlayer] + " ");
         System.out.println("Attack on position ("+ attack.getX()+ "," +  attack.getY() + ")");
         if(otherCurrentPlayer.getGrid().isShip(attack.getX(),attack.getY())){
@@ -106,10 +105,20 @@ public class Game implements Serializable {
     /**
      * Methode qui retourne le joueur suivant du joueur actuel
      */
-    private Player next(){
+    private Player whosNext(){
         return players[(currentPlayer == 0)?1:0];
     }
 
+
+    /**
+     * Methode qui permet de changer le joueur en cours (fin de tour début du tour pour l'autre joueur
+     */
+    public void setNext(){
+        System.out.println("Current Player : "+currentPlayer);
+        currentPlayer = (currentPlayer == 0)?1:0;
+        System.out.println("Current Player after next : "+currentPlayer);
+
+    }
     @Override
     public String toString() {
         return "Game{" +

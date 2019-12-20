@@ -15,6 +15,7 @@ public class Move {
 		this.x = x;
 		this.y =y;
 		this.direction = direction;
+		this.type = shipType;
 		this.ship = new UUID(0,0);
 	}
 

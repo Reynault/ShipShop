@@ -23,7 +23,7 @@ public class MainObserver implements Observer {
         views.put(Views.MAIN, new MainView(this, controller));
         views.put(Views.END_GAME, new EndGameView(this, controller));
 
-        setCurrent(Views.MENU);
+        setCurrent(Views.MAIN);
     }
 
     public void setCurrent(Views current) {

@@ -29,7 +29,7 @@ public class MainView extends PanelView {
 
     private boolean select;
     private BufferedImage cursorImage;
-    private int RANGE_Y, RANGE_X;
+    private int size;
     private int toward;
     private DirectionConstant[] direction;
 
@@ -272,8 +272,7 @@ public class MainView extends PanelView {
 
                 cursorImage = ImageIO.read(ClassLoader.getSystemResource("sprite/aircraft.png"));
 
-                RANGE_Y = 4;
-                RANGE_X = 1;
+                size = 5;
 
                 setCursor(toolkit.createCustomCursor(cursorImage, new Point(getX(),
                         getY()), "img"));
@@ -313,39 +312,107 @@ public class MainView extends PanelView {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (select) {
-                BufferedImage tmp;
+                BufferedImage tmp, resizedImage;
+                Graphics2D g;
 
-                BufferedImage resizedImage = new BufferedImage(RANGE_X * width_cell, RANGE_Y * height_cell, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g = resizedImage.createGraphics();
-                g.drawImage(cursorImage, 0, 0, RANGE_X * width_cell, RANGE_Y * height_cell, null);
-                g.dispose();
-
-                // Checking if we can add the ship in the grid
-                if ((x - RANGE_Y + 1) >= 0 && (x - RANGE_Y + 1) < (player.length + 1) &&
-                        (y + RANGE_X) >= 0 && (y + RANGE_X) <= player[x].length) {
-
-                    // Setting ship in the grid
-                    for (int i = 0; i < RANGE_Y; i++) {
-                        for (int j = 0; j < RANGE_X; j++) {
-
-                            tmp = resizedImage.getSubimage(
-                                    j * width_cell,
-                                    i * height_cell,
-                                    width_cell,
-                                    height_cell
-                            );
-
-                            ImageIcon imageIcon = new ImageIcon(tmp);
-
-                            player[x - i][y + j].setIcon(imageIcon);
-
-                        }
-                    }
-
-                    select = false;
-                    setCursor(Cursor.getDefaultCursor());
-
+                switch (direction[toward]) {
+                    case DOWN:
+                    case UP:
+                        resizedImage = new BufferedImage(width_cell, size * height_cell, BufferedImage.TYPE_INT_ARGB);
+                        g = resizedImage.createGraphics();
+                        g.drawImage(cursorImage, 0, 0, width_cell, size * height_cell, null);
+                        g.dispose();
+                        break;
+                    case RIGHT:
+                    case LEFT:
+                        resizedImage = new BufferedImage(width_cell * size, height_cell, BufferedImage.TYPE_INT_ARGB);
+                        g = resizedImage.createGraphics();
+                        g.drawImage(cursorImage, 0, 0, width_cell * size, height_cell, null);
+                        g.dispose();
+                        break;
+                    default:
+                        resizedImage = new BufferedImage(width_cell * size, height_cell, BufferedImage.TYPE_INT_ARGB);
+                        break;
                 }
+
+                // Setting parameter depending on the direction
+                switch (direction[toward]){
+                    case DOWN:
+                        if((x-size)+1 >= 0) {
+                            for (int i = 0; i < size; i++) {
+                                tmp = resizedImage.getSubimage(
+                                        0,
+                                        i * height_cell,
+                                        width_cell,
+                                        height_cell
+                                );
+
+                                ImageIcon imageIcon = new ImageIcon(tmp);
+
+                                player[x - i][y].setIcon(imageIcon);
+                            }
+                            select = false;
+                            setCursor(Cursor.getDefaultCursor());
+                        }
+                        break;
+                    case UP:
+                        if(x+size <= player.length) {
+                            for(int i = 0; i < size; i++){
+                                tmp = resizedImage.getSubimage(
+                                        0,
+                                        (size-(i+1)) * height_cell,
+                                        width_cell,
+                                        height_cell
+                                );
+
+                                ImageIcon imageIcon = new ImageIcon(tmp);
+
+                                player[x+i][y].setIcon(imageIcon);
+                            }
+                            select = false;
+                            setCursor(Cursor.getDefaultCursor());
+                        }
+                        break;
+                    case RIGHT:
+                        if(y+size <= player.length) {
+                            for (int i = 0; i < size; i++) {
+                                tmp = resizedImage.getSubimage(
+                                        i * height_cell,
+                                        0,
+                                        width_cell,
+                                        height_cell
+                                );
+
+
+                                ImageIcon imageIcon = new ImageIcon(tmp);
+
+                                player[x][y + i].setIcon(imageIcon);
+                            }
+                            select = false;
+                            setCursor(Cursor.getDefaultCursor());
+                        }
+                        break;
+                    case LEFT:
+                        if((y-size + 1) >= 0) {
+                            for (int i = 0; i < size; i++) {
+                                tmp = resizedImage.getSubimage(
+                                        (size - (i + 1)) * height_cell,
+                                        0,
+                                        width_cell,
+                                        height_cell
+                                );
+
+                                ImageIcon imageIcon = new ImageIcon(tmp);
+
+                                player[x][y - i].setIcon(imageIcon);
+                            }
+                            select = false;
+                            setCursor(Cursor.getDefaultCursor());
+                        }
+                        break;
+                }
+
+
             }else{
                 ImageIcon imageIcon = (ImageIcon) player[x][y].getIcon();
 
@@ -416,7 +483,7 @@ public class MainView extends PanelView {
                     int w = (int) (width * cos + height * sin);
                     int h = (int) (width * sin + height * cos);
 
-                    BufferedImage out = new BufferedImage(w, h, cursorImage.getType());
+                    BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
                     Graphics2D g2 = out.createGraphics();
                     double x = w / 2;
@@ -432,12 +499,6 @@ public class MainView extends PanelView {
 
                     setCursor(toolkit.createCustomCursor(cursorImage, new Point(getX(),
                             getY()), "img"));
-
-
-                    // Changing the range
-                    int tmp = RANGE_Y;
-                    RANGE_Y = RANGE_X;
-                    RANGE_X = tmp;
                 }
             }
         }

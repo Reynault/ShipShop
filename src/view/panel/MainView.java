@@ -23,8 +23,8 @@ import static view.constant.GraphicConstant.HEIGHT_MAIN;
 import static view.constant.GraphicConstant.WIDTH_MAIN;
 
 public class MainView extends PanelView {
-    // Data
 
+    // Data
     private final int width_cell, height_cell;
 
     private boolean select;
@@ -243,6 +243,7 @@ public class MainView extends PanelView {
     }
 
     private void changeStep(){
+        select = false;
         sideBarPlacement.setVisible(false);
         left.add(gameReview, BorderLayout.WEST);
     }
@@ -315,6 +316,7 @@ public class MainView extends PanelView {
                 BufferedImage tmp, resizedImage;
                 Graphics2D g;
 
+                // Setting image depending on the direction
                 switch (direction[toward]) {
                     case DOWN:
                     case UP:
@@ -335,7 +337,7 @@ public class MainView extends PanelView {
                         break;
                 }
 
-                // Setting parameter depending on the direction
+                // Adding image on buttons depending on the direction
                 switch (direction[toward]){
                     case DOWN:
                         if((x-size)+1 >= 0) {

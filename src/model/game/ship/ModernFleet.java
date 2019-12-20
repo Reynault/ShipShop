@@ -37,6 +37,7 @@ public class ModernFleet extends FleetFactory implements Serializable {
         Ship res;
         switch (shipType) {
             case SUBMARINE:
+                nbSubmarine --;
                 res = new Ship(
                         HP_SUBMARINE,
                         AMMO_SUBMARINE,
@@ -47,6 +48,7 @@ public class ModernFleet extends FleetFactory implements Serializable {
                 );
                 break;
             case AIRCRAFT:
+                nbAircraft --;
                 res = new Ship(
                         HP_AIRCRAFT,
                         AMMO_AIRCRAFT,
@@ -57,6 +59,7 @@ public class ModernFleet extends FleetFactory implements Serializable {
                 );
                 break;
             case TORPEDO:
+                nbTorpedo --;
                 res = new Ship(
                         HP_TORPEDO,
                         AMMO_TORPEDO,
@@ -67,6 +70,7 @@ public class ModernFleet extends FleetFactory implements Serializable {
                 );
                 break;
             case CRUISER:
+                nbCruiser --;
                 res = new Ship(
                         HP_CRUISER,
                         AMMO_CRUISER,

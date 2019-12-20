@@ -221,14 +221,37 @@ class GridTest {
             void place_ship_exist(){
 
                 Move move = new Move(
-                        1,0, DirectionConstant.DOWN, ShipType.CRUISER
+                        0,0, DirectionConstant.RIGHT, ShipType.TORPEDO
                 );
+
 
                 UUID uuid = grid.placeShip(move, fleetFactory);
 
                 Ship ship = grid.getShip(uuid);
 
                 Assertions.assertNotNull(ship);
+
+            }
+
+            @Test
+            void place_ship_same_ships(){
+
+                Move move = new Move(
+                        0,0, DirectionConstant.RIGHT, ShipType.TORPEDO
+                );
+
+
+                UUID uuid = grid.placeShip(move, fleetFactory);
+
+
+                move = new Move(
+                        0,1, DirectionConstant.RIGHT, ShipType.TORPEDO
+                );
+
+
+                UUID uuid2 = grid.placeShip(move, fleetFactory);
+
+                Assertions.assertNotEquals(uuid, uuid2);
 
             }
 

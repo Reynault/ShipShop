@@ -4,10 +4,12 @@ import model.Move;
 import model.game.Game;
 import model.game.ship.FleetFactory;
 import model.game.ship.Ship;
+
+import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 
-public class Grid {
+public class Grid implements Serializable {
 
     protected int[][] ennemyGrid = new int[Game.GRID_WIDTH][Game.GRID_HEIGHT];
 

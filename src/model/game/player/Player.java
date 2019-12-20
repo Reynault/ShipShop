@@ -7,9 +7,10 @@ import model.game.player.tactic.Tactic;
 import model.game.ship.FleetFactory;
 import model.game.ship.Ship;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public abstract class Player {
+public abstract class Player implements Serializable {
 
     protected boolean ready;
     protected FleetFactory fleetFactory;

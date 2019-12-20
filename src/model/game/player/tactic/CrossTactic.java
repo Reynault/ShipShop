@@ -3,7 +3,9 @@ package model.game.player.tactic;
 import model.Move;
 import model.game.player.Player;
 
-public class CrossTactic implements Tactic{
+import java.io.Serializable;
+
+public class CrossTactic implements Tactic, Serializable {
 
     @Override
     public Move applyTactic(Player player) {

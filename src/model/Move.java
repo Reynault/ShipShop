@@ -1,17 +1,21 @@
 package model;
 
+import com.sun.javafx.scene.traversal.Direction;
+
 import java.util.UUID;
 
 public class Move {
 
-	final static UUID NONE_UUID = new UUID(0,0);
 	int x, y;
 	DirectionConstant direction;
 	ShipType type;
 	UUID ship;
 
-	public Move(){
-
+	public Move(int x, int y, DirectionConstant direction, ShipType shipType){
+		this.x = x;
+		this.y =y;
+		this.direction = direction;
+		this.ship = new UUID(0,0);
 	}
 
 	public int getX() {

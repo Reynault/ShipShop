@@ -3,10 +3,13 @@ package model.game.ship;
 import model.DirectionConstant;
 import model.ShipType;
 
+import java.io.Serializable;
+import java.util.UUID;
+
 /**
  * Ship is a model class that represent a ship and its properties
  */
-public class Ship {
+public class Ship implements Serializable {
     private int hp;
     private int ammo;
     private int dmg;
@@ -21,6 +24,8 @@ public class Ship {
      * ShipType is a parameter that indicate the type of the ship (Submarine, cruiser etc...)
      */
     private ShipType shipType;
+
+    final static UUID NONE_UUID = new UUID(0,0);
 
     /**
      * Default constructor for Ship with all properties provided

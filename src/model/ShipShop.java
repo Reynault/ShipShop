@@ -2,6 +2,8 @@ package model;
 
 import model.game.Game;
 import model.game.era.Era;
+import model.game.era.EraFactory;
+import model.game.player.tactic.RandomTactic;
 import model.game.player.tactic.Tactic;
 import model.game.ship.Ship;
 
@@ -14,6 +16,7 @@ import java.util.UUID;
 import static model.UpdateObserver.*;
 
 public class ShipShop extends Observable {
+    private String SAVE_PATH = "save.ser";
 
     protected UUID requestedShip;
     protected Attack requestAttack;
@@ -70,24 +73,41 @@ public class ShipShop extends Observable {
         }
     }
 
-    //A faire
-    public void save(File file) throws IOException {
-        if(!file.exists()){
-            file.createNewFile();
+    public void save(Game game){
+        File file = new File(SAVE_PATH);
+        try{
+            if (!file.exists()){
+                file.createNewFile();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        FileOutputStream fos = new FileOutputStream(file);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(game);
-        oos.close();
-        fos.close();
+
+        try {
+            FileOutputStream stream = new FileOutputStream(file);
+            ObjectOutputStream object = new ObjectOutputStream(stream);
+            object.writeObject(game);
+            object.close();
+            stream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public Game load(File file) throws IOException, ClassNotFoundException {
-        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-        Game g = (Game)ois.readObject();
-        setChanged();
-        notifyObservers(LOAD);
-        return g;
+    public Game load(){
+        Game game = null;
+        try {
+            FileInputStream stream = new FileInputStream(new File(SAVE_PATH));
+            ObjectInputStream object = new ObjectInputStream(stream);
+            game = (Game)object.readObject();
+            object.close();
+            stream.close();
+        }catch (Exception e){
+            createGame(EraFactory.getModernEra(), new RandomTactic(), true);
+        }
+        return game;
     }
 
     public Ship getShip(UUID uuid) {
@@ -95,4 +115,14 @@ public class ShipShop extends Observable {
     }
 
 
+    public Game getGame() {
+        return this.game;
+    }
+
+    @Override
+    public String toString() {
+        return "ShipShop{" +
+                "game=" + game +
+                '}';
+    }
 }

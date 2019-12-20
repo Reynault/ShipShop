@@ -10,10 +10,11 @@ import model.game.player.tactic.Tactic;
 import model.game.ship.Ship;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
-public class Game {
+public class Game implements Serializable {
 
     public static int GRID_WIDTH;
     public static int GRID_HEIGHT;
@@ -98,4 +99,13 @@ public class Game {
         return players[(currentPlayer == 0)?1:0];
     }
 
+    @Override
+    public String toString() {
+        return "Game{" +
+                "currentPlayer=" + currentPlayer +
+                ", era=" + era +
+                ", p1=" + p1 +
+                ", p2=" + p2 +
+                '}';
+    }
 }

@@ -1,7 +1,6 @@
 package view.panel;
 
 import controller.GameController;
-import sun.applet.Main;
 import view.constant.GraphicConstant;
 import view.constant.Views;
 

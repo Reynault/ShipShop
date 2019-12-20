@@ -3,7 +3,9 @@ package model.game.ship;
 import model.DirectionConstant;
 import model.ShipType;
 
-public class XVIFleet extends FleetFactory {
+import java.io.Serializable;
+
+public class XVIFleet extends FleetFactory implements Serializable {
     private static int HP_SUBMARINE = 3;
     private static int HP_AIRCRAFT = 5;
     private static int HP_TORPEDO = 2;

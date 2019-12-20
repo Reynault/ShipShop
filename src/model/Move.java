@@ -1,7 +1,5 @@
 package model;
 
-import com.sun.javafx.scene.traversal.Direction;
-
 import java.util.UUID;
 
 public class Move {

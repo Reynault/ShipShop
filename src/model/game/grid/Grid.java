@@ -1,6 +1,5 @@
 package model.game.grid;
 
-import javafx.geometry.Pos;
 import model.DirectionConstant;
 import model.Move;
 import model.ShipType;
@@ -9,7 +8,6 @@ import model.game.ship.FleetFactory;
 import model.game.ship.Ship;
 
 import java.io.Serializable;
-
 import java.util.*;
 
 /**

@@ -25,23 +25,30 @@ public class Grid implements Serializable {
     private int[][] ennemyGrid;
     private int[][] playerGrid;
 
+    private int grid_width;
+    private int grid_height;
+
     private Map<UUID, Ship> ships;
     private Map<UUID, List<Position>> positions;
 
     /**
      * Default constructor that initialise everything
      */
-    public Grid(){
-        ennemyGrid = new int[Game.GRID_WIDTH][Game.GRID_HEIGHT];
-        playerGrid = new int[Game.GRID_WIDTH][Game.GRID_HEIGHT];
+    public Grid(int grid_width, int grid_height){
+        this.grid_height = grid_height;
+        this.grid_width = grid_width;
 
-        for(int i = 0 ; i < Game.GRID_WIDTH; i++){
-            for(int j = 0; j < Game.GRID_HEIGHT; j++){
+        ennemyGrid = new int[grid_width][grid_height];
+        playerGrid = new int[grid_width][grid_height];
+
+        for(int i = 0 ; i < grid_width; i++){
+            for(int j = 0; j < grid_height; j++){
                 ennemyGrid[i][j] = NONE;
                 playerGrid[i][j] = NONE;
             }
 
         }
+
 
         ships = new HashMap<>();
         positions = new HashMap<>();
@@ -77,8 +84,10 @@ public class Grid implements Serializable {
         // Getting size
         int size = fleetFactory.getSize(shipType);
 
+        System.out.println("Condition : "+size);
+
         // Checking if we can place the ship in the grid
-        if(x >= 0 && x < Game.GRID_WIDTH && y >= 0 && y < Game.GRID_HEIGHT && fleetFactory.hasShip(move.getType())){
+        if(x >= 0 && x < grid_width && y >= 0 && y < grid_height && fleetFactory.hasShip(move.getType())){
 
             // Then checking if the ship is overflowing the grid
             boolean overflow;
@@ -100,13 +109,13 @@ public class Grid implements Serializable {
                     }
                     break;
                 case RIGHT:
-                    overflow = (x+size) >= Game.GRID_WIDTH;
+                    overflow = (x+size) >= grid_width;
                     for(int i = 0 ; i  < size; i++){
                         pos.add(new Position(x+i, y));
                     }
                     break;
                 case DOWN:
-                    overflow = (y+size) >= Game.GRID_HEIGHT;
+                    overflow = (y+size) >= grid_height;
                     for(int i = 0 ; i  < size; i++){
                         pos.add(new Position(x, y+1));
                     }
@@ -127,6 +136,7 @@ public class Grid implements Serializable {
 
                     for(Position p: check){
                         if(pos.contains(p)){
+                            System.out.println("ok2");
                             exist = true;
                         }
                     }
@@ -140,6 +150,8 @@ public class Grid implements Serializable {
                     ships.put(res, ship);
                     positions.put(res, pos);
                 }
+            }else{
+                System.out.println("ok");
             }
 
         }

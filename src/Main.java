@@ -1,4 +1,5 @@
 import model.*;
+import model.game.Game;
 import model.game.era.EraFactory;
 import model.game.grid.Grid;
 import model.game.player.Player;

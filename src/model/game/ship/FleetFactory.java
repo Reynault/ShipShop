@@ -3,11 +3,33 @@ package model.game.ship;
 import model.EraConstant;
 import model.ShipType;
 
-public abstract class FleetFactory {
+import java.io.Serializable;
+
+public abstract class FleetFactory implements Serializable {
     private int nbCruiser;
     private int nbSubmarine;
     private int nbTorpedo;
     private int nbAircraft;
+
+    static int HP_SUBMARINE;
+    static int HP_AIRCRAFT ;
+    static int HP_TORPEDO ;
+    static int HP_CRUISER ;
+
+    static int AMMO_SUBMARINE;
+    static int AMMO_AIRCRAFT;
+    static int AMMO_TORPEDO;
+    static int AMMO_CRUISER;
+
+    static int DMG_SUBMARINE;
+    static int DMG_AIRCRAFT;
+    static int DMG_TORPEDO;
+    static int DMG_CRUISER;
+
+    static int NBTILES_SUBMARINE;
+    static int NBTILES_AIRCRAFT;
+    static int NBTILES_TORPEDO;
+    static int NBTILES_CRUISER;
 
     public FleetFactory(int nbCruiser, int nbSubmarine, int nbTorpedo, int nbAircraft) {
         this.nbCruiser = nbCruiser;
@@ -53,4 +75,26 @@ public abstract class FleetFactory {
     }
 
     public abstract Ship getShip(ShipType shipType);
+
+    public int getSize(ShipType shipType) {
+        int size;
+        switch (shipType){
+            case TORPEDO:
+                size = NBTILES_TORPEDO;
+                break;
+            case CRUISER:
+                size = NBTILES_CRUISER;
+                break;
+            case AIRCRAFT:
+                size = NBTILES_AIRCRAFT;
+                break;
+            case SUBMARINE:
+                size = NBTILES_SUBMARINE;
+                break;
+            default:
+                size = -1;
+                break;
+        }
+        return size;
+    }
 }

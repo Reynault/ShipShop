@@ -1,5 +1,6 @@
 package view.panel;
 
+import controller.GameController;
 import view.constant.Views;
 
 import java.util.HashMap;
@@ -8,18 +9,21 @@ import java.util.Observer;
 
 public class MainObserver implements Observer {
     private PanelView current;
-
+    private GameController controller;
     private HashMap<Views, PanelView> views;
 
-    public MainObserver() {
+    public MainObserver(GameController controller) {
+        this.controller = controller;
+
         views = new HashMap<>();
 
-        views.put(Views.MENU, new MenuView(this));
-        views.put(Views.ERA, new EraView(this));
-        views.put(Views.TACTIC, new TacticView(this));
-        views.put(Views.MAIN, new MainView(this));
+        views.put(Views.MENU, new MenuView(this, controller));
+        views.put(Views.ERA, new EraView(this, controller));
+        views.put(Views.TACTIC, new TacticView(this, controller));
+        views.put(Views.MAIN, new MainView(this, controller));
+        views.put(Views.END_GAME, new EndGameView(this, controller));
 
-        setCurrent(Views.MAIN);
+        setCurrent(Views.MENU);
     }
 
     public void setCurrent(Views current) {
@@ -28,6 +32,9 @@ public class MainObserver implements Observer {
         }
 
         if (this.views.containsKey(current)) {
+            if(current == Views.MAIN){
+                this.views.put(Views.MAIN, new MainView(this, controller));
+            }
             this.current = this.views.get(current);
             this.current.open();
         }

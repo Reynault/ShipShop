@@ -1,5 +1,6 @@
 package view.panel;
 
+import controller.GameController;
 import view.constant.StringConstant;
 
 import javax.swing.*;
@@ -8,18 +9,20 @@ import java.util.Observable;
 public abstract class PanelView extends JPanel {
     private JFrame frame;
     private MainObserver mainObserver;
+    private GameController controller;
 
-    public PanelView(MainObserver mainObserver) {
+    public PanelView(MainObserver mainObserver, GameController controller) {
         this.mainObserver = mainObserver;
         this.frame = new JFrame(StringConstant.APP_TITLE);
+        this.controller = controller;
     }
 
-    public void open(){
+    public void open() {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
-    public void close(){
+    public void close() {
         frame.setVisible(false);
     }
 

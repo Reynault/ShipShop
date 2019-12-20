@@ -1,7 +1,9 @@
 package view.panel;
 
+import controller.GameController;
 import model.DirectionConstant;
 import view.constant.StringConstant;
+import view.constant.TextureFactory;
 import view.constant.Views;
 
 import javax.imageio.ImageIO;
@@ -13,7 +15,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Observable;
@@ -25,13 +26,25 @@ public class MainView extends PanelView {
     // Data
 
     private final int width_cell, height_cell;
+
     private boolean select;
     private BufferedImage cursorImage;
     private int RANGE_Y, RANGE_X;
     private int toward;
     private DirectionConstant[] direction;
 
+
+    private final JPanel left;
+
+    // Game review
+    private JPanel gameReview;
+    private final JLabel ammo;
+    private final JLabel attack;
+    private final JLabel life;
+
     // Placement buttons
+
+    private JPanel sideBarPlacement;
     private JButton[] shipPlacement;
 
     private JButton[][] ennemy;
@@ -57,8 +70,8 @@ public class MainView extends PanelView {
     private final int AIRCRAFT = 3;
     private final int READY = 4;
 
-    public MainView(MainObserver mainObserver) {
-        super(mainObserver);
+    public MainView(MainObserver mainObserver, GameController controller) {
+        super(mainObserver, controller);
 
         // Creating mouse listener
         SelectionListener selectionListener = new SelectionListener();
@@ -101,7 +114,7 @@ public class MainView extends PanelView {
         global.setLayout(new GridLayout(1, 2));
         this.add(global, BorderLayout.CENTER);
 
-        JPanel left = new JPanel();
+        left = new JPanel();
         JPanel right = new JPanel();
 
         left.setLayout(new BorderLayout());
@@ -111,10 +124,13 @@ public class MainView extends PanelView {
         global.add(right);
 
         // Setting ennemy grid
+        JLabel ennemyDescription = new JLabel(StringConstant.ENNEMY_TITLE, SwingConstants.CENTER);
+
         ennemyGrid = new JPanel();
         ennemyGrid.setLayout(new GridLayout(WIDTH_PANEL, HEIGHT_PANEL));
-        ennemyGrid.setBorder(new EmptyBorder(10,10,10,10));
+        ennemyGrid.setBorder(new EmptyBorder(10, 10, 10, 10));
 
+        right.add(ennemyDescription, BorderLayout.NORTH);
         right.add(ennemyGrid, BorderLayout.CENTER);
         right.setBorder(new EmptyBorder(10, 10, 10, 10));
 
@@ -130,7 +146,7 @@ public class MainView extends PanelView {
                 ennemy[i][j].setPreferredSize(new Dimension(
                         width_cell, height_cell
                 ));
-                ennemy[i][j].addActionListener(new PlayerTileListener(i, j));
+                ennemy[i][j].addActionListener(new EnnemyTileListener(i, j));
                 ennemy[i][j].addMouseListener(selectionListener);
 
                 ennemyGrid.add(ennemy[i][j], i, j);
@@ -138,10 +154,13 @@ public class MainView extends PanelView {
         }
 
         // Setting player grid
+        JLabel playerDescription = new JLabel(StringConstant.PLAYER_TITLE, SwingConstants.CENTER);
+
         playerGrid = new JPanel();
         playerGrid.setLayout(new GridLayout(WIDTH_PANEL, HEIGHT_PANEL));
-        playerGrid.setBorder(new EmptyBorder(10,10,10,10));
+        playerGrid.setBorder(new EmptyBorder(10, 10, 10, 10));
 
+        left.add(playerDescription, BorderLayout.NORTH);
         left.add(playerGrid, BorderLayout.CENTER);
         left.setBorder(new EmptyBorder(10, 10, 10, 10));
 
@@ -166,19 +185,19 @@ public class MainView extends PanelView {
         // Setting ship placement buttons
         shipPlacement = new JButton[5];
 
-        shipPlacement[CRUISER] = new JButton("0");
+        shipPlacement[CRUISER] = new JButton(StringConstant.CRUISER);
         shipPlacement[CRUISER].addActionListener(new ShipListener());
         shipPlacement[CRUISER].addMouseListener(selectionListener);
 
-        shipPlacement[SUBMARINE] = new JButton("1");
+        shipPlacement[SUBMARINE] = new JButton(StringConstant.SUBMARINE);
         shipPlacement[SUBMARINE].addActionListener(new ShipListener());
         shipPlacement[SUBMARINE].addMouseListener(selectionListener);
 
-        shipPlacement[AIRCRAFT] = new JButton("2");
+        shipPlacement[AIRCRAFT] = new JButton(StringConstant.AIRCRAFT);
         shipPlacement[AIRCRAFT].addActionListener(new ShipListener());
         shipPlacement[AIRCRAFT].addMouseListener(selectionListener);
 
-        shipPlacement[TORPEDO] = new JButton("3");
+        shipPlacement[TORPEDO] = new JButton(StringConstant.TORPERDO);
         shipPlacement[TORPEDO].addActionListener(new ShipListener());
         shipPlacement[TORPEDO].addMouseListener(selectionListener);
 
@@ -186,15 +205,33 @@ public class MainView extends PanelView {
         shipPlacement[READY].addActionListener(new ReadyListener());
 
         // Setting side bar with ship placement
-        JPanel sidebar = new JPanel();
-        sidebar.setLayout(new GridLayout(shipPlacement.length, WIDTH_SIDEBAR));
+        sideBarPlacement = new JPanel();
+        sideBarPlacement.setLayout(new GridLayout(shipPlacement.length, WIDTH_SIDEBAR));
 
-        left.add(sidebar, BorderLayout.WEST);
+        left.add(sideBarPlacement, BorderLayout.WEST);
 
         // Adding buttons
         for (JButton button : shipPlacement) {
-            sidebar.add(button);
+            sideBarPlacement.add(button);
         }
+
+        // Setting side bar with game review
+        gameReview = new JPanel();
+        gameReview.setLayout(new GridLayout(5,1));
+
+        JLabel selectedShip = new JLabel(StringConstant.SELECTED_SHIP, SwingConstants.CENTER);
+        life = new JLabel(StringConstant.LIFE, SwingConstants.CENTER);
+        attack = new JLabel(StringConstant.ATTACK, SwingConstants.CENTER);
+        ammo = new JLabel(StringConstant.AMMO, SwingConstants.CENTER);
+
+        JButton endTurn = new JButton(StringConstant.END_TURN);
+        endTurn.addActionListener(new EndTurnListener());
+
+        gameReview.add(selectedShip);
+        gameReview.add(life);
+        gameReview.add(attack);
+        gameReview.add(ammo);
+        gameReview.add(endTurn);
 
         // Configuring data
         select = false;
@@ -205,20 +242,25 @@ public class MainView extends PanelView {
         this.buildFrame();
     }
 
+    private void changeStep(){
+        sideBarPlacement.setVisible(false);
+        left.add(gameReview, BorderLayout.WEST);
+    }
+
     @Override
     public void update(Observable o, Object arg) {
 
     }
 
-    public class ReadyListener implements ActionListener {
+    private class ReadyListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            changeStep();
         }
     }
 
-    public class ShipListener implements ActionListener {
+    private class ShipListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -236,8 +278,6 @@ public class MainView extends PanelView {
                 setCursor(toolkit.createCustomCursor(cursorImage, new Point(getX(),
                         getY()), "img"));
 
-                width = cursorImage.getWidth();
-                height = cursorImage.getHeight();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -245,7 +285,22 @@ public class MainView extends PanelView {
         }
     }
 
-    public class PlayerTileListener implements ActionListener {
+    private class EnnemyTileListener implements ActionListener{
+
+        int x, y;
+
+        public EnnemyTileListener(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+        }
+    }
+
+    private class PlayerTileListener implements ActionListener {
 
         int x;
         int y;
@@ -257,27 +312,21 @@ public class MainView extends PanelView {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(select){
+            if (select) {
                 BufferedImage tmp;
 
-                BufferedImage resizedImage = new BufferedImage(RANGE_X *width_cell, RANGE_Y *height_cell, BufferedImage.TYPE_INT_ARGB);
+                BufferedImage resizedImage = new BufferedImage(RANGE_X * width_cell, RANGE_Y * height_cell, BufferedImage.TYPE_INT_ARGB);
                 Graphics2D g = resizedImage.createGraphics();
-                g.drawImage(cursorImage, 0, 0, RANGE_X *width_cell, RANGE_Y *height_cell, null);
+                g.drawImage(cursorImage, 0, 0, RANGE_X * width_cell, RANGE_Y * height_cell, null);
                 g.dispose();
 
-                System.out.println("x : "+ x);
-                System.out.println("x-range : "+  (x - RANGE_Y));
-                System.out.println("y : "+ y);
-                System.out.println("y-range : "+ (y + RANGE_X));
-
                 // Checking if we can add the ship in the grid
-                if((x - RANGE_Y + 1) >= 0 && (x - RANGE_Y + 1) <  (player.length + 1) &&
+                if ((x - RANGE_Y + 1) >= 0 && (x - RANGE_Y + 1) < (player.length + 1) &&
                         (y + RANGE_X) >= 0 && (y + RANGE_X) <= player[x].length) {
 
                     // Setting ship in the grid
                     for (int i = 0; i < RANGE_Y; i++) {
                         for (int j = 0; j < RANGE_X; j++) {
-
 
                             tmp = resizedImage.getSubimage(
                                     j * width_cell,
@@ -293,16 +342,32 @@ public class MainView extends PanelView {
                         }
                     }
 
+                    select = false;
+                    setCursor(Cursor.getDefaultCursor());
+
                 }
+            }else{
+                ImageIcon imageIcon = (ImageIcon) player[x][y].getIcon();
 
-                select = false;
-                setCursor(Cursor.getDefaultCursor());
+                if(imageIcon != null) {
+                    BufferedImage tmp = (BufferedImage) imageIcon.getImage();
 
+                    Graphics2D g = (Graphics2D) tmp.getGraphics();
+
+                    g.drawImage(
+                            TextureFactory.getInstance().getCross_ennemy(),
+                            0,
+                            0,
+                            tmp.getWidth(),
+                            tmp.getHeight(),
+                            null
+                    );
+                }
             }
         }
     }
 
-    public class ExitListener implements ActionListener {
+    private class ExitListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -310,7 +375,7 @@ public class MainView extends PanelView {
         }
     }
 
-    public class ChangeTacticListener implements ActionListener {
+    private class ChangeTacticListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -319,9 +384,14 @@ public class MainView extends PanelView {
 
     }
 
-    float width, height;
+    private class EndTurnListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
 
-    public class SelectionListener implements MouseListener {
+        }
+    }
+
+    private class SelectionListener implements MouseListener {
 
 
         @Override
@@ -333,27 +403,27 @@ public class MainView extends PanelView {
             // If a ship is selected
             if (select) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                    toward = (toward+1) % 4;
+                    toward = (toward + 1) % 4;
 
                     Toolkit toolkit = Toolkit.getDefaultToolkit();
 
                     // Rotating the form
-                    double theta = Math.PI/2;
+                    double theta = Math.PI / 2;
                     double cos = Math.abs(Math.cos(theta));
                     double sin = Math.abs(Math.sin(theta));
-                    double width  = cursorImage.getWidth();
+                    double width = cursorImage.getWidth();
                     double height = cursorImage.getHeight();
-                    int w = (int)(width * cos + height * sin);
-                    int h = (int)(width * sin + height * cos);
+                    int w = (int) (width * cos + height * sin);
+                    int h = (int) (width * sin + height * cos);
 
                     BufferedImage out = new BufferedImage(w, h, cursorImage.getType());
 
                     Graphics2D g2 = out.createGraphics();
-                    double x = w/2;
-                    double y = h/2;
+                    double x = w / 2;
+                    double y = h / 2;
                     AffineTransform at = AffineTransform.getRotateInstance(theta, x, y);
-                    x = (w - width)/2;
-                    y = (h - height)/2;
+                    x = (w - width) / 2;
+                    y = (h - height) / 2;
                     at.translate(x, y);
                     g2.drawRenderedImage(cursorImage, at);
                     g2.dispose();

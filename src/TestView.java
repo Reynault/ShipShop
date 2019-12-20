@@ -11,7 +11,7 @@ public class TestView {
         GameController controller = new GameController(shipShop);
 
         // Initialise views
-        MainObserver mainObserver = new MainObserver();
+        MainObserver mainObserver = new MainObserver(controller);
 
         // Adding controller
         shipShop.addObserver(mainObserver);

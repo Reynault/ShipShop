@@ -6,30 +6,30 @@ import model.ShipType;
 import java.io.Serializable;
 
 public abstract class FleetFactory implements Serializable {
-    private int nbCruiser;
-    private int nbSubmarine;
-    private int nbTorpedo;
-    private int nbAircraft;
+    int nbCruiser;
+    int nbSubmarine;
+    int nbTorpedo;
+    int nbAircraft;
 
-    public int HP_SUBMARINE;
-    public int HP_AIRCRAFT ;
-    public int HP_TORPEDO ;
-    public int HP_CRUISER ;
+    int HP_SUBMARINE;
+    int HP_AIRCRAFT ;
+    int HP_TORPEDO ;
+    int HP_CRUISER ;
 
-    public int AMMO_SUBMARINE;
-    public int AMMO_AIRCRAFT;
-    public int AMMO_TORPEDO;
-    public int AMMO_CRUISER;
+    int AMMO_SUBMARINE;
+    int AMMO_AIRCRAFT;
+    int AMMO_TORPEDO;
+    int AMMO_CRUISER;
 
-    public int DMG_SUBMARINE;
-    public int DMG_AIRCRAFT;
-    public int DMG_TORPEDO;
-    public int DMG_CRUISER;
+    int DMG_SUBMARINE;
+    int DMG_AIRCRAFT;
+    int DMG_TORPEDO;
+    int DMG_CRUISER;
 
-    public int NBTILES_SUBMARINE;
-    public int NBTILES_AIRCRAFT;
-    public int NBTILES_TORPEDO;
-    public int NBTILES_CRUISER;
+    int NBTILES_SUBMARINE;
+    int NBTILES_AIRCRAFT;
+    int NBTILES_TORPEDO;
+    int NBTILES_CRUISER;
 
     public FleetFactory(int nbCruiser, int nbSubmarine, int nbTorpedo, int nbAircraft) {
         this.nbCruiser = nbCruiser;

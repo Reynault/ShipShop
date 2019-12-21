@@ -26,7 +26,7 @@ public class EndGameView extends PanelView {
 
         this.setLayout(new BorderLayout());
 
-        message = new JLabel(StringConstant.END_GAME_TITLE+"win", SwingConstants.CENTER);
+        message = new JLabel(mainObserver.getEndMessage(), SwingConstants.CENTER);
         message.setFont(new Font("Dialog", Font.PLAIN, 35));
 
         this.add(message, BorderLayout.CENTER);

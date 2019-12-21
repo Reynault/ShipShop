@@ -40,7 +40,9 @@ public class StringConstant {
     public static final String DEAD = "Dead";
 
     // End game
-    public static final String END_GAME_TITLE = "You ";
+    public static final String WIN_MESSAGE = "You Win";
+    public static final String LOSE_MESSAGE = "You Lose";
+    public static final String EQUALITY_MESSAGE = "Equality";
 
     // General
     public static final String CANCEL_BUTTON = "Cancel";

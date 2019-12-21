@@ -1,0 +1,37 @@
+@startuml
+
+title What happens when the player save the game
+
+autonumber
+actor player
+
+player -> GUI: Click on button for save
+
+GUI -> ShipShop: save(Game game)
+
+create "file: File"
+ShipShop -> "file: File" : new File(SAVE_PATH)
+
+alt !file.exists()
+
+ShipShop -> "file: File" : file.createNewFile()
+
+end
+
+create "stream: FileOutputStream"
+ShipShop -> "stream: FileOutputStream" : new FileOutputStream(file)
+
+create "object: ObjectOutputStream"
+ShipShop -> "object: ObjectOutputStream" : new ObjectOutputStream(stream)
+
+ShipShop -> "object: ObjectOutputStream" : writeObject(game)
+ShipShop -> "object: ObjectOutputStream" : close()
+
+ShipShop -> "stream: FileOutputStream" : close()
+
+ShipShop -> ShipShop : setChanged()
+ShipShop -> ShipShop : notifyObservers(SAVE)
+
+GUI --> player: See a message \n the game is saved \n successfully
+
+@enduml

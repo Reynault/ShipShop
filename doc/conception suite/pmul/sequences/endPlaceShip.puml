@@ -1,0 +1,44 @@
+@startuml
+
+autonumber
+actor player
+
+player -> GUI: the player has ended the placing part
+
+GUI -> ShipShop: endPlaceShip()
+
+ShipShop -> Game: endPlaceShip()
+
+Game -> "next: Player" : setReady(true)
+
+Game -> "next: Player": p1 : isHuman()
+
+"next: Player" --> Game: True / False
+
+Game -> "next: Player": ready : isReady()
+
+"next: Player" --> Game: True / False
+
+note left
+    If the other player is a human and is not ready,
+    the game will not change. If it's an IA, or if
+    the other player is ready, we can launch the game
+end note
+
+alt p1 == False && ready == False
+
+    Game -> ShipShop : false
+
+else
+
+    Game -> ShipShop : true
+
+    ShipShop -> ShipShop : setChanged()
+
+    ShipShop -> ShipShop : updateObserver(LAUNCH)
+
+end
+
+GUI --> player : the GUI is updated depending if the other player is ready 
+
+@enduml

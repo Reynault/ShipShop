@@ -397,6 +397,14 @@ public class MainView extends PanelView {
 
             case END_GAME:
 
+                if (shipShop.getLife() > shipShop.getEnnemyLife()){
+                    mainObserver.setEndMessage(StringConstant.WIN_MESSAGE);
+                }else if(shipShop.getLife() == shipShop.getEnnemyLife()) {
+                    mainObserver.setEndMessage(StringConstant.EQUALITY_MESSAGE);
+                }else{
+                    mainObserver.setEndMessage(StringConstant.LOSE_MESSAGE);
+                }
+
                 mainObserver.setCurrent(Views.END_GAME);
 
                 break;

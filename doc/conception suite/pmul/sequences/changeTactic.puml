@@ -1,0 +1,15 @@
+@startuml
+title When the player change the tactic
+
+autonumber
+actor player
+
+player -> GUI: Select tactic
+
+GUI -> ShipShop: setTactic(int player, Tactic tactic)
+
+ShipShop -> Game: setTactic(int player, Tactic tactic)
+
+Game -> Player:  setTactic(Tactic tactic)
+
+@enduml

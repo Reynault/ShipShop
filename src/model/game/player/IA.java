@@ -1,8 +1,9 @@
 package model.game.player;
 
-import model.DirectionConstant;
-import model.Move;
-import model.ShipType;
+import model.informations.Attack;
+import model.constant.DirectionConstant;
+import model.informations.Move;
+import model.constant.ShipType;
 import model.game.Game;
 import model.game.player.tactic.Tactic;
 import model.game.ship.FleetFactory;
@@ -32,16 +33,16 @@ public class IA extends Player{
         for(ShipType ship: ShipType.values()){
             while(fleetFactory.hasShip(ship)) {
                 move = new Move(
-                        rand.nextInt(grid.getGrid_width()),
-                        rand.nextInt(grid.getGrid_height()),
+                        rand.nextInt(grid.getGridWidth()),
+                        rand.nextInt(grid.getGridHeight()),
                         DirectionConstant.getRandomDirection(),
                         ship
                 );
                 uid = grid.placeShip(move, fleetFactory);
                 while(uid != null) {
                     move = new Move(
-                            rand.nextInt(grid.getGrid_width()),
-                            rand.nextInt(grid.getGrid_height()),
+                            rand.nextInt(grid.getGridWidth()),
+                            rand.nextInt(grid.getGridHeight()),
                             DirectionConstant.getRandomDirection(),
                             ship
                     );
@@ -52,8 +53,8 @@ public class IA extends Player{
         }
     }
 
-    public Move getBestMove(){
-        return null;
+    public Attack getBestMove(Game game, Player player){
+        return tactic.applyTactic(game, this ,player);
     }
 
     @Override

@@ -5,7 +5,7 @@ public class TacticFactory {
         return new RandomTactic();
     }
 
-    public static Tactic getCrossTactic(){
-        return new CrossTactic();
+    public static Tactic getLinearTactic(){
+        return new LinearTactic();
     }
 }

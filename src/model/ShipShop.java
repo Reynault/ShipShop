@@ -1,37 +1,32 @@
 package model;
 
+import model.constant.ShipType;
+import model.constant.UpdateObserver;
 import model.game.Game;
+import model.game.GameFactory;
 import model.game.era.Era;
-import model.game.era.EraFactory;
-import model.game.player.tactic.RandomTactic;
 import model.game.player.tactic.Tactic;
 import model.game.ship.Ship;
+import model.informations.Attack;
+import model.informations.Move;
+import model.informations.Review;
 
+import javax.sound.midi.Soundbank;
 import java.awt.*;
 import java.io.*;
 import java.io.File;
 import java.util.Observable;
 import java.util.UUID;
 
-import static model.UpdateObserver.*;
+import static model.constant.UpdateObserver.*;
 
 public class ShipShop extends Observable {
     private String SAVE_PATH = "save.ser";
 
-    protected UUID requestedShip;
-    protected Attack requestAttack;
-    protected GameFactory gameFactory;
+    private UUID requestedShip;
+    private Review turnReview;
+    private GameFactory gameFactory;
     protected Game game;
-
-    public ShipShop() {
-    }
-
-    public ShipShop(UUID requestedShip, Attack requestAttack, GameFactory gameFactory, Game game) {
-        this.requestedShip = requestedShip;
-        this.requestAttack = requestAttack;
-        this.gameFactory = gameFactory;
-        this.game = game;
-    }
 
     public void createGame(Era era, Tactic tactic, boolean humanFirst) {
         if (humanFirst) {
@@ -41,25 +36,38 @@ public class ShipShop extends Observable {
             game = GameFactory.getEVPGame(era);
             game.setTactic(0, tactic);
         }
+
+        this.setChanged();
+        this.notifyObservers(CREATE_GAME);
     }
 
     public UUID placeShip(Move move) {
         UUID uuid = game.placeShip(move);
         setChanged();
-        notifyObservers(PLACESHIP);
+        notifyObservers(PLACE_SHIP);
         return uuid;
     }
 
     public void setTactic(int player, Tactic tactic) {
         game.setTactic(player, tactic);
+        setChanged();
+        notifyObservers(CHANGE_TACTIC);
     }
 
     public Image drawShip(ShipType type) {
         return game.drawShip(type);
     }
 
-    public void play(Attack attack){
-        game.play(attack);
+    public void play(Attack attack) {
+        turnReview = game.play(attack);
+
+        if(turnReview.isCanAttack()) {
+            setChanged();
+            notifyObservers(END_TURN);
+        }else{
+            setChanged();
+            notifyObservers(UpdateObserver.CAN_NOT_ATTACK);
+        }
     }
 
     /**
@@ -73,10 +81,10 @@ public class ShipShop extends Observable {
         }
     }
 
-    public void save(Game game){
+    public void save(Game game) {
         File file = new File(SAVE_PATH);
-        try{
-            if (!file.exists()){
+        try {
+            if (!file.exists()) {
                 file.createNewFile();
             }
         } catch (IOException e) {
@@ -94,28 +102,33 @@ public class ShipShop extends Observable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        this.setChanged();
+        this.notifyObservers(SAVE);
     }
 
-    public void load(){
+    public void load() {
         Game game = null;
         try {
             FileInputStream stream = new FileInputStream(new File(SAVE_PATH));
             ObjectInputStream object = new ObjectInputStream(stream);
-            game = (Game)object.readObject();
+            game = (Game) object.readObject();
             object.close();
             stream.close();
-        }catch (Exception e){
-            e.printStackTrace();
-            createGame(EraFactory.getModernEra(), new RandomTactic(), true);
+
+            this.setChanged();
+            this.notifyObservers(LOAD);
+        } catch (Exception e) {
+            this.setChanged();
+            this.notifyObservers(BAD_LOAD);
         }
         this.game = game;
     }
 
-    public Ship getShip(UUID uuid) {
-        return null;
-    }
-
-
+    /**
+     * Function used for get the Game
+     * @return
+     */
     public Game getGame() {
         return this.game;
     }
@@ -125,5 +138,35 @@ public class ShipShop extends Observable {
         return "ShipShop{" +
                 "game=" + game +
                 '}';
+    }
+
+    public Ship getShip(UUID uuid) {
+        return game.getShip(uuid);
+    }
+
+    public int getSize(ShipType type) {
+        return game.getSize(type);
+    }
+
+    public int getNbShip(ShipType cruiser) {
+        return game.getNbShip(cruiser);
+    }
+
+    public int getLife() {
+        System.out.println("VIE : "+ game.getLife());
+        return game.getLife();
+    }
+
+    public int getEnnemyLife() {
+        return game.getEnnemyLife();
+    }
+
+    public void getShipInformations(UUID currentShip) {
+        setChanged();
+        notifyObservers(GET_SHIP_INFO);
+    }
+
+    public Review getTurnReview() {
+        return turnReview;
     }
 }

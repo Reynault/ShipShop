@@ -7,41 +7,48 @@ import java.io.IOException;
 public class TextureFactory {
     private static TextureFactory instance = new TextureFactory();
 
-    private BufferedImage cross_player;
-    private BufferedImage flag_player;
+    private BufferedImage crossPlayer;
+    private BufferedImage flagPlayer;
 
-    private BufferedImage cross_ennemy;
-    private BufferedImage flag_ennemy;
+    private BufferedImage crossEnnemy;
+    private BufferedImage flagEnnemy;
+
+    private BufferedImage plannedAttack;
 
 
-    private TextureFactory(){
+    private TextureFactory() {
         try {
-            cross_player = ImageIO.read(ClassLoader.getSystemResource("sprite/cross-player.png"));
-            flag_player = ImageIO.read(ClassLoader.getSystemResource("sprite/flag-player.png"));
-            cross_ennemy = ImageIO.read(ClassLoader.getSystemResource("sprite/cross-ennemy.png"));
-            flag_ennemy = ImageIO.read(ClassLoader.getSystemResource("sprite/flag-ennemy.png"));
+            crossPlayer = ImageIO.read(ClassLoader.getSystemResource("sprite/cross-player.png"));
+            flagPlayer = ImageIO.read(ClassLoader.getSystemResource("sprite/flag-player.png"));
+            crossEnnemy = ImageIO.read(ClassLoader.getSystemResource("sprite/cross-ennemy.png"));
+            flagEnnemy = ImageIO.read(ClassLoader.getSystemResource("sprite/flag-ennemy.png"));
+            plannedAttack = ImageIO.read(ClassLoader.getSystemResource("sprite/planned-attack.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static TextureFactory getInstance(){
+    public static TextureFactory getInstance() {
         return instance;
     }
 
-    public BufferedImage getCross_player() {
-        return cross_player;
+    public BufferedImage getCrossPlayer() {
+        return crossPlayer;
     }
 
-    public BufferedImage getFlag_player() {
-        return flag_player;
+    public BufferedImage getFlagPlayer() {
+        return flagPlayer;
     }
 
-    public BufferedImage getCross_ennemy() {
-        return cross_ennemy;
+    public BufferedImage getCrossEnnemy() {
+        return crossEnnemy;
     }
 
-    public BufferedImage getFlag_ennemy() {
-        return flag_ennemy;
+    public BufferedImage getFlagEnnemy() {
+        return flagEnnemy;
+    }
+
+    public BufferedImage getPlannedAttack() {
+        return plannedAttack;
     }
 }

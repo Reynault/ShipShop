@@ -1,8 +1,9 @@
 package model.game.grid;
 
-import model.DirectionConstant;
-import model.Move;
-import model.ShipType;
+import model.constant.DirectionConstant;
+import model.constant.GridConstant;
+import model.informations.Move;
+import model.constant.ShipType;
 import model.game.ship.FleetFactory;
 import model.game.ship.Ship;
 
@@ -14,18 +15,14 @@ import java.util.*;
  */
 public class Grid implements Serializable {
 
-    // Three constants that define if the tile has been shot, and if and ennemy/ship has been discovered
-    private static final int NONE = 100;
-    private static final int HIT = 200;
-    private static final int TOUCHED = 300;
-
-    private int[][] ennemyGrid;
-    private int[][] playerGrid;
+    private GridConstant[][] ennemyGrid;
+    private GridConstant[][] playerGrid;
 
     private int grid_width;
     private int grid_height;
 
     private Map<UUID, Ship> ships;
+
     private Map<UUID, List<Position>> positions;
 
     /**
@@ -35,13 +32,13 @@ public class Grid implements Serializable {
         this.grid_height = grid_height;
         this.grid_width = grid_width;
 
-        ennemyGrid = new int[grid_width][grid_height];
-        playerGrid = new int[grid_width][grid_height];
+        ennemyGrid = new GridConstant[grid_width][grid_height];
+        playerGrid = new GridConstant[grid_width][grid_height];
 
         for (int i = 0; i < grid_width; i++) {
             for (int j = 0; j < grid_height; j++) {
-                ennemyGrid[i][j] = NONE;
-                playerGrid[i][j] = NONE;
+                ennemyGrid[i][j] = GridConstant.NONE;
+                playerGrid[i][j] = GridConstant.NONE;
             }
 
         }
@@ -62,6 +59,9 @@ public class Grid implements Serializable {
      */
     public UUID placeShip(Move move, FleetFactory fleetFactory) {
 
+        System.out.println("fleetffactory : "+ fleetFactory);
+        System.out.println("move : "+ move);
+
         // Checking if in objects are null
         if (move == null || fleetFactory == null) {
             return null;
@@ -80,6 +80,7 @@ public class Grid implements Serializable {
 
         // Checking if we can place the ship in the grid
         if (x >= 0 && x < grid_width && y >= 0 && y < grid_height && fleetFactory.hasShip(move.getType())) {
+
 
             // Then checking if the ship is overflowing the grid
             boolean overflow;
@@ -117,6 +118,9 @@ public class Grid implements Serializable {
                     break;
             }
 
+            System.out.println("Position : "+Arrays.asList(pos));
+            System.out.println("Overflow ?  : "+overflow);
+
             if (!overflow) {
 
                 // Then checking if the ship is on another ship
@@ -144,45 +148,112 @@ public class Grid implements Serializable {
             }
 
         }
-
+        System.out.println("UUID GRID : "+res);
         return res;
     }
 
-    public boolean canAttack(UUID ship) {
-        return false;
+    public boolean canAttack(int x, int y, UUID ship) {
+        return ennemyGrid[x][y] == GridConstant.NONE
+                && ships.containsKey(ship)
+                && ships.get(ship).canAttack();
     }
 
     public int getDmg(UUID id) {
-        return 0;
+        return getShip(id).getDmg();
     }
 
+    /**
+     * This method is returning true if the player can't shoot anymore
+     * @return defeated
+     */
     public boolean isDefeated() {
-        return false;
+        Ship ship;
+        boolean defeated = true;
+
+        Iterator<UUID> iterator = ships.keySet().iterator();
+        while(iterator.hasNext() && defeated){
+            ship = ships.get(iterator.next());
+
+            if(ship.canAttack()){
+                defeated = false;
+            }
+        }
+
+        return defeated;
+    }
+
+    public boolean isFlag(int x, int y){
+        return ennemyGrid[x][y] == GridConstant.FLAG;
     }
 
     public boolean isShip(int x, int y) {
+        Iterator iterator = positions.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry mapentry = (Map.Entry) iterator.next();
+            List<Position> positionList = (List<Position>) mapentry.getValue();
+            for (Position p: positionList) {
+                if(p.getX() == x && p.getY() == y) return true;
+            }
+        }
         return false;
     }
 
-    public Ship getShip(UUID uuid) {
+    /**
+     * Methode pour le debugage et les tests
+     * @param uuid
+     * @return
+     */
+    public boolean isShip(UUID uuid){
+        return positions.containsKey(uuid);
+    }
+
+    public Ship getShip(UUID uuid){
         return ships.get(uuid);
     }
 
     public Ship getShip(int x, int y) {
-        return null;
+        Iterator iterator = positions.entrySet().iterator();
+        UUID shipUUID = null;
+        boolean isFound = false;
+        while (iterator.hasNext() || !isFound) {
+            Map.Entry mapentry = (Map.Entry) iterator.next();
+            List<Position> positionList = (List<Position>) mapentry.getValue();
+            for (Position p: positionList) {
+                if(p.getX() == x && p.getY() == y) {
+                    isFound = true;
+                    shipUUID = (UUID)mapentry.getKey();
+                }
+            }
+        }
+        return getShip(shipUUID);
     }
 
-    public void crossTile(int x, int y) {
-
+    /**
+     * Method cross Tile that add a cross in one
+     * of the two grids of the player
+     * @param x the x
+     * @param y the y
+     * @param player if true, it's adding in the player grid
+     */
+    public void crossTile(int x, int y, boolean player) {
+        if(player){
+            playerGrid[x][y] = GridConstant.CROSS;
+        }else{
+            ennemyGrid[x][y] = GridConstant.CROSS;
+        }
     }
 
-    public void flagTile(int x, int y) {
-
+    public void flagTile(int x, int y, boolean player) {
+        if(player){
+            playerGrid[x][y] = GridConstant.FLAG;
+        }else {
+            ennemyGrid[x][y] = GridConstant.FLAG;
+        }
     }
 
     public void hit(int x, int y, int hit) {
         //Test de si la case est un bateau
-        if (isShip(y, y)) {
+        if (isShip(x, y)) {
             //On récupère le bateau par les coordonnées
             if (!getShip(x, y).hasSunk()) {
                 getShip(x, y).hit(hit);
@@ -190,11 +261,11 @@ public class Grid implements Serializable {
         }
     }
 
-    public int getGrid_width() {
+    public int getGridWidth() {
         return grid_width;
     }
 
-    public int getGrid_height() {
+    public int getGridHeight() {
         return grid_height;
     }
 
@@ -203,5 +274,38 @@ public class Grid implements Serializable {
         return "Grid{" +
                 "positions=" + positions +
                 '}';
+    }
+
+    public int getAmmo(UUID ship) {
+        return getShip(ship).getAmmo();
+    }
+
+    public void decreaseAmmo(UUID ship) {
+        getShip(ship).decreaseAmmo();
+        System.out.println(getShip(ship));
+    }
+
+    public int getLife() {
+        int max = 0;
+        int res = 0;
+
+        Ship ship;
+
+        for(UUID uuid : ships.keySet()){
+            ship = ships.get(uuid);
+
+            max += ship.getMaxHp();
+            res += ship.getHp();
+        }
+
+
+        System.out.println("RES : "+ res);
+
+        return res * 100 / max;
+    }
+
+    public Object[] getShips() {
+        Set<UUID> keys = ships.keySet();
+        return keys.toArray();
     }
 }

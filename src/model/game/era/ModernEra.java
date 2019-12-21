@@ -1,13 +1,11 @@
 package model.game.era;
 
-import model.ShipType;
+import model.constant.ShipType;
 import model.game.ship.FleetFactory;
 import model.game.ship.ModernFleet;
-import model.game.ship.Ship;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;

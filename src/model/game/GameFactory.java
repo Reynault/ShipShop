@@ -1,4 +1,4 @@
-package model;
+package model.game;
 
 import model.game.Game;
 import model.game.era.Era;

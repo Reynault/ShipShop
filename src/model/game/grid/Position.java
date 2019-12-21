@@ -1,6 +1,7 @@
 package model.game.grid;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * class that represent a position in the game providing the information

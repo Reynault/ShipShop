@@ -1,6 +1,6 @@
 package model.game.era;
 
-import model.ShipType;
+import model.constant.ShipType;
 import model.game.ship.FleetFactory;
 import model.game.ship.XVIFleet;
 
@@ -24,22 +24,22 @@ public class XVIEra extends Era implements Serializable {
             switch (type){
                 case CRUISER:
                     inputStream
-                            = ModernEra.class.getClassLoader().getResourceAsStream("sprite/cruiser.png");
+                            = ModernEra.class.getClassLoader().getResourceAsStream("sprite/cruiser-XVI.png");
                     ship = ImageIO.read(inputStream);
                     break;
                 case TORPEDO:
                     inputStream
-                            = ModernEra.class.getClassLoader().getResourceAsStream("sprite/torpedo.png");
+                            = ModernEra.class.getClassLoader().getResourceAsStream("sprite/torpedo-XVI.png");
                     ship = ImageIO.read(inputStream);
                     break;
                 case AIRCRAFT:
                     inputStream
-                            = ModernEra.class.getClassLoader().getResourceAsStream("sprite/aircraft.png");
+                            = ModernEra.class.getClassLoader().getResourceAsStream("sprite/aircraft-XVI.png");
                     ship = ImageIO.read(inputStream);
                     break;
                 case SUBMARINE:
                     inputStream
-                            = ModernEra.class.getClassLoader().getResourceAsStream("sprite/submarine.png");
+                            = ModernEra.class.getClassLoader().getResourceAsStream("sprite/submarine-XVI.png");
                     ship = ImageIO.read(inputStream);
                     break;
                 default:

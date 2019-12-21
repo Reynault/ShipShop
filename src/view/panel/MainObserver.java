@@ -12,8 +12,14 @@ public class MainObserver implements Observer {
     private GameController controller;
     private HashMap<Views, PanelView> views;
 
+    private String chosenTactic;
+    private String chosenEra;
+
     public MainObserver(GameController controller) {
         this.controller = controller;
+
+        this.chosenEra = "";
+        this.chosenTactic = "";
 
         views = new HashMap<>();
 
@@ -22,8 +28,9 @@ public class MainObserver implements Observer {
         views.put(Views.TACTIC, new TacticView(this, controller));
         views.put(Views.MAIN, new MainView(this, controller));
         views.put(Views.END_GAME, new EndGameView(this, controller));
+        views.put(Views.BAD_LOAD, new BadLoadView(this, controller));
 
-        setCurrent(Views.MAIN);
+        setCurrent(Views.MENU);
     }
 
     public void setCurrent(Views current) {
@@ -32,7 +39,7 @@ public class MainObserver implements Observer {
         }
 
         if (this.views.containsKey(current)) {
-            if(current == Views.MAIN){
+            if (current == Views.MAIN) {
                 this.views.put(Views.MAIN, new MainView(this, controller));
             }
             this.current = this.views.get(current);
@@ -58,8 +65,24 @@ public class MainObserver implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (current != null) {
-            current.update(o, arg);
+        if (this.current != null) {
+            this.current.update(o, arg);
         }
+    }
+
+    public void setChosenTactic(String chosenTactic) {
+        this.chosenTactic = chosenTactic;
+    }
+
+    public void setChosenEra(String chosenEra) {
+        this.chosenEra = chosenEra;
+    }
+
+    public String getChosenTactic() {
+        return chosenTactic;
+    }
+
+    public String getChosenEra() {
+        return chosenEra;
     }
 }

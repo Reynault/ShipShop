@@ -1,6 +1,6 @@
-import model.DirectionConstant;
-import model.Move;
-import model.ShipType;
+import model.constant.DirectionConstant;
+import model.informations.Move;
+import model.constant.ShipType;
 import model.game.grid.Grid;
 import model.game.ship.FleetFactory;
 import model.game.ship.ModernFleet;

@@ -14,13 +14,15 @@ import java.util.Observable;
 
 public class TacticView extends PanelView{
 
+    private String chosenTactic;
+
     private JLabel title;
     private JComboBox<String> choices;
     private JButton cancel;
     private JButton validate;
 
     public static final String RANDOM = "Random";
-    public static final String CROSS = "Cross";
+    public static final String LINEAR = "Linear";
 
     public TacticView(MainObserver mainObserver, GameController controller) {
         super(mainObserver, controller);
@@ -36,7 +38,7 @@ public class TacticView extends PanelView{
         title.setBorder(new EmptyBorder(10,10,40,10));
 
         // Setting JComboBox
-        String[] choicesString = {RANDOM, CROSS};
+        String[] choicesString = {RANDOM, LINEAR};
         choices = new JComboBox<>(choicesString);
 
         // List renderer
@@ -81,11 +83,10 @@ public class TacticView extends PanelView{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            MainObserver o = getMainObserver();
-            if(o.isCurrentView(Views.MAIN)){
-                o.closeView(Views.TACTIC);
+            if(mainObserver.isCurrentView(Views.MAIN)){
+                mainObserver.closeView(Views.TACTIC);
             }else {
-                o.setCurrent(Views.MENU);
+                mainObserver.setCurrent(Views.MENU);
             }
         }
     }
@@ -94,11 +95,15 @@ public class TacticView extends PanelView{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            MainObserver o = getMainObserver();
-            if(o.isCurrentView(Views.MAIN)){
-                o.closeView(Views.TACTIC);
+            chosenTactic = (String) choices.getSelectedItem();
+            mainObserver.setChosenTactic(chosenTactic);
+
+            if(mainObserver.isCurrentView(Views.MAIN)){
+                controller.setTactic(chosenTactic);
+                mainObserver.closeView(Views.TACTIC);
             }else {
-                o.setCurrent(Views.MAIN);
+                mainObserver.setCurrent(Views.MAIN);
+                controller.createGame(mainObserver.getChosenEra(), chosenTactic);
             }
         }
     }

@@ -1,6 +1,9 @@
 package model.game.player;
 
-import model.Move;
+import model.informations.Attack;
+import model.informations.Move;
+import model.constant.ShipType;
+import model.game.Game;
 import model.game.grid.Grid;
 import model.game.grid.GridFactory;
 import model.game.player.tactic.Tactic;
@@ -8,12 +11,13 @@ import model.game.ship.FleetFactory;
 import model.game.ship.Ship;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class Player implements Serializable {
 
-    protected boolean ready;
-    protected FleetFactory fleetFactory;
+    private boolean ready;
+    private FleetFactory fleetFactory;
     protected Grid grid;
     protected  Tactic tactic;
 
@@ -28,20 +32,22 @@ public abstract class Player implements Serializable {
     }
 
     public UUID placeShip(Move move){
-        return grid.placeShip(move, fleetFactory);
+        UUID uuid =  grid.placeShip(move, fleetFactory);
+        System.out.println("PlaceShip Player : " +uuid);
+        return uuid;
     }
 
     public boolean isDefeated(){
-        return false;
+        return grid.isDefeated();
     }
 
-    public boolean canAttack(UUID id){
-        return grid.getShip(id).canAttack();
+    public boolean canAttack(int x, int y, UUID id){
+        return grid.canAttack(x, y, id);
     }
 
     public abstract boolean isHuman();
 
-    public Move getBestMove(){
+    public Attack getBestMove(Game game, Player player){
         return null;
     }
 
@@ -69,4 +75,51 @@ public abstract class Player implements Serializable {
         return grid;
     }
 
+
+    /**
+     * Function used for decrease the ammo after a fire
+     * @param ship
+     */
+    public void decreaseAmmo(UUID ship) {
+        grid.decreaseAmmo(ship);
+    }
+
+
+    //////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+
+    /**
+     * A debug Function used for get the ammo left of a Ship
+     * @param ship
+     * @return
+     */
+    public int getAmmo(UUID ship){
+        return grid.getAmmo(ship);
+    }
+
+    public int getSize(ShipType type) {
+        return fleetFactory.getSize(type);
+    }
+
+    public int getNbShip(ShipType cruiser) {
+        return fleetFactory.getNbShip(cruiser);
+    }
+
+    public int getLife() {
+        int res = grid.getLife();
+        return res;
+    }
+
+    public int getWidth() {
+        return grid.getGridWidth();
+    }
+
+    public int getHeight() {
+        return grid.getGridHeight();
+    }
+
+    public Object[] getShips() {
+        return grid.getShips();
+    }
 }

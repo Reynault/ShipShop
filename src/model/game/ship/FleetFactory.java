@@ -1,8 +1,8 @@
 package model.game.ship;
 
-import model.DirectionConstant;
-import model.EraConstant;
-import model.ShipType;
+import model.constant.DirectionConstant;
+import model.constant.EraConstant;
+import model.constant.ShipType;
 
 import java.io.Serializable;
 
@@ -149,5 +149,20 @@ public abstract class FleetFactory implements Serializable {
                 break;
         }
         return size;
+    }
+
+    public int getNbShip(ShipType cruiser) {
+        switch (cruiser){
+            case TORPEDO:
+                return nbTorpedo;
+            case CRUISER:
+                return nbCruiser;
+            case AIRCRAFT:
+                return nbAircraft;
+            case SUBMARINE:
+                return nbSubmarine;
+            default:
+                return 0;
+        }
     }
 }

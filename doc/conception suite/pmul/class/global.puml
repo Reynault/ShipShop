@@ -5,24 +5,18 @@
     +notifyObservers(arg: int)
  }
 
- package controller <<Folder>>{
-    class GameController {
-        +model: ShipShop
-
-        +GameController(model: ShipShop)
-        +createGame(stringEra: String, stringTactic: String)
-        +loadGame(): void
-        +saveGame(): void
-        +placeShip(move: Move): UUID
-        +endShipPlacement(): void
-        +play(attack: Attack): void
-    }
- }
-
  package model <<Folder>> {
+    interface ShipShopInterface {
+        +createGame(era: Era, tactic: Tactic, humanFirst: boolean): void
+        +placeShip(move: Move): UUID
+        +play(attack: Attack): void
+        +endPlaceShip(): void
+        +save(game: Game): void
+        +load(): void
+    }
+
     class ShipShop {
         -requestedShip: UUID
-        -turnReview: Review
 
         +createGame(era: Era, tactic: Tactic, humanFirst: boolean): void
         +placeShip(move: Move): UUID
@@ -31,6 +25,17 @@
         +endPlaceShip(): void
         +save(game: Game): void
         +load(): void
+    }
+
+    class LiaisonRMI {
+        +createGame(era: Era, tactic: Tactic, humanFirst: boolean): void
+        +placeShip(move: Move): UUID
+        +drawShip(type: ShipType): Image
+        +play(attack: Attack): void
+        +endPlaceShip(): void
+        +save(game: Game): void
+        +load(): void
+
     }
 
     package constant <<Folder>>{
@@ -80,9 +85,6 @@
             +{static} GRID_WIDTH = 10 : int
             +{static} GRID_HEIGHT = 10 : int
             -currentPlayer : int
-            -p1: Player
-            -p2: Player
-            -players: Player[]
 
             +Game(era: Era; p1: Player, p2: Player)
             +setTactic(player: int, tactic: Tactic): void
@@ -145,36 +147,224 @@
                 +decreaseAmmo(ship: UUID): void
             }
 
+            class GridFactory {
+                +{static} getSimpleGrid(): Grid
+            }
 
+            class Position {
+                -x: int
+                -y: int
+
+                +Position(x: int, y: int)
+            }
+        }
+
+        package player <<Folder>>{
+            abstract class Player {
+                -ready: boolean
+
+                +player(fleetFactory: FleetFactory)
+                +hit(x: int, y: int, dmg: int): void
+                +placeShip(move: Move): UUID
+                +isDefeated(): boolean
+                +canAttack(x: int, y: int, id: UUID): boolean
+                +{abstract} isHuman(): boolean
+                +getBestMove(game: Game, player: Player): Attack
+                +decreaseAmmo(ship: UUID
+            }
+
+            class PlayerFactory {
+                +{static} getIA(era: Era): IA
+                +{static} getHuman(era: Era): Human
+            }
+
+            class Human {
+                +Human(fleetFactory: FleetFactory)
+                +isHuman(): boolean
+            }
+
+            class IA {
+                +IA(fleetFactory: FleetFactory)
+                +getBestMove(game: Game, player: Player): Attack
+                +isHuman(): boolean
+                +setTactic(tactic: Tactic): void
+            }
+
+            package tactic <<Folder>> {
+                interface Tactic {
+                    applyTactic(game: Game, attacker: Player, victim: Player)
+                }
+
+                class LinearTactic {
+                    -rand: Random
+
+                    +LinearTactic()
+                    +applyTactic(game: Game, attacker: Player, victim: Player): Attack
+                }
+
+                class RandomTactic {
+                    -rand: Random
+
+                    +RandomTactic()
+                    +applyTactic(game: Game, attacker: Player, victim: Player): Attack
+                }
+
+                class TacticFactory {
+                    +{static} getRandomTactic(): Tactic
+                    +{static} getLinearTactic(): Tactic
+                }
+            }
+        }
+
+        package ship <<Folder>> {
+            abstract class FleetFactory {
+                -nbCruiser: int
+                -nbSubmarine: int
+                -nbTorpedo: int
+                -nbAircraft: int
+
+                +HP_CRUISER: int
+                +HP_SUBMARINE: int
+                +HP_TORPEDO: int
+                +HP_AIRCRAFT: int
+
+                +AMMO_CRUISER: int
+                +AMMO_SUBMARINE: int
+                +AMMO_TORPEDO: int
+                +AMMO_AIRCRAFT: int
+
+                +DMG_CRUISER: int
+                +DMG_SUBMARINE: int
+                +DMG_TORPEDO: int
+                +DMG_AIRCRAFT: int
+
+                +NBTILES_CRUISER: int
+                +NBTILES_SUBMARINE: int
+                +NBTILES_TORPEDO: int
+                +NBTILES_AIRCRAFT: int
+
+                +FleetFactory(nbCruiser: int, nbSubmarine: int, nbTorpedo: int, nbAircraft: int)
+                +{static} getFactory(era: EraConstant, nbAircraft: int, nbCruiser: int, nbSubmarine: int, nbTorpedo: int): FleetFactory
+                +hasShip(shipType: ShipType): boolean
+                +getShip(shipType: ShipType, direction: DirectionConstant): Ship
+                +getSize(shipType: ShipType): int
+                +getNbShip(cruiser: ShipType): int
+            }
+
+            class ModernFleet{
+                +ModernFleet(nbCruiser: int, nbSubmarine: int, nbTorpedo: int, nbAircraft: int)
+            }
+
+            class XVIFleet{
+                +XVIFleet(nbCruiser: int, nbSubmarine: int, nbTorpedo: int, nbAircraft: int)
+            }
+
+            class Ship{
+                -maxHp: int
+                -hp: int
+                -ammo: int
+                -dmg: int
+                -nbTiles: int
+                -direction:  DirectionConstant
+                -shipType: ShipType
+
+                +Ship(hp: int, ammo: int, dmg: int, nbTiles: int, direction: DirectionCOnstant, shipTYpe: ShipType)
+                +place(constant: DirectionConstant): void
+                +hasSunk(): boolean
+                +canShoot(): boolean
+                +canAttack(): boolean
+                +getAmmo(): int
+                +getHp(): int
+                +hit(dmg: int): void
+                +decreaseAmmo(): void
+                +getShipType(): ShipType
+                +getDmg(): int
+                +toString(): String
+            }
         }
     }
 
-    class Attack {
-        -x: int
-        -y: int
-        -ship: UUID
+    package informations {
+        class Attack {
+            -x: int
+            -y: int
+            -ship: UUID
 
-        +Attack(x: int, y: int, ship: UUID)
-        +getX(): int
-        +getY(): int
-        +getShip(): UUID
+            +Attack(x: int, y: int, ship: UUID)
+            +getX(): int
+            +getY(): int
+            +getShip(): UUID
+        }
+
+        class Move {
+            -x: int
+            -y: int
+            -direction: DirectionConstant
+            -type: ShipType
+            -ship: UUID
+
+            +Move(x: int, y: int, direction: DirectionConstant, shipType: ShipType)
+        }
+
+        class Review {
+            -canAttack: boolean
+            -alreadySunk: boolean
+            -dataSet: boolean
+            -end: boolean
+            -xPlayer: int
+            -yPlayer: int
+            -xEnnemy: int
+            -yEnnemy: int
+            -player: GridConstant
+            -ennemy: GridConstant
+
+            +Review(canAttack: boolean, alreadySunk: boolean, dataSet: boolean, end: boolean, xPlayer: int, yPlayer: int, xEnnemy: int, yEnnemy: int, player: GridConstant, ennemy: GridConstant)
+        }
+    }
+
+    package rmi <<Folder>> {
+        class ShipShopClient {
+            +{static} main(args: String[]): void
+        }
+
+        class ShipShopServer {
+            +{static} main(args: String[]): void
+        }
     }
 
  }
 
 
-
+Observable ^-- LiaisonRMI
 Observable ^-- ShipShop
+ShipShopInterface ^-- ShipShop
 Era ^-- ModernEra
 Era ^-- XVIEra
+Player ^-- Human
+Player ^-- IA
+Tactic ^-- LinearTactic
+Tactic ^-- RandomTactic
+FleetFactory ^-- ModernFleet
+FleetFactory ^-- XVIFleet
 
 ShipShop --> "1" GameFactory : gameFactory
 ShipShop --> "1" Game : game
+ShipShop --> "1" Review : turnReview
 Game --> "1" Era : era
+LiaisonRMI --> "1" Review : turnReview
+LiaisonRMI --> "1" ShipShopInterface : interfaceRMI
+Game --> "1" Player : p1
+Game --> "1" Player : p2
+Game --> "*" Player : players
+Player --> "1" FleetFactory : fleetFactory
+Player --> "1" Grid : grid
+Player --> "1" Tactic : tactic
 
 GameFactory ..> Game : create
 EraFactory ..> Era : create
-
+GridFactory ..> Grid : create
+PlayerFactory ..> Player : create
+TacticFactory ..> Tactic : create
 
 
 @enduml

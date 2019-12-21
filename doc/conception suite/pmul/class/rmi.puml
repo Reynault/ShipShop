@@ -1,0 +1,29 @@
+@startuml
+
+ package rmi <<Folder>> {
+        class ShipShopClient {
+            +{static} main(args: String[]): void
+        }
+
+        class ShipShopServer {
+            +{static} main(args: String[]): void
+        }
+    }
+
+    class LiaisonRMI {
+        +turnReview: Review
+        +interfaceRMI: ShipShopInterface
+
+        +LiaisonRMI(interfaceRMI: ShipShopInterface)
+        +createGame(era: Era, tactic: Tactic, humanFirst: boolean): void
+        +placeShip(move: Move): UUID
+        +drawShip(type: ShipType): Image
+        +play(attack: Attack): void
+        +endPlaceShip(): void
+        +save(game: Game): void
+        +load(): void
+
+    }
+
+
+@enduml

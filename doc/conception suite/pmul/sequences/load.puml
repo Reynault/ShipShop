@@ -1,0 +1,34 @@
+@startuml
+
+title What happens when the player load a game
+
+autonumber
+actor player
+
+player -> GUI: Click on button for \n load a game
+
+GUI -> ShipShop: load()
+
+create "f:File"
+ShipShop -> "f:File" : new File(SAVE_PATH)
+
+create "stream:FileInputStream"
+ShipShop -> "stream:FileInputStream" : new FileInputStream(f)
+
+create "object:ObjectInputStream"
+ShipShop -> "object:ObjectInputStream" : new ObjectInputStream(stream)
+
+ShipShop -> "object:ObjectInputStream": readObject(game)
+
+"object:ObjectInputStream" --> ShipShop: Game
+
+ShipShop -> "object:ObjectInputStream" : close()
+ShipShop -> "stream:FileInputStream" : close()
+
+alt load successfully
+    GUI --> player: See a message \n the game is loaded \n successfully
+else
+    GUI --> player: See a message \n the game isn't loaded \n successfully
+end
+
+@enduml

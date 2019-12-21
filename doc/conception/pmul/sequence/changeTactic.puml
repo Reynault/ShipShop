@@ -1,15 +1,15 @@
 @startuml
-title When the player change the tactic
+ title When the player change the tactic
 
-autonumber
-actor player
+ autonumber
+ actor player
 
-player -> GUI: Select tactic
+ player -> GUI: Select tactic
 
-GUI -> ShipShop: setTactic(Player player, Tactic tactic)
+ GUI -> ShipShop: setTactic(Player player, Tactic tactic)
 
-ShipShop -> Game: setTactic(Player player, Tactic tactic)
+ ShipShop -> Game: setTactic(Player player, Tactic tactic)
 
-Game -> Player:  setTactic(Tactic tactic)
+ Game -> Player:  setTactic(Tactic tactic)
 
-@enduml
+ @enduml

@@ -130,7 +130,7 @@ public class Game implements Serializable {
         if(!isFinished()){
             // If not, we let the other player to play
             if(!nextPlayer.isHuman()){
-                play(nextPlayer.getBestMove());
+                play(nextPlayer.getBestMove(whosNext()));
             }
         }
     }

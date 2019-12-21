@@ -1,6 +1,6 @@
 package model.game.player.tactic;
 
-import model.Move;
+import model.Attack;
 import model.game.player.Player;
 
 import java.io.Serializable;
@@ -8,8 +8,7 @@ import java.io.Serializable;
 public class CrossTactic implements Tactic, Serializable {
 
     @Override
-    public Move applyTactic(Player player) {
-        player.setTactic(this);
+    public Attack applyTactic(Player attacker, Player victim) {
         return null;
     }
 

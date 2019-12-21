@@ -52,8 +52,8 @@ public class IA extends Player{
         }
     }
 
-    public Attack getBestMove(){
-        return null;
+    public Attack getBestMove(Player player){
+        return tactic.applyTactic(this ,player);
     }
 
     @Override

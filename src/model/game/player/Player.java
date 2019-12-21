@@ -45,7 +45,7 @@ public abstract class Player implements Serializable {
 
     public abstract boolean isHuman();
 
-    public Attack getBestMove(){
+    public Attack getBestMove(Player player){
         return null;
     }
 

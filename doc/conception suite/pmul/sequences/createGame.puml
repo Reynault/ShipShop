@@ -23,10 +23,10 @@ In this case, the human plays
 first.
 end note
 
-ShipShop -> GameFactory: game = getPvEGame()
+ShipShop -> GameFactory: game = getPvEGame(era)
 
 GameFactory -> Game:  game = game(Era era, Player p1, Player p2)
-ShipShop -> Game: setTactic(Player p2, Tactic tc)
+ShipShop -> Game: setTactic(int p2, Tactic tc)
 Game -> Player: setTactic(Tactic tc)
 
 Game -> Era: getFleetFactory()

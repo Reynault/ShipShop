@@ -298,9 +298,6 @@ public class Grid implements Serializable {
             res += ship.getHp();
         }
 
-
-        System.out.println("RES : "+ res);
-
         return res * 100 / max;
     }
 

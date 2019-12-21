@@ -83,6 +83,7 @@ public class Game implements Serializable {
     public Review play(Attack attack) {
         boolean canAttack = false;
         boolean playerSet = false;
+        boolean alreadySunk = false;
         boolean ennemySet = false;
         boolean end = false;
         int xPlayer = 0;
@@ -138,18 +139,20 @@ public class Game implements Serializable {
                     players[currentPlayer].getGrid().flagTile(x, y, false);
                     nextPlayer.getGrid().flagTile(x, y, true);
 
-                    xPlayer = x;
-                    yPlayer = y;
-                    player = GridConstant.FLAG;
-                    playerSet = true;
-
                     // --------PRINT---------
 //                    System.out.println("The tile at position (" + x + "," + y + ") was flag as hit\n");
 
                 } else {
                     // --------PRINT---------
 //                    System.out.println("The ennemy Ship has already sunk...\n");
+                    alreadySunk = true;
+                    System.out.println("SUNK ???");
                 }
+
+                xPlayer = x;
+                yPlayer = y;
+                player = GridConstant.FLAG;
+                playerSet = true;
             } else {
                 //If the next player doesn't have a Ship in the target tile, the tile is flag as already hit
                 //The tile can't be target anymore
@@ -175,7 +178,6 @@ public class Game implements Serializable {
                     xEnnemy = res.getxPlayer();
                     yEnnemy = res.getyPlayer();
                     ennemy = res.getPlayer();
-                    System.out.println(" POURQUOI ");
                     ennemySet = true;
                 }
             }else{
@@ -183,7 +185,7 @@ public class Game implements Serializable {
             }
         }
 
-        return new Review(canAttack, ennemySet && playerSet, end, xPlayer, yPlayer, xEnnemy, yEnnemy, player, ennemy);
+        return new Review(canAttack, alreadySunk, ennemySet && playerSet, end, xPlayer, yPlayer, xEnnemy, yEnnemy, player, ennemy);
     }
 
     private boolean isFinished() {
@@ -210,10 +212,9 @@ public class Game implements Serializable {
      * Methode qui permet de changer le joueur en cours (fin de tour début du tour pour l'autre joueur
      */
     public void setNext() {
-        System.out.println("Current Player : " + currentPlayer);
+//        System.out.println("Current Player : " + currentPlayer);
         currentPlayer = (currentPlayer == 0) ? 1 : 0;
-        System.out.println("Current Player after next : " + currentPlayer);
-
+//        System.out.println("Current Player after next : " + currentPlayer);
     }
 
 

@@ -36,6 +36,9 @@ public class StringConstant {
     public static final String SUBMARINE = "Submarine: ";
     public static final String CRUISER = "Cruiser: ";
 
+    public static final String CAN_NOT_SHOOT = "Cannot Shoot";
+    public static final String DEAD = "Dead";
+
     // End game
     public static final String END_GAME_TITLE = "You ";
 

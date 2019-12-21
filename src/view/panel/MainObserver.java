@@ -65,8 +65,8 @@ public class MainObserver implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (current != null) {
-            current.update(o, arg);
+        if (this.current != null) {
+            this.current.update(o, arg);
         }
     }
 

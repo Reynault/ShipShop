@@ -7,8 +7,11 @@ import model.game.era.Era;
 import model.game.era.EraFactory;
 import model.game.player.tactic.Tactic;
 import model.game.player.tactic.TacticFactory;
+import model.game.ship.Ship;
 import view.panel.EraView;
 import view.panel.TacticView;
+
+import java.util.UUID;
 
 public class GameController {
     ShipShop model;
@@ -61,8 +64,8 @@ public class GameController {
         model.save(model.getGame());
     }
 
-    public void placeShip(Move move){
-        model.placeShip(move);
+    public UUID placeShip(Move move){
+        return model.placeShip(move);
     }
 
     public void endShipPlacement(){
@@ -88,5 +91,9 @@ public class GameController {
                 break;
         }
         model.setTactic(1,tactic);
+    }
+
+    public void getShipInformations(UUID currentShip) {
+        model.getShipInformations(currentShip);
     }
 }

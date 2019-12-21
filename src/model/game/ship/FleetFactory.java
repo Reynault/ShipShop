@@ -150,4 +150,19 @@ public abstract class FleetFactory implements Serializable {
         }
         return size;
     }
+
+    public int getNbShip(ShipType cruiser) {
+        switch (cruiser){
+            case TORPEDO:
+                return nbTorpedo;
+            case CRUISER:
+                return nbCruiser;
+            case AIRCRAFT:
+                return nbAircraft;
+            case SUBMARINE:
+                return nbSubmarine;
+            default:
+                return 0;
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package model.game.player;
 
 import model.Move;
+import model.ShipType;
 import model.game.grid.Grid;
 import model.game.grid.GridFactory;
 import model.game.player.tactic.Tactic;
@@ -92,5 +93,18 @@ public abstract class Player implements Serializable {
      */
     public int getAmmo(UUID ship){
         return grid.getAmmo(ship);
+    }
+
+    public int getSize(ShipType type) {
+        return fleetFactory.getSize(type);
+    }
+
+    public int getNbShip(ShipType cruiser) {
+        return fleetFactory.getNbShip(cruiser);
+    }
+
+    public int getLife() {
+        int res = grid.getLife();
+        return res;
     }
 }

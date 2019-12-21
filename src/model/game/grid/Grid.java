@@ -250,4 +250,20 @@ public class Grid implements Serializable {
     public void decreaseAmmo(UUID ship) {
         getShip(ship).decreaseAmmo();
     }
+
+    public int getLife() {
+        int max = 0;
+        int res = 0;
+
+        Ship ship;
+
+        for(UUID uuid : ships.keySet()){
+            ship = ships.get(uuid);
+
+            max += ship.getMaxHp();
+            res += ship.getHp();
+        }
+
+        return res * 100 / max;
+    }
 }

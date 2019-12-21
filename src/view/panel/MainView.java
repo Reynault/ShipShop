@@ -1,14 +1,11 @@
 package view.panel;
 
 import controller.GameController;
-import model.Attack;
-import model.DirectionConstant;
-import model.Move;
+import model.*;
+import model.game.ship.Ship;
 import view.constant.StringConstant;
-import view.constant.TextureFactory;
 import view.constant.Views;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -18,8 +15,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.Observable;
+import java.util.UUID;
 
 import static view.constant.GraphicConstant.HEIGHT_MAIN;
 import static view.constant.GraphicConstant.WIDTH_MAIN;
@@ -27,41 +24,48 @@ import static view.constant.GraphicConstant.WIDTH_MAIN;
 public class MainView extends PanelView {
 
     // Data
-    private Attack currentAttack;
-    private Move currentMove;
-
     private final int width_cell, height_cell;
 
-    private boolean select;
+    // Data for the movement
     private BufferedImage cursorImage;
-    private int size;
-    private int toward;
+    private int currentSize;
+    private ShipType currentType;
     private DirectionConstant[] direction;
+    private int toward;
 
-
-    private final JPanel left;
+    // Data for an attack
+    private UUID currentShip;
 
     // Game review
     private JPanel gameReview;
     private final JLabel ammo;
     private final JLabel attack;
     private final JLabel life;
+    private final JLabel selectedShip;
+    private final JButton endTurn;
+    private boolean inGame;
 
     // Placement buttons
 
+    private boolean select;
     private JPanel sideBarPlacement;
     private JButton[] shipPlacement;
 
-    private JButton[][] ennemy;
-    private JButton[][] player;
-    private JPanel ennemyGrid;
-    private JPanel playerGrid;
+    // Global
 
+    private final JPanel left;
     private JMenuBar menuBar;
     private JMenu menu;
     private JMenuItem changeTactic;
     private JMenuItem save;
     private JMenuItem exit;
+    private JLabel ennemyDescription;
+    private JLabel playerDescription;
+
+    private JButton[][] ennemy;
+    private JButton[][] player;
+    private JPanel ennemyGrid;
+    private JPanel playerGrid;
 
     // Constants
     private final int WIDTH_PANEL = 10;
@@ -88,7 +92,7 @@ public class MainView extends PanelView {
         direction[3] = DirectionConstant.LEFT;
         toward = 0;
 
-        // Setting prefered size
+        // Setting prefered currentSize
         this.setPreferredSize(
                 new Dimension(WIDTH_MAIN, HEIGHT_MAIN)
         );
@@ -130,7 +134,7 @@ public class MainView extends PanelView {
         global.add(right);
 
         // Setting ennemy grid
-        JLabel ennemyDescription = new JLabel(StringConstant.ENNEMY_TITLE, SwingConstants.CENTER);
+        ennemyDescription = new JLabel(StringConstant.ENNEMY_TITLE, SwingConstants.CENTER);
 
         ennemyGrid = new JPanel();
         ennemyGrid.setLayout(new GridLayout(WIDTH_PANEL, HEIGHT_PANEL));
@@ -160,7 +164,7 @@ public class MainView extends PanelView {
         }
 
         // Setting player grid
-        JLabel playerDescription = new JLabel(StringConstant.PLAYER_TITLE, SwingConstants.CENTER);
+        playerDescription = new JLabel(StringConstant.PLAYER_TITLE, SwingConstants.CENTER);
 
         playerGrid = new JPanel();
         playerGrid.setLayout(new GridLayout(WIDTH_PANEL, HEIGHT_PANEL));
@@ -192,23 +196,20 @@ public class MainView extends PanelView {
         shipPlacement = new JButton[5];
 
         shipPlacement[CRUISER] = new JButton(StringConstant.CRUISER);
-        shipPlacement[CRUISER].addActionListener(new ShipListener());
         shipPlacement[CRUISER].addMouseListener(selectionListener);
 
         shipPlacement[SUBMARINE] = new JButton(StringConstant.SUBMARINE);
-        shipPlacement[SUBMARINE].addActionListener(new ShipListener());
         shipPlacement[SUBMARINE].addMouseListener(selectionListener);
 
         shipPlacement[AIRCRAFT] = new JButton(StringConstant.AIRCRAFT);
-        shipPlacement[AIRCRAFT].addActionListener(new ShipListener());
         shipPlacement[AIRCRAFT].addMouseListener(selectionListener);
 
-        shipPlacement[TORPEDO] = new JButton(StringConstant.TORPERDO);
-        shipPlacement[TORPEDO].addActionListener(new ShipListener());
+        shipPlacement[TORPEDO] = new JButton(StringConstant.TORPEDO);
         shipPlacement[TORPEDO].addMouseListener(selectionListener);
 
         shipPlacement[READY] = new JButton(StringConstant.READY_BUTTON);
         shipPlacement[READY].addActionListener(new ReadyListener());
+        shipPlacement[READY].setEnabled(false);
 
         // Setting side bar with ship placement
         sideBarPlacement = new JPanel();
@@ -223,14 +224,15 @@ public class MainView extends PanelView {
 
         // Setting side bar with game review
         gameReview = new JPanel();
-        gameReview.setLayout(new GridLayout(5,1));
+        gameReview.setLayout(new GridLayout(5, 1));
 
-        JLabel selectedShip = new JLabel(StringConstant.SELECTED_SHIP, SwingConstants.CENTER);
-        life = new JLabel(StringConstant.LIFE, SwingConstants.CENTER);
-        attack = new JLabel(StringConstant.ATTACK, SwingConstants.CENTER);
-        ammo = new JLabel(StringConstant.AMMO, SwingConstants.CENTER);
+        selectedShip = new JLabel(StringConstant.SELECTED_SHIP, SwingConstants.CENTER);
+        life = new JLabel(StringConstant.LIFE + "-", SwingConstants.CENTER);
+        attack = new JLabel(StringConstant.ATTACK + "-", SwingConstants.CENTER);
+        ammo = new JLabel(StringConstant.AMMO + "-", SwingConstants.CENTER);
 
-        JButton endTurn = new JButton(StringConstant.END_TURN);
+        endTurn = new JButton(StringConstant.END_TURN);
+        endTurn.setEnabled(false);
         endTurn.addActionListener(new EndTurnListener());
 
         gameReview.add(selectedShip);
@@ -241,6 +243,7 @@ public class MainView extends PanelView {
 
         // Configuring data
         select = false;
+        inGame = false;
 
         // Adding mouse listener
         this.addMouseListener(selectionListener);
@@ -248,15 +251,147 @@ public class MainView extends PanelView {
         this.buildFrame();
     }
 
-    private void changeStep(){
+    private void changeStep() {
+        // Indicate to the model that we change the current state
+        controller.endShipPlacement();
+
+        // Select is now false (no more ship selected)
         select = false;
+        inGame = true;
+
+        // Removing the ship placing sidebar
         sideBarPlacement.setVisible(false);
+
+        // Adding the information bar
         left.add(gameReview, BorderLayout.WEST);
     }
 
     @Override
     public void update(Observable o, Object arg) {
+        UpdateObserver val = (UpdateObserver) arg;
 
+        ShipShop shipShop = (ShipShop) o;
+
+        switch (val) {
+            // When creating a game
+            case CREATE_GAME:
+
+                // Setting ship button values
+                shipPlacement[CRUISER].addActionListener(
+                        new ShipListener(
+                                (BufferedImage) shipShop.drawShip(ShipType.CRUISER),
+                                shipShop.getSize(ShipType.CRUISER),
+                                ShipType.CRUISER
+                        )
+                );
+
+                shipPlacement[SUBMARINE].addActionListener(
+                        new ShipListener(
+                                (BufferedImage) shipShop.drawShip(ShipType.SUBMARINE),
+                                shipShop.getSize(ShipType.SUBMARINE),
+                                ShipType.SUBMARINE
+                        )
+                );
+
+                shipPlacement[TORPEDO].addActionListener(
+                        new ShipListener(
+                                (BufferedImage) shipShop.drawShip(ShipType.TORPEDO),
+                                shipShop.getSize(ShipType.TORPEDO),
+                                ShipType.TORPEDO
+                        )
+                );
+
+                shipPlacement[AIRCRAFT].addActionListener(
+                        new ShipListener(
+                                (BufferedImage) shipShop.drawShip(ShipType.AIRCRAFT),
+                                shipShop.getSize(ShipType.AIRCRAFT),
+                                ShipType.AIRCRAFT
+                        )
+                );
+
+                majPlacementShip(shipShop);
+
+                break;
+
+            case PLACE_SHIP:
+                majPlacementShip(shipShop);
+                break;
+
+            case LAUNCH:
+                // Updating the two labels on the top of the two grids
+                playerDescription.setText(
+                        StringConstant.PLAYER_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getLife() + "%"
+                );
+
+                ennemyDescription.setText(
+                        StringConstant.ENNEMY_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getEnnemyLife() + "%"
+                );
+                break;
+
+            case GET_SHIP_INFO:
+                Ship ship = shipShop.getShip(currentShip);
+
+
+                ammo.setText(
+                        StringConstant.AMMO + ship.getAmmo()
+                );
+
+                attack.setText(
+                        StringConstant.ATTACK + ship.getDmg()
+                );
+
+                life.setText(
+                        StringConstant.LIFE + ship.getHp()
+                );
+
+                selectedShip.setText(
+                        ship.getShipType()+""
+                );
+
+                break;
+        }
+    }
+
+    private void majPlacementShip(ShipShop shipShop) {
+        int nbCruiser = shipShop.getNbShip(ShipType.CRUISER);
+        shipPlacement[CRUISER].setText(
+                StringConstant.CRUISER + nbCruiser
+        );
+
+        if (nbCruiser == 0) {
+            shipPlacement[CRUISER].setEnabled(false);
+        }
+
+        int nbSubmarine = shipShop.getNbShip(ShipType.SUBMARINE);
+        shipPlacement[SUBMARINE].setText(
+                StringConstant.CRUISER + nbSubmarine
+        );
+
+        if (nbSubmarine == 0) {
+            shipPlacement[SUBMARINE].setEnabled(false);
+        }
+
+        int nbTorpedo = shipShop.getNbShip(ShipType.TORPEDO);
+        shipPlacement[TORPEDO].setText(
+                StringConstant.TORPEDO + nbTorpedo
+        );
+
+        if (nbTorpedo == 0) {
+            shipPlacement[TORPEDO].setEnabled(false);
+        }
+
+        int nbAircraft = shipShop.getNbShip(ShipType.AIRCRAFT);
+        shipPlacement[AIRCRAFT].setText(
+                StringConstant.AIRCRAFT + nbAircraft
+        );
+
+        if (nbAircraft == 0) {
+            shipPlacement[AIRCRAFT].setEnabled(false);
+        }
+
+        if (nbAircraft == 0 && nbCruiser == 0 && nbSubmarine == 0 && nbTorpedo == 0) {
+            shipPlacement[READY].setEnabled(true);
+        }
     }
 
     private class ReadyListener implements ActionListener {
@@ -269,29 +404,32 @@ public class MainView extends PanelView {
 
     private class ShipListener implements ActionListener {
 
+        private BufferedImage image;
+        private int size;
+        private ShipType type;
+
+        public ShipListener(BufferedImage image, int size, ShipType type) {
+            this.image = image;
+            this.size = size;
+            this.type = type;
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             select = true;
             toward = 0;
+            cursorImage = image;
+            currentSize = size;
+            currentType = type;
 
-            try {
-                Toolkit toolkit = Toolkit.getDefaultToolkit();
-
-                cursorImage = ImageIO.read(ClassLoader.getSystemResource("sprite/aircraft.png"));
-
-                size = 5;
-
-                setCursor(toolkit.createCustomCursor(cursorImage, new Point(getX(),
-                        getY()), "img"));
-
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-
+            // When triggering a ship placement button, the cursor becomes the new ship
+            Toolkit toolkit = Toolkit.getDefaultToolkit();
+            setCursor(toolkit.createCustomCursor(cursorImage, new Point(getX(),
+                    getY()), "img"));
         }
     }
 
-    private class EnnemyTileListener implements ActionListener{
+    private class EnnemyTileListener implements ActionListener {
 
         int x, y;
 
@@ -308,6 +446,7 @@ public class MainView extends PanelView {
 
     private class PlayerTileListener implements ActionListener {
 
+        UUID relatedShip;
         int x;
         int y;
 
@@ -316,8 +455,43 @@ public class MainView extends PanelView {
             this.y = y;
         }
 
+        public void setRelatedShip(UUID relatedShip) {
+            this.relatedShip = relatedShip;
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
+            // What happen when the game is launched
+            if (inGame) {
+                // If the button is related to a ship
+                if (relatedShip != null) {
+
+                    currentShip = relatedShip;
+                    controller.getShipInformations(currentShip);
+
+                }
+            }
+
+//                 else {
+//                ImageIcon imageIcon = (ImageIcon) player[x][y].getIcon();
+//
+//                if (imageIcon != null) {
+//                    tmp = (BufferedImage) imageIcon.getImage();
+//
+//                    g = (Graphics2D) tmp.getGraphics();
+//
+//                    g.drawImage(
+//                            TextureFactory.getInstance().getCross_ennemy(),
+//                            0,
+//                            0,
+//                            tmp.getWidth(),
+//                            tmp.getHeight(),
+//                            null
+//                    );
+//                }
+//            }
+
+            // What happen in the ship placement step
             if (select) {
                 BufferedImage tmp, resizedImage;
                 Graphics2D g;
@@ -326,126 +500,121 @@ public class MainView extends PanelView {
                 int xGrid = y;
                 int yGrid = 9 - x;
                 DirectionConstant constant = direction[toward];
-                System.out.println(constant);
-                System.out.println("x : "+x);
-                System.out.println("y : "+y);
-                System.out.println("xGrid : "+xGrid);
-                System.out.println("yGrid : "+yGrid);
+                ShipType type = currentType;
 
-                // Setting image depending on the direction
-                switch (direction[toward]) {
-                    case DOWN:
-                    case UP:
-                        resizedImage = new BufferedImage(width_cell, size * height_cell, BufferedImage.TYPE_INT_ARGB);
-                        g = resizedImage.createGraphics();
-                        g.drawImage(cursorImage, 0, 0, width_cell, size * height_cell, null);
-                        g.dispose();
-                        break;
-                    case RIGHT:
-                    case LEFT:
-                        resizedImage = new BufferedImage(width_cell * size, height_cell, BufferedImage.TYPE_INT_ARGB);
-                        g = resizedImage.createGraphics();
-                        g.drawImage(cursorImage, 0, 0, width_cell * size, height_cell, null);
-                        g.dispose();
-                        break;
-                    default:
-                        resizedImage = new BufferedImage(width_cell * size, height_cell, BufferedImage.TYPE_INT_ARGB);
-                        break;
-                }
+                Move currentMove = new Move(xGrid, yGrid, constant, type);
+                UUID res = controller.placeShip(currentMove);
 
-                // Adding image on buttons depending on the direction
-                switch (direction[toward]){
-                    case DOWN:
-                        if((x-size)+1 >= 0) {
-                            for (int i = 0; i < size; i++) {
-                                tmp = resizedImage.getSubimage(
-                                        0,
-                                        i * height_cell,
-                                        width_cell,
-                                        height_cell
-                                );
+                if (res != null) {
 
-                                ImageIcon imageIcon = new ImageIcon(tmp);
+                    // Setting image depending on the direction
+                    switch (direction[toward]) {
+                        case DOWN:
+                        case UP:
+                            resizedImage = new BufferedImage(width_cell, currentSize * height_cell, BufferedImage.TYPE_INT_ARGB);
+                            g = resizedImage.createGraphics();
+                            g.drawImage(cursorImage, 0, 0, width_cell, currentSize * height_cell, null);
+                            g.dispose();
+                            break;
+                        case RIGHT:
+                        case LEFT:
+                            resizedImage = new BufferedImage(width_cell * currentSize, height_cell, BufferedImage.TYPE_INT_ARGB);
+                            g = resizedImage.createGraphics();
+                            g.drawImage(cursorImage, 0, 0, width_cell * currentSize, height_cell, null);
+                            g.dispose();
+                            break;
+                        default:
+                            resizedImage = new BufferedImage(width_cell * currentSize, height_cell, BufferedImage.TYPE_INT_ARGB);
+                            break;
+                    }
 
-                                player[x - i][y].setIcon(imageIcon);
+                    // Adding image on buttons depending on the direction
+                    switch (direction[toward]) {
+                        case DOWN:
+                            if ((x - currentSize) + 1 >= 0) {
+                                for (int i = 0; i < currentSize; i++) {
+                                    tmp = resizedImage.getSubimage(
+                                            0,
+                                            i * height_cell,
+                                            width_cell,
+                                            height_cell
+                                    );
+
+                                    ImageIcon imageIcon = new ImageIcon(tmp);
+
+                                    player[x - i][y].setIcon(imageIcon);
+
+                                    PlayerTileListener a = (PlayerTileListener) (player[x - i][y].getActionListeners()[0]);
+                                    a.setRelatedShip(res);
+                                }
+                                select = false;
+                                setCursor(Cursor.getDefaultCursor());
                             }
-                            select = false;
-                            setCursor(Cursor.getDefaultCursor());
-                        }
-                        break;
-                    case UP:
-                        if(x+size <= player.length) {
-                            for(int i = 0; i < size; i++){
-                                tmp = resizedImage.getSubimage(
-                                        0,
-                                        (size-(i+1)) * height_cell,
-                                        width_cell,
-                                        height_cell
-                                );
+                            break;
+                        case UP:
+                            if (x + currentSize <= player.length) {
+                                for (int i = 0; i < currentSize; i++) {
+                                    tmp = resizedImage.getSubimage(
+                                            0,
+                                            (currentSize - (i + 1)) * height_cell,
+                                            width_cell,
+                                            height_cell
+                                    );
 
-                                ImageIcon imageIcon = new ImageIcon(tmp);
+                                    ImageIcon imageIcon = new ImageIcon(tmp);
 
-                                player[x+i][y].setIcon(imageIcon);
+                                    player[x + i][y].setIcon(imageIcon);
+                                    PlayerTileListener a = (PlayerTileListener) (player[x + i][y].getActionListeners()[0]);
+                                    a.setRelatedShip(res);
+                                }
+                                select = false;
+                                setCursor(Cursor.getDefaultCursor());
                             }
-                            select = false;
-                            setCursor(Cursor.getDefaultCursor());
-                        }
-                        break;
-                    case RIGHT:
-                        if(y+size <= player.length) {
-                            for (int i = 0; i < size; i++) {
-                                tmp = resizedImage.getSubimage(
-                                        i * height_cell,
-                                        0,
-                                        width_cell,
-                                        height_cell
-                                );
+                            break;
+                        case RIGHT:
+                            if (y + currentSize <= player.length) {
+                                for (int i = 0; i < currentSize; i++) {
+                                    tmp = resizedImage.getSubimage(
+                                            i * height_cell,
+                                            0,
+                                            width_cell,
+                                            height_cell
+                                    );
 
 
-                                ImageIcon imageIcon = new ImageIcon(tmp);
+                                    ImageIcon imageIcon = new ImageIcon(tmp);
 
-                                player[x][y + i].setIcon(imageIcon);
+                                    player[x][y + i].setIcon(imageIcon);
+                                    PlayerTileListener a = (PlayerTileListener) (player[x][y + i].getActionListeners()[0]);
+                                    a.setRelatedShip(res);
+                                }
+                                select = false;
+                                setCursor(Cursor.getDefaultCursor());
                             }
-                            select = false;
-                            setCursor(Cursor.getDefaultCursor());
-                        }
-                        break;
-                    case LEFT:
-                        if((y-size + 1) >= 0) {
-                            for (int i = 0; i < size; i++) {
-                                tmp = resizedImage.getSubimage(
-                                        (size - (i + 1)) * height_cell,
-                                        0,
-                                        width_cell,
-                                        height_cell
-                                );
+                            break;
+                        case LEFT:
+                            if ((y - currentSize + 1) >= 0) {
+                                for (int i = 0; i < currentSize; i++) {
+                                    tmp = resizedImage.getSubimage(
+                                            (currentSize - (i + 1)) * height_cell,
+                                            0,
+                                            width_cell,
+                                            height_cell
+                                    );
 
-                                ImageIcon imageIcon = new ImageIcon(tmp);
+                                    ImageIcon imageIcon = new ImageIcon(tmp);
 
-                                player[x][y - i].setIcon(imageIcon);
+                                    player[x][y - i].setIcon(imageIcon);
+
+                                    PlayerTileListener a = (PlayerTileListener) (player[x][y - i].getActionListeners()[0]);
+                                    a.setRelatedShip(res);
+                                }
+                                select = false;
+                                setCursor(Cursor.getDefaultCursor());
                             }
-                            select = false;
-                            setCursor(Cursor.getDefaultCursor());
-                        }
-                        break;
-                }
+                            break;
+                    }
 
-            }else{
-                ImageIcon imageIcon = (ImageIcon) player[x][y].getIcon();
-
-                if(imageIcon != null) {
-                    BufferedImage tmp = (BufferedImage) imageIcon.getImage();
-
-                    Graphics2D g = (Graphics2D) tmp.getGraphics();
-
-                    g.drawImage(
-                            TextureFactory.getInstance().getCross_ennemy(),
-                            0,
-                            0,
-                            tmp.getWidth(),
-                            tmp.getHeight(),
-                            null
-                    );
                 }
             }
         }
@@ -468,7 +637,7 @@ public class MainView extends PanelView {
 
     }
 
-    private class EndTurnListener implements ActionListener{
+    private class EndTurnListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
 

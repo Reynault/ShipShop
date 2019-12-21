@@ -9,6 +9,7 @@ import java.io.Serializable;
  * Ship is a model class that represent a ship and its properties
  */
 public class Ship implements Serializable {
+    private int maxHp;
     private int hp;
     private int ammo;
     private int dmg;
@@ -22,7 +23,7 @@ public class Ship implements Serializable {
     /**
      * ShipType is a parameter that indicate the type of the ship (Submarine, cruiser etc...)
      */
-    private ShipType shipType;
+    private final ShipType shipType;
 
 //    final static UUID NONE_UUID = new UUID(0,0);
 
@@ -36,6 +37,7 @@ public class Ship implements Serializable {
      * @param shipType the ship type
      */
     public Ship(int hp, int ammo, int dmg, int nbTiles, DirectionConstant direction, ShipType shipType) {
+        this.maxHp = hp;
         this.hp = hp;
         this.ammo = ammo;
         this.dmg = dmg;
@@ -74,6 +76,14 @@ public class Ship implements Serializable {
 
     public void decreaseAmmo(){
         ammo = ammo -1;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public ShipType getShipType() {
+        return shipType;
     }
 
     public int getDmg() {

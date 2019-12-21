@@ -11,9 +11,7 @@ import java.io.File;
 import java.util.Observable;
 import java.util.UUID;
 
-import static model.UpdateObserver.BAD_LOAD;
-import static model.UpdateObserver.LAUNCH;
-import static model.UpdateObserver.PLACE_SHIP;
+import static model.UpdateObserver.*;
 
 public class ShipShop extends Observable {
     private String SAVE_PATH = "save.ser";
@@ -41,6 +39,9 @@ public class ShipShop extends Observable {
             game = GameFactory.getEVPGame(era);
             game.setTactic(0, tactic);
         }
+
+        this.setChanged();
+        this.notifyObservers(CREATE_GAME);
     }
 
     public UUID placeShip(Move move) {
@@ -52,6 +53,8 @@ public class ShipShop extends Observable {
 
     public void setTactic(int player, Tactic tactic) {
         game.setTactic(player, tactic);
+        setChanged();
+        notifyObservers(CHANGE_TACTIC);
     }
 
     public Image drawShip(ShipType type) {
@@ -60,6 +63,8 @@ public class ShipShop extends Observable {
 
     public void play(Attack attack) {
         game.play(attack);
+        setChanged();
+        notifyObservers(END_TURN);
     }
 
     /**
@@ -94,6 +99,9 @@ public class ShipShop extends Observable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        this.setChanged();
+        this.notifyObservers(SAVE);
     }
 
     public void load() {
@@ -104,6 +112,9 @@ public class ShipShop extends Observable {
             game = (Game) object.readObject();
             object.close();
             stream.close();
+
+            this.setChanged();
+            this.notifyObservers(LOAD);
         } catch (Exception e) {
             this.setChanged();
             this.notifyObservers(BAD_LOAD);
@@ -128,5 +139,26 @@ public class ShipShop extends Observable {
 
     public Ship getShip(UUID uuid) {
         return game.getShip(uuid);
+    }
+
+    public int getSize(ShipType type) {
+        return game.getSize(type);
+    }
+
+    public int getNbShip(ShipType cruiser) {
+        return game.getNbShip(cruiser);
+    }
+
+    public int getLife() {
+        return game.getLife();
+    }
+
+    public int getEnnemyLife() {
+        return game.getEnnemyLife();
+    }
+
+    public void getShipInformations(UUID currentShip) {
+        setChanged();
+        notifyObservers(GET_SHIP_INFO);
     }
 }

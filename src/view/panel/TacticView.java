@@ -102,8 +102,8 @@ public class TacticView extends PanelView{
                 controller.setTactic(chosenTactic);
                 mainObserver.closeView(Views.TACTIC);
             }else {
-                controller.createGame(mainObserver.getChosenEra(), chosenTactic);
                 mainObserver.setCurrent(Views.MAIN);
+                controller.createGame(mainObserver.getChosenEra(), chosenTactic);
             }
         }
     }

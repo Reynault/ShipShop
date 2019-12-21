@@ -126,7 +126,7 @@ public class Game implements Serializable {
     }
 
     public Ship getShip(UUID uuid){
-        return null;
+        return players[currentPlayer].getShip(uuid);
     }
 
     /**
@@ -179,5 +179,21 @@ public class Game implements Serializable {
      */
     public int getCurrentPlayer(){
         return currentPlayer;
+    }
+
+    public int getSize(ShipType type) {
+        return players[currentPlayer].getSize(type);
+    }
+
+    public int getNbShip(ShipType cruiser) {
+        return players[currentPlayer].getNbShip(cruiser);
+    }
+
+    public int getLife() {
+        return players[currentPlayer].getLife();
+    }
+
+    public int getEnnemyLife() {
+        return players[(currentPlayer+1)%2].getLife();
     }
 }

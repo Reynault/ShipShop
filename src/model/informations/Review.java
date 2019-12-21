@@ -2,7 +2,9 @@ package model.informations;
 
 import model.constant.GridConstant;
 
-public final class Review {
+import java.io.Serializable;
+
+public final class Review implements Serializable {
     private final boolean canAttack;
 
     private final boolean alreadySunk;

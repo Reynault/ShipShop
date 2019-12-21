@@ -1,8 +1,9 @@
 package model.informations;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public final class Attack {
+public final class Attack implements Serializable {
 
     private final int x;
     private final int y;

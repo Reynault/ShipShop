@@ -1,7 +1,7 @@
 package model;
 
+import model.constant.EraConstant;
 import model.constant.ShipType;
-import model.constant.UpdateObserver;
 import model.game.Game;
 import model.game.GameFactory;
 import model.game.era.Era;
@@ -13,13 +13,11 @@ import model.informations.Review;
 
 import java.awt.*;
 import java.io.*;
-import java.io.File;
-import java.util.Observable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.UUID;
 
-import static model.constant.UpdateObserver.*;
-
-public class ShipShop extends Observable implements Serializable{
+public class ShipShop extends UnicastRemoteObject implements ShipShopInterface {
     private String SAVE_PATH = "save.ser";
 
     private UUID requestedShip;
@@ -27,7 +25,10 @@ public class ShipShop extends Observable implements Serializable{
     private GameFactory gameFactory;
     protected Game game;
 
-    public void createGame(Era era, Tactic tactic, boolean humanFirst) {
+    public ShipShop() throws RemoteException {
+    }
+
+    public void createGame(Era era, Tactic tactic, boolean humanFirst)  throws RemoteException{
         if (humanFirst) {
             game = GameFactory.getPVEGame(era);
             game.setTactic(1, tactic);
@@ -35,53 +36,30 @@ public class ShipShop extends Observable implements Serializable{
             game = GameFactory.getEVPGame(era);
             game.setTactic(0, tactic);
         }
-
-        this.setChanged();
-        this.notifyObservers(CREATE_GAME);
     }
 
-    public UUID placeShip(Move move) {
+    public UUID placeShip(Move move)  throws RemoteException{
         UUID uuid = game.placeShip(move);
-        setChanged();
-        notifyObservers(PLACE_SHIP);
         return uuid;
     }
 
-    public void setTactic(int player, Tactic tactic) {
+    public void setTactic(int player, Tactic tactic)  throws RemoteException{
         game.setTactic(player, tactic);
-        setChanged();
-        notifyObservers(CHANGE_TACTIC);
     }
 
-    public Image drawShip(ShipType type) {
-        return game.drawShip(type);
-    }
-
-    public void play(Attack attack) {
-        turnReview = game.play(attack);
-
-        setChanged();
-        if(turnReview.isEnd()){
-            notifyObservers(END_GAME);
-        }else if(turnReview.ifCanAttack()) {
-            notifyObservers(END_TURN);
-        }else{
-            notifyObservers(UpdateObserver.CAN_NOT_ATTACK);
-        }
+    public Review play(Attack attack) throws RemoteException {
+        return game.play(attack);
     }
 
     /**
      * EndPlaceShip is a method that verify is the place
      * step is finished, if it is, it updates its observers
      */
-    public void endPlaceShip() {
-        if (game.endPlaceShip()) {
-            this.setChanged();
-            this.notifyObservers(LAUNCH);
-        }
+    public boolean endPlaceShip()  throws RemoteException{
+        return game.endPlaceShip();
     }
 
-    public void save(Game game) {
+    public void save(Game game) throws RemoteException {
         File file = new File(SAVE_PATH);
         try {
             if (!file.exists()) {
@@ -102,13 +80,9 @@ public class ShipShop extends Observable implements Serializable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        this.setChanged();
-        this.notifyObservers(SAVE);
     }
 
-    public void load() {
-        Game game = null;
+    public boolean load()  throws RemoteException{
         try {
             FileInputStream stream = new FileInputStream(new File(SAVE_PATH));
             ObjectInputStream object = new ObjectInputStream(stream);
@@ -116,21 +90,18 @@ public class ShipShop extends Observable implements Serializable{
             object.close();
             stream.close();
 
-            this.setChanged();
-            this.notifyObservers(LOAD);
+            return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            this.setChanged();
-            this.notifyObservers(BAD_LOAD);
+            return false;
         }
-        this.game = game;
     }
 
     /**
      * Function used for get the Game
+     *
      * @return
      */
-    public Game getGame() {
+    public Game getGame()  throws RemoteException{
         return this.game;
     }
 
@@ -141,29 +112,29 @@ public class ShipShop extends Observable implements Serializable{
                 '}';
     }
 
-    public Ship getShip(UUID uuid) {
+    public Ship getShip(UUID uuid)  throws RemoteException{
         return game.getShip(uuid);
     }
 
-    public int getSize(ShipType type) {
+    public int getSize(ShipType type)  throws RemoteException{
         return game.getSize(type);
     }
 
-    public int getNbShip(ShipType cruiser) {
+    public int getNbShip(ShipType cruiser)  throws RemoteException{
         return game.getNbShip(cruiser);
     }
 
-    public int getLife(int num) {
+    public int getLife(int num)  throws RemoteException{
 //        System.out.println("VIE : "+ game.getLife());
         return game.getLife(num);
     }
 
-    public void getShipInformations(UUID currentShip) {
-        setChanged();
-        notifyObservers(GET_SHIP_INFO);
+    public Review getTurnReview()  throws RemoteException{
+        return turnReview;
     }
 
-    public Review getTurnReview() {
-        return turnReview;
+    @Override
+    public EraConstant getEra() throws RemoteException {
+        return game.getEra();
     }
 }

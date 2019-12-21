@@ -7,14 +7,14 @@ public class EraFactory {
 
     public static Era getModernEra(){
         if(modernEra == null){
-            modernEra = new ModernEra();
+            modernEra = new Modern();
         }
         return modernEra;
     }
 
     public static Era getXVIEra(){
         if(xviEra == null){
-            xviEra = new XVIEra();
+            xviEra = new XVI();
         }
         return xviEra;
     }

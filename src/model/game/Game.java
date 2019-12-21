@@ -1,5 +1,6 @@
 package model.game;
 
+import model.constant.EraConstant;
 import model.constant.GridConstant;
 import model.constant.ShipType;
 import model.game.era.Era;
@@ -42,10 +43,6 @@ public class Game implements Serializable {
 
     public void setTactic(int player, Tactic tactic) {
         players[player].setTactic(tactic);
-    }
-
-    public Image drawShip(ShipType type) {
-        return era.drawShip(type);
     }
 
     /**
@@ -264,6 +261,10 @@ public class Game implements Serializable {
 
     public int getLife(int num) {
         return players[num].getLife();
+    }
+
+    public EraConstant getEra() {
+        return era.getName();
     }
 
     public Player getPlayerHuman() {

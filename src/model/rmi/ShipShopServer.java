@@ -1,7 +1,6 @@
 package model.rmi;
 
 import model.ShipShop;
-import model.ShipShopImpl;
 
 import javax.naming.NamingException;
 import java.rmi.AlreadyBoundException;
@@ -15,7 +14,7 @@ public class ShipShopServer {
 
         System.out.println("Constructing server implementation...");
 
-        ShipShopImpl impl = new ShipShopImpl(new ShipShop());
+        ShipShop impl = new ShipShop();
 
         System.out.println("Binding server implementation to registry...");
 

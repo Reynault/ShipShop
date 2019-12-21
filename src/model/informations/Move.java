@@ -3,9 +3,10 @@ package model.informations;
 import model.constant.DirectionConstant;
 import model.constant.ShipType;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public final class Move {
+public final class Move implements Serializable {
 
     private final int x, y;
     private final DirectionConstant direction;

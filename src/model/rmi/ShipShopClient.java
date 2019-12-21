@@ -1,7 +1,7 @@
 package model.rmi;
 
 import controller.GameController;
-import model.ShipShop;
+import model.LiaisonRMI;
 import model.ShipShopInterface;
 import view.panel.MainObserver;
 
@@ -18,16 +18,16 @@ public class ShipShopClient {
         ShipShopInterface shipshop = (ShipShopInterface) registry.lookup("shipshop");
 
         // Initialise model
-        ShipShop jeu = shipshop.getObj();
+        LiaisonRMI liaisonRMI = new LiaisonRMI(shipshop);
 
         // Initialise controller
-        GameController controller = new GameController(jeu);
+        GameController controller = new GameController(liaisonRMI);
 
         // Initialise views
         MainObserver mainObserver = new MainObserver(controller);
 
         // Adding controller
-        jeu.addObserver(mainObserver);
+        liaisonRMI.addObserver(mainObserver);
     }
 
 }

@@ -1,5 +1,10 @@
 package view.constant;
 
+import model.constant.EraConstant;
+import view.sprite.ModernFactory;
+import view.sprite.SpriteFactory;
+import view.sprite.XVIFactory;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -15,7 +20,6 @@ public class TextureFactory {
 
     private BufferedImage plannedAttack;
 
-
     private TextureFactory() {
         try {
             crossPlayer = ImageIO.read(ClassLoader.getSystemResource("sprite/cross-player.png"));
@@ -26,6 +30,22 @@ public class TextureFactory {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public SpriteFactory getSpriteFactory(EraConstant eraConstant){
+        SpriteFactory spriteFactory;
+        switch (eraConstant){
+            case XVI:
+                spriteFactory = new XVIFactory();
+                break;
+            case MODERN:
+                spriteFactory = new ModernFactory();
+                break;
+            default:
+                spriteFactory = new ModernFactory();
+                break;
+        }
+        return spriteFactory;
     }
 
     public static TextureFactory getInstance() {

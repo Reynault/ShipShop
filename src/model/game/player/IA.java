@@ -1,5 +1,6 @@
 package model.game.player;
 
+import model.Attack;
 import model.DirectionConstant;
 import model.Move;
 import model.ShipType;
@@ -51,7 +52,7 @@ public class IA extends Player{
         }
     }
 
-    public Move getBestMove(){
+    public Attack getBestMove(){
         return null;
     }
 

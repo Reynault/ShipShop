@@ -255,7 +255,7 @@ public class Grid implements Serializable {
         //Test de si la case est un bateau
         if (isShip(x, y)) {
             //On récupère le bateau par les coordonnées
-            if (getShip(x, y).hasSunk()) {
+            if (!getShip(x, y).hasSunk()) {
                 getShip(x, y).hit(hit);
             }
         }
@@ -282,6 +282,7 @@ public class Grid implements Serializable {
 
     public void decreaseAmmo(UUID ship) {
         getShip(ship).decreaseAmmo();
+        System.out.println(getShip(ship));
     }
 
     public int getLife() {
@@ -296,6 +297,9 @@ public class Grid implements Serializable {
             max += ship.getMaxHp();
             res += ship.getHp();
         }
+
+
+        System.out.println("RES : "+ res);
 
         return res * 100 / max;
     }

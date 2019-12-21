@@ -76,11 +76,12 @@ public class Game implements Serializable {
     }
 
     /**
-     * funtion used for launch an attck on an ennemy ship
+     * funtion used for launch an attack on an ennemy ship
      *
      * @param attack
      */
     public Review play(Attack attack) {
+        boolean canAttack = false;
         boolean playerSet = false;
         boolean ennemySet = false;
         boolean end = false;
@@ -94,8 +95,8 @@ public class Game implements Serializable {
         Player nextPlayer = whosNext();
 
         // --------PRINT---------
-        System.out.println("Attack start at (X,Y) by player : " + players[currentPlayer] + " ");
-        System.out.println("Attack on position (" + attack.getX() + "," + attack.getY() + ")");
+//        System.out.println("Attack start at (X,Y) by player : " + players[currentPlayer] + " ");
+//        System.out.println("Attack on position (" + attack.getX() + "," + attack.getY() + ")");
 
         int x, y;
         x = attack.getX();
@@ -103,34 +104,35 @@ public class Game implements Serializable {
         UUID ship = attack.getShip();
         Grid targetGrid = nextPlayer.getGrid();
 
-        //Test if the target at X and Y position is a ship
-        if (targetGrid.isShip(x, y)) {
+        // Testing if the current ship can actually attack
+        if(players[currentPlayer].canAttack(x, y, ship)){
+            canAttack = true;
 
-            // --------PRINT---------
-            System.out.println("Other Player have a ship at the position.");
+            //Decrease ammo of the ship who fire
+            players[currentPlayer].decreaseAmmo(ship);
 
-            //Test if the Ship has sunk or not
-            if (!targetGrid.getShip(x, y).hasSunk()) {
+            //Test if the target at X and Y position is a ship
+            if (targetGrid.isShip(x, y)) {
 
                 // --------PRINT---------
-                System.out.println("Other Player ship's have " + targetGrid.getShip(x, y).getHp() + " hp.");
+//                System.out.println("Other Player have a ship at the position.");
 
-                //Test if the current Player Ship can fire
-                if (players[currentPlayer].canAttack(x, y, ship)) {
+                //Test if the Ship has sunk or not
+                if (!targetGrid.getShip(x, y).hasSunk()) {
 
                     // --------PRINT---------
-                    System.out.println("The Player can attack! Fire!");
-                    System.out.println("The attack make " + players[currentPlayer].getDmg(ship) + " damage.");
+//                    System.out.println("Other Player ship's have " + targetGrid.getShip(x, y).getHp() + " hp.");
+
+                    // --------PRINT---------
+//                    System.out.println("The Player can attack! Fire!");
+//                    System.out.println("The attack make " + players[currentPlayer].getDmg(ship) + " damage.");
 
                     //Hit the ennemy Ship (decrease his hp of the global ship)
                     nextPlayer.hit(x, y, players[currentPlayer].getDmg(ship));
 
-                    //Decrease ammo of the ship who fire
-                    players[currentPlayer].decreaseAmmo(ship);
-
                     // --------PRINT---------
-                    System.out.println("The Player ship have " + players[currentPlayer].getAmmo(ship) + " ammo left.");
-                    System.out.println("The attack hit the ennemy ship ! " + targetGrid.getShip(x, y).getHp() + " hp left.");
+//                    System.out.println("The Player ship have " + players[currentPlayer].getAmmo(ship) + " ammo left.");
+//                    System.out.println("The attack hit the ennemy ship ! " + targetGrid.getShip(x, y).getHp() + " hp left.");
 
                     //Flag the tile who just be the target (you can't target it anymore)
                     players[currentPlayer].getGrid().flagTile(x, y, false);
@@ -142,49 +144,46 @@ public class Game implements Serializable {
                     playerSet = true;
 
                     // --------PRINT---------
-                    System.out.println("The tile at position (" + x + "," + y + ") was flag as hit\n");
+//                    System.out.println("The tile at position (" + x + "," + y + ") was flag as hit\n");
 
                 } else {
                     // --------PRINT---------
-                    System.out.println("The tile at position (" + x + "," + y + ") was already flag as hit... or you don't have ammo\n");
+//                    System.out.println("The ennemy Ship has already sunk...\n");
                 }
-
             } else {
+                //If the next player doesn't have a Ship in the target tile, the tile is flag as already hit
+                //The tile can't be target anymore
+                players[currentPlayer].getGrid().crossTile(x, y, false);
+                nextPlayer.getGrid().crossTile(x, y, true);
+
+                xPlayer = x;
+                yPlayer = y;
+                player = GridConstant.CROSS;
+                playerSet = true;
+
                 // --------PRINT---------
-                System.out.println("The ennemy Ship has already sunk...\n");
+//                System.out.println("The attack at position (" + x + "," + y + ") miss...\n");
             }
-        } else {
-            //If the next player doesn't have a Ship in the target tile, the tile is flag as already hit
-            //The tile can't be target anymore
-            players[currentPlayer].getGrid().crossTile(x, y, false);
-            nextPlayer.getGrid().crossTile(x, y, true);
 
-            xPlayer = x;
-            yPlayer = y;
-            player = GridConstant.CROSS;
-            playerSet = true;
+            currentPlayer = (currentPlayer + 1) % 2;
 
-            // --------PRINT---------
-            System.out.println("The attack at position (" + x + "," + y + ") miss...\n");
+            // Verifying if the game is finished
+            if (!isFinished()) {
+                // If not, we let the other player to play
+                if (!nextPlayer.isHuman()) {
+                    Review res = play(nextPlayer.getBestMove(this, whosNext()));
+                    xEnnemy = res.getxPlayer();
+                    yEnnemy = res.getyPlayer();
+                    ennemy = res.getPlayer();
+                    System.out.println(" POURQUOI ");
+                    ennemySet = true;
+                }
+            }else{
+                end = true;
+            }
         }
 
-        currentPlayer = (currentPlayer + 1) % 2;
-
-        // Verifying if the game is finished
-        if (!isFinished()) {
-            // If not, we let the other player to play
-            if (!nextPlayer.isHuman()) {
-                Review res = play(nextPlayer.getBestMove(this, whosNext()));
-                xEnnemy = res.getxPlayer();
-                yEnnemy = res.getyPlayer();
-                ennemy = res.getPlayer();
-                ennemySet = true;
-            }
-        }else{
-            end = true;
-        }
-
-        return new Review(ennemySet && playerSet, end, xPlayer, yPlayer, xEnnemy, yEnnemy, player, ennemy);
+        return new Review(canAttack, ennemySet && playerSet, end, xPlayer, yPlayer, xEnnemy, yEnnemy, player, ennemy);
     }
 
     private boolean isFinished() {

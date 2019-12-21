@@ -89,4 +89,17 @@ public class Ship implements Serializable {
     public int getDmg() {
         return dmg;
     }
+
+    @Override
+    public String toString() {
+        return "Ship{" +
+                "maxHp=" + maxHp +
+                ", hp=" + hp +
+                ", ammo=" + ammo +
+                ", dmg=" + dmg +
+                ", nbTiles=" + nbTiles +
+                ", direction=" + direction +
+                ", shipType=" + shipType +
+                '}';
+    }
 }

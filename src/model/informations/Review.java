@@ -3,6 +3,8 @@ package model.informations;
 import model.constant.GridConstant;
 
 public final class Review {
+    private final boolean canAttack;
+
     private final boolean dataSet;
 
     private final boolean end;
@@ -11,7 +13,8 @@ public final class Review {
 
     private final GridConstant player, ennemy;
 
-    public Review(boolean dataSet, boolean end, int xPlayer, int yPlayer, int xEnnemy, int yEnnemy, GridConstant player, GridConstant ennemy) {
+    public Review(boolean canAttack, boolean dataSet, boolean end, int xPlayer, int yPlayer, int xEnnemy, int yEnnemy, GridConstant player, GridConstant ennemy) {
+        this.canAttack = canAttack;
         this.dataSet = dataSet;
         this.end = end;
         this.xPlayer = xPlayer;
@@ -48,6 +51,10 @@ public final class Review {
 
     public GridConstant getEnnemy() {
         return ennemy;
+    }
+
+    public boolean isCanAttack() {
+        return canAttack;
     }
 
     public boolean isDataSet() {

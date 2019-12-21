@@ -358,6 +358,10 @@ public class MainView extends PanelView {
 
                 break;
 
+            case CAN_NOT_ATTACK:
+
+                break;
+
             case END_TURN:
                 plannedAttack = null;
                 currentShip = null;
@@ -437,6 +441,29 @@ public class MainView extends PanelView {
 
                     player[x][y].setIcon(new ImageIcon(buffer));
                 }
+
+                // Updating the two labels on the top of the two grids
+                playerDescription.setText(
+                        StringConstant.PLAYER_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getLife() + "%"
+                );
+
+                ennemyDescription.setText(
+                        StringConstant.ENNEMY_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getEnnemyLife() + "%"
+                );
+
+                ammo.setText(
+                        StringConstant.AMMO + "-"
+                );
+
+                attack.setText(
+                        StringConstant.ATTACK + "-"
+                );
+
+                life.setText(
+                        StringConstant.LIFE + "-"
+                );
+
+                selectedShip.setText(StringConstant.SELECTED_SHIP);
 
                 break;
         }

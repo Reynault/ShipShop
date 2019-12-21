@@ -1,6 +1,7 @@
 package model;
 
 import model.constant.ShipType;
+import model.constant.UpdateObserver;
 import model.game.Game;
 import model.game.GameFactory;
 import model.game.era.Era;
@@ -10,6 +11,7 @@ import model.informations.Attack;
 import model.informations.Move;
 import model.informations.Review;
 
+import javax.sound.midi.Soundbank;
 import java.awt.*;
 import java.io.*;
 import java.io.File;
@@ -58,8 +60,14 @@ public class ShipShop extends Observable {
 
     public void play(Attack attack) {
         turnReview = game.play(attack);
-        setChanged();
-        notifyObservers(END_TURN);
+
+        if(turnReview.isCanAttack()) {
+            setChanged();
+            notifyObservers(END_TURN);
+        }else{
+            setChanged();
+            notifyObservers(UpdateObserver.CAN_NOT_ATTACK);
+        }
     }
 
     /**
@@ -145,6 +153,7 @@ public class ShipShop extends Observable {
     }
 
     public int getLife() {
+        System.out.println("VIE : "+ game.getLife());
         return game.getLife();
     }
 

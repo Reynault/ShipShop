@@ -1,7 +1,7 @@
 package view.panel;
 
 import controller.GameController;
-import model.UpdateObserver;
+import model.constant.UpdateObserver;
 import view.constant.GraphicConstant;
 import view.constant.Views;
 

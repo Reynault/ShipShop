@@ -1,4 +1,7 @@
-package model;
+package model.informations;
+
+import model.constant.DirectionConstant;
+import model.constant.ShipType;
 
 import java.util.UUID;
 

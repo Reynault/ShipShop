@@ -1,8 +1,9 @@
 package model.game.grid;
 
-import model.DirectionConstant;
-import model.Move;
-import model.ShipType;
+import model.constant.DirectionConstant;
+import model.constant.GridConstant;
+import model.informations.Move;
+import model.constant.ShipType;
 import model.game.ship.FleetFactory;
 import model.game.ship.Ship;
 
@@ -14,13 +15,8 @@ import java.util.*;
  */
 public class Grid implements Serializable {
 
-    // Three constants that define if the tile has been shot, and if and ennemy/ship has been discovered
-    private static final int NONE = 100;
-    private static final int HIT = 200;
-    private static final int TOUCHED = 300;
-
-    private int[][] ennemyGrid;
-    private int[][] playerGrid;
+    private GridConstant[][] ennemyGrid;
+    private GridConstant[][] playerGrid;
 
     private int grid_width;
     private int grid_height;
@@ -36,13 +32,13 @@ public class Grid implements Serializable {
         this.grid_height = grid_height;
         this.grid_width = grid_width;
 
-        ennemyGrid = new int[grid_width][grid_height];
-        playerGrid = new int[grid_width][grid_height];
+        ennemyGrid = new GridConstant[grid_width][grid_height];
+        playerGrid = new GridConstant[grid_width][grid_height];
 
         for (int i = 0; i < grid_width; i++) {
             for (int j = 0; j < grid_height; j++) {
-                ennemyGrid[i][j] = NONE;
-                playerGrid[i][j] = NONE;
+                ennemyGrid[i][j] = GridConstant.NONE;
+                playerGrid[i][j] = GridConstant.NONE;
             }
 
         }
@@ -156,16 +152,32 @@ public class Grid implements Serializable {
         return res;
     }
 
-    public boolean canAttack(UUID ship) {
-        return false;
+    public boolean canAttack(int x, int y, UUID ship) {
+        return ennemyGrid[x][y] == GridConstant.NONE && ships.get(ship).canAttack();
     }
 
     public int getDmg(UUID id) {
         return getShip(id).getDmg();
     }
 
+    /**
+     * This method is returning true if the player can't shoot anymore
+     * @return defeated
+     */
     public boolean isDefeated() {
-        return false;
+        Ship ship;
+        boolean defeated = true;
+
+        Iterator<UUID> iterator = ships.keySet().iterator();
+        while(iterator.hasNext() && defeated){
+            ship = ships.get(iterator.next());
+
+            if(ship.canAttack()){
+                defeated = false;
+            }
+        }
+
+        return defeated;
     }
 
     public boolean isShip(int x, int y) {
@@ -210,12 +222,27 @@ public class Grid implements Serializable {
         return getShip(shipUUID);
     }
 
-    public void crossTile(int x, int y) {
-
+    /**
+     * Method cross Tile that add a cross in one
+     * of the two grids of the player
+     * @param x the x
+     * @param y the y
+     * @param player if true, it's adding in the player grid
+     */
+    public void crossTile(int x, int y, boolean player) {
+        if(player){
+            playerGrid[x][y] = GridConstant.CROSS;
+        }else{
+            ennemyGrid[x][y] = GridConstant.CROSS;
+        }
     }
 
-    public void flagTile(int x, int y) {
-
+    public void flagTile(int x, int y, boolean player) {
+        if(player){
+            playerGrid[x][y] = GridConstant.FLAG;
+        }else {
+            ennemyGrid[x][y] = GridConstant.FLAG;
+        }
     }
 
     public void hit(int x, int y, int hit) {

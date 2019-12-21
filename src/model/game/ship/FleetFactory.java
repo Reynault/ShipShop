@@ -1,8 +1,8 @@
 package model.game.ship;
 
-import model.DirectionConstant;
-import model.EraConstant;
-import model.ShipType;
+import model.constant.DirectionConstant;
+import model.constant.EraConstant;
+import model.constant.ShipType;
 
 import java.io.Serializable;
 

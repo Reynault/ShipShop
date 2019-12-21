@@ -1,10 +1,11 @@
 package model.game.player.tactic;
 
-import model.Attack;
+import model.informations.Attack;
+import model.game.Game;
 import model.game.player.Player;
 
 public interface Tactic {
 
-    Attack applyTactic(Player attacker, Player victim);
+    Attack applyTactic(Game game, Player attacker, Player victim);
 
 }

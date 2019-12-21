@@ -1,7 +1,11 @@
 import model.*;
+import model.constant.DirectionConstant;
+import model.constant.ShipType;
 import model.game.era.EraFactory;
 import model.game.player.tactic.CrossTactic;
 import model.game.player.tactic.RandomTactic;
+import model.informations.Attack;
+import model.informations.Move;
 
 import java.io.IOException;
 import java.util.UUID;

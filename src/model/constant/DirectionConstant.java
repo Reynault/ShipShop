@@ -1,4 +1,4 @@
-package model;
+package model.constant;
 
 import java.util.Random;
 

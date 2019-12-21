@@ -1,9 +1,10 @@
 package model.game.player;
 
-import model.Attack;
-import model.DirectionConstant;
-import model.Move;
-import model.ShipType;
+import model.informations.Attack;
+import model.constant.DirectionConstant;
+import model.informations.Move;
+import model.constant.ShipType;
+import model.game.Game;
 import model.game.player.tactic.Tactic;
 import model.game.ship.FleetFactory;
 
@@ -52,8 +53,8 @@ public class IA extends Player{
         }
     }
 
-    public Attack getBestMove(Player player){
-        return tactic.applyTactic(this ,player);
+    public Attack getBestMove(Game game, Player player){
+        return tactic.applyTactic(game, this ,player);
     }
 
     @Override

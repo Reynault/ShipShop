@@ -1,7 +1,7 @@
 package controller;
 
-import model.Attack;
-import model.Move;
+import model.informations.Attack;
+import model.informations.Move;
 import model.ShipShop;
 import model.game.era.Era;
 import model.game.era.EraFactory;

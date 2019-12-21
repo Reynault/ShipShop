@@ -1,6 +1,6 @@
 package model.game.era;
 
-import model.ShipType;
+import model.constant.ShipType;
 import model.game.ship.FleetFactory;
 import model.game.ship.XVIFleet;
 

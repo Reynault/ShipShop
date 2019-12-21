@@ -2,7 +2,12 @@ package view.panel;
 
 import controller.GameController;
 import model.*;
+import model.constant.DirectionConstant;
+import model.constant.ShipType;
+import model.constant.UpdateObserver;
 import model.game.ship.Ship;
+import model.informations.Attack;
+import model.informations.Move;
 import view.constant.StringConstant;
 import view.constant.TextureFactory;
 import view.constant.Views;
@@ -355,7 +360,15 @@ public class MainView extends PanelView {
                 plannedAttack = null;
                 currentShip = null;
 
+                Attack attack = shipShop.getRequestAttack();
+                if(attack != null){
+                    int x = (width_cell-1) - attack.getY();
+                    int y = attack.getX();
+                    player[x][y].setIcon(new ImageIcon(
+                            TextureFactory.getInstance().getCrossEnnemy().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)
+                    ));
 
+                }
                 break;
         }
     }
@@ -458,7 +471,7 @@ public class MainView extends PanelView {
 
                 // Then, we can generate an attack
                 int xGrid = y;
-                int yGrid = 9 - x;
+                int yGrid = (width_cell-1) - x;
 
                 plannedAttack = new Attack(xGrid, yGrid, currentShip);
                 xTarget = x;

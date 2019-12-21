@@ -1,8 +1,9 @@
 package model.game.player;
 
-import model.Attack;
-import model.Move;
-import model.ShipType;
+import model.informations.Attack;
+import model.informations.Move;
+import model.constant.ShipType;
+import model.game.Game;
 import model.game.grid.Grid;
 import model.game.grid.GridFactory;
 import model.game.player.tactic.Tactic;
@@ -14,8 +15,8 @@ import java.util.UUID;
 
 public abstract class Player implements Serializable {
 
-    protected boolean ready;
-    protected FleetFactory fleetFactory;
+    private boolean ready;
+    private FleetFactory fleetFactory;
     protected Grid grid;
     protected  Tactic tactic;
 
@@ -36,16 +37,16 @@ public abstract class Player implements Serializable {
     }
 
     public boolean isDefeated(){
-        return false;
+        return grid.isDefeated();
     }
 
-    public boolean canAttack(UUID id){
-        return grid.getShip(id).canAttack();
+    public boolean canAttack(int x, int y, UUID id){
+        return grid.canAttack(x, y, id);
     }
 
     public abstract boolean isHuman();
 
-    public Attack getBestMove(Player player){
+    public Attack getBestMove(Game game, Player player){
         return null;
     }
 

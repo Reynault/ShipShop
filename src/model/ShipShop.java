@@ -1,9 +1,13 @@
 package model;
 
+import model.constant.ShipType;
 import model.game.Game;
+import model.game.GameFactory;
 import model.game.era.Era;
 import model.game.player.tactic.Tactic;
 import model.game.ship.Ship;
+import model.informations.Attack;
+import model.informations.Move;
 
 import java.awt.*;
 import java.io.*;
@@ -11,14 +15,14 @@ import java.io.File;
 import java.util.Observable;
 import java.util.UUID;
 
-import static model.UpdateObserver.*;
+import static model.constant.UpdateObserver.*;
 
 public class ShipShop extends Observable {
     private String SAVE_PATH = "save.ser";
 
-    protected UUID requestedShip;
-    protected Attack requestAttack;
-    protected GameFactory gameFactory;
+    private UUID requestedShip;
+    private Attack requestAttack;
+    private GameFactory gameFactory;
     protected Game game;
 
     public ShipShop() {
@@ -62,7 +66,7 @@ public class ShipShop extends Observable {
     }
 
     public void play(Attack attack) {
-        game.play(attack);
+        requestAttack = game.play(attack);
         setChanged();
         notifyObservers(END_TURN);
     }
@@ -160,5 +164,9 @@ public class ShipShop extends Observable {
     public void getShipInformations(UUID currentShip) {
         setChanged();
         notifyObservers(GET_SHIP_INFO);
+    }
+
+    public Attack getRequestAttack() {
+        return requestAttack;
     }
 }

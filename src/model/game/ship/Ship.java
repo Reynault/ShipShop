@@ -1,7 +1,7 @@
 package model.game.ship;
 
-import model.DirectionConstant;
-import model.ShipType;
+import model.constant.DirectionConstant;
+import model.constant.ShipType;
 
 import java.io.Serializable;
 
@@ -51,7 +51,7 @@ public class Ship implements Serializable {
     }
 
     public boolean hasSunk(){
-        return hp > 0;
+        return hp <= 0;
     }
 
     public boolean canShoot(){
@@ -59,7 +59,7 @@ public class Ship implements Serializable {
     }
 
     public boolean canAttack(){
-        return hasSunk() && canShoot();
+        return !hasSunk() && canShoot();
     }
 
     public int getAmmo() {

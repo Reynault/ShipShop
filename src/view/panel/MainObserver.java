@@ -1,6 +1,7 @@
 package view.panel;
 
 import controller.GameController;
+import view.constant.StringConstant;
 import view.constant.Views;
 
 import java.util.HashMap;
@@ -14,12 +15,14 @@ public class MainObserver implements Observer {
 
     private String chosenTactic;
     private String chosenEra;
+    private String endMessage;
 
     public MainObserver(GameController controller) {
         this.controller = controller;
 
         this.chosenEra = "";
         this.chosenTactic = "";
+        this.endMessage = StringConstant.WIN_MESSAGE;
 
         views = new HashMap<>();
 
@@ -84,5 +87,13 @@ public class MainObserver implements Observer {
 
     public String getChosenEra() {
         return chosenEra;
+    }
+
+    public String getEndMessage() {
+        return endMessage;
+    }
+
+    public void setEndMessage(String message) {
+        endMessage = message;
     }
 }

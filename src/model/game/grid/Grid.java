@@ -180,6 +180,10 @@ public class Grid implements Serializable {
         return defeated;
     }
 
+    public boolean isFlag(int x, int y){
+        return ennemyGrid[x][y] == GridConstant.FLAG;
+    }
+
     public boolean isShip(int x, int y) {
         Iterator iterator = positions.entrySet().iterator();
         while (iterator.hasNext()) {

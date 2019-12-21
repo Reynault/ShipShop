@@ -2,7 +2,7 @@ import model.*;
 import model.constant.DirectionConstant;
 import model.constant.ShipType;
 import model.game.era.EraFactory;
-import model.game.player.tactic.CrossTactic;
+import model.game.player.tactic.LinearTactic;
 import model.game.player.tactic.RandomTactic;
 import model.informations.Attack;
 import model.informations.Move;
@@ -18,7 +18,7 @@ public class Main {
 //        shipShop.drawShip(ShipType.TORPEDO);
         System.out.println("Game launched and Tropedo drawed !");
         System.out.println("Changing tactic for IA ...");
-        shipShop.setTactic(1, new CrossTactic());
+        shipShop.setTactic(1, new LinearTactic());
         System.out.println("Tactic Changed for IA !");
         System.out.println("Saving game ...");
         shipShop.save(shipShop.getGame());

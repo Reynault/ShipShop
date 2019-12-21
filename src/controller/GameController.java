@@ -42,8 +42,8 @@ public class GameController {
             case TacticView.RANDOM:
                 tactic = TacticFactory.getRandomTactic();
                 break;
-            case TacticView.CROSS:
-                tactic = TacticFactory.getCrossTactic();
+            case TacticView.LINEAR:
+                tactic = TacticFactory.getLinearTactic();
                 break;
             default:
                 tactic = TacticFactory.getRandomTactic();
@@ -81,8 +81,8 @@ public class GameController {
             case TacticView.RANDOM:
                 tactic = TacticFactory.getRandomTactic();
                 break;
-            case TacticView.CROSS:
-                tactic = TacticFactory.getCrossTactic();
+            case TacticView.LINEAR:
+                tactic = TacticFactory.getLinearTactic();
                 break;
             default:
                 tactic = TacticFactory.getRandomTactic();

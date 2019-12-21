@@ -119,6 +119,7 @@ public class ShipShop extends Observable {
             this.setChanged();
             this.notifyObservers(LOAD);
         } catch (Exception e) {
+            e.printStackTrace();
             this.setChanged();
             this.notifyObservers(BAD_LOAD);
         }

@@ -6,6 +6,9 @@ import model.constant.DirectionConstant;
 import model.constant.GridConstant;
 import model.constant.ShipType;
 import model.constant.UpdateObserver;
+import model.game.Game;
+import model.game.grid.Position;
+import model.game.player.Player;
 import model.game.ship.Ship;
 import model.informations.Attack;
 import model.informations.Move;
@@ -23,6 +26,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.UUID;
 
@@ -515,6 +520,50 @@ public class MainView extends PanelView {
                 selectedShip.setText(StringConstant.SELECTED_SHIP);
 
                 break;
+            case LOAD:{
+                System.out.println(shipShop);
+                Map<UUID, List<Position>> bateau_joueur;
+                Map<UUID, Ship> ships;
+                Player playerHuman = shipShop.getGame().getPlayerHuman();
+                bateau_joueur = playerHuman.getGrid().getPositions();
+                ships = playerHuman.getGrid().getShipID();
+
+                for (Map.Entry<UUID, List<Position>> bateau : bateau_joueur.entrySet()){
+                    UUID uuid = bateau.getKey();
+                    List<Position> positions = bateau.getValue();
+
+                    //TODO: placer les bateau case par case...
+                }
+
+                for (int i = 0; i < WIDTH_PANEL; i++) {
+                    for (int j = 0; j < HEIGHT_PANEL; j++) {
+                        if (playerHuman.getGrid().isFlag(i, j)){
+                            //TODO: CHANGER LES COORDONEES POUR LES BONNES
+                            player[i][j].setIcon(new ImageIcon(
+                                    TextureFactory.getInstance().getFlagPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                        }
+                        if (playerHuman.getGrid().isCross(i, j)){
+                            player[i][j].setIcon(new ImageIcon(
+                                    TextureFactory.getInstance().getCrossPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                        }
+                        if (playerHuman.getGrid().isCrossEnemie(i, j)){
+                            ennemy[i][j].setIcon(new ImageIcon(
+                                    TextureFactory.getInstance().getCrossEnnemy().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                        }
+                        if (playerHuman.getGrid().isFlagEnemie(i, j)){
+                            ennemy[i][j].setIcon(new ImageIcon(
+                                    TextureFactory.getInstance().getFlagEnnemy().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                        }
+                    }
+                }
+                changeStep();
+                update(shipShop, UpdateObserver.LAUNCH);
+
+                break;
+            }
+            default:{
+                break;
+            }
         }
     }
 

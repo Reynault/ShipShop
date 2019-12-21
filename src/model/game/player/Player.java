@@ -19,7 +19,7 @@ public abstract class Player implements Serializable {
     private boolean ready;
     private FleetFactory fleetFactory;
     protected Grid grid;
-    protected  Tactic tactic;
+    protected Tactic tactic;
 
     public Player(FleetFactory fleetFactory) {
         this.fleetFactory = fleetFactory;
@@ -122,4 +122,5 @@ public abstract class Player implements Serializable {
     public Object[] getShips() {
         return grid.getShips();
     }
+
 }

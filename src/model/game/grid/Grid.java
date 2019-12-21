@@ -183,8 +183,18 @@ public class Grid implements Serializable {
         return defeated;
     }
 
-    public boolean isFlag(int x, int y){
+    public boolean isFlagEnemie(int x, int y){
         return ennemyGrid[x][y] == GridConstant.FLAG;
+    }
+    public boolean isCrossEnemie(int x, int y){
+        return ennemyGrid[x][y] == GridConstant.CROSS;
+    }
+
+    public boolean isFlag(int x, int y){
+        return playerGrid[x][y] == GridConstant.FLAG;
+    }
+    public boolean isCross(int x, int y){
+        return playerGrid[x][y] == GridConstant.CROSS;
     }
 
     public boolean isShip(int x, int y) {
@@ -306,5 +316,14 @@ public class Grid implements Serializable {
     public Object[] getShips() {
         Set<UUID> keys = ships.keySet();
         return keys.toArray();
+    }
+
+    public Map<UUID, List<Position>> getPositions() {
+        return positions;
+    }
+
+
+    public Map<UUID, Ship> getShipID() {
+        return ships;
     }
 }

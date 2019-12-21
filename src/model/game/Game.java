@@ -264,4 +264,8 @@ public class Game implements Serializable {
     public int getEnnemyLife() {
         return players[(currentPlayer + 1) % 2].getLife();
     }
+
+    public Player getPlayerHuman() {
+        return (p1.isHuman())? p1: p2;
+    }
 }

@@ -10,6 +10,7 @@ import model.game.player.tactic.TacticFactory;
 import view.panel.EraView;
 import view.panel.TacticView;
 
+import java.util.Observable;
 import java.util.UUID;
 
 public class GameController {
@@ -93,5 +94,9 @@ public class GameController {
 
     public void getShipInformations(UUID currentShip) {
         model.getShipInformations(currentShip);
+    }
+
+    public ShipShop getModel() {
+        return this.model;
     }
 }

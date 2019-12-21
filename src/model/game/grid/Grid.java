@@ -255,11 +255,11 @@ public class Grid implements Serializable {
         }
     }
 
-    public int getGrid_width() {
+    public int getGridWidth() {
         return grid_width;
     }
 
-    public int getGrid_height() {
+    public int getGridHeight() {
         return grid_height;
     }
 
@@ -292,5 +292,9 @@ public class Grid implements Serializable {
         }
 
         return res * 100 / max;
+    }
+
+    public UUID[] getShips() {
+        return (UUID[]) ships.keySet().toArray();
     }
 }

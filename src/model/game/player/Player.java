@@ -11,6 +11,7 @@ import model.game.ship.FleetFactory;
 import model.game.ship.Ship;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class Player implements Serializable {
@@ -108,5 +109,17 @@ public abstract class Player implements Serializable {
     public int getLife() {
         int res = grid.getLife();
         return res;
+    }
+
+    public int getWidth() {
+        return grid.getGridWidth();
+    }
+
+    public int getHeight() {
+        return grid.getGridHeight();
+    }
+
+    public UUID[] getShips() {
+        return grid.getShips();
     }
 }

@@ -33,16 +33,16 @@ public class IA extends Player{
         for(ShipType ship: ShipType.values()){
             while(fleetFactory.hasShip(ship)) {
                 move = new Move(
-                        rand.nextInt(grid.getGrid_width()),
-                        rand.nextInt(grid.getGrid_height()),
+                        rand.nextInt(grid.getGridWidth()),
+                        rand.nextInt(grid.getGridHeight()),
                         DirectionConstant.getRandomDirection(),
                         ship
                 );
                 uid = grid.placeShip(move, fleetFactory);
                 while(uid != null) {
                     move = new Move(
-                            rand.nextInt(grid.getGrid_width()),
-                            rand.nextInt(grid.getGrid_height()),
+                            rand.nextInt(grid.getGridWidth()),
+                            rand.nextInt(grid.getGridHeight()),
                             DirectionConstant.getRandomDirection(),
                             ship
                     );

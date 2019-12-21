@@ -49,8 +49,8 @@ public class Main {
         System.out.println("List of ship in the grid : "+shipShop.getGame().getPlayer()[0].getGrid().isShip(uuid2));
 
 
-        for(int i = 0; i < shipShop.getGame().getPlayer()[1].getGrid().getGrid_width(); i++){
-            for(int y = 0; y<shipShop.getGame().getPlayer()[1].getGrid().getGrid_height(); y++){
+        for(int i = 0; i < shipShop.getGame().getPlayer()[1].getGrid().getGridWidth(); i++){
+            for(int y = 0; y<shipShop.getGame().getPlayer()[1].getGrid().getGridHeight(); y++){
                 shipShop.play(new Attack(i, y, uuid));
             }
         }

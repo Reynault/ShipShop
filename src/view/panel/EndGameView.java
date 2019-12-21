@@ -32,6 +32,7 @@ public class EndGameView extends PanelView {
         this.add(message, BorderLayout.CENTER);
 
         exit = new JButton(StringConstant.EXIT_BUTTON);
+        exit.addActionListener(new ExitListener());
 
         this.add(exit, BorderLayout.SOUTH);
 

@@ -59,8 +59,8 @@ public class Grid implements Serializable {
      */
     public UUID placeShip(Move move, FleetFactory fleetFactory) {
 
-        System.out.println("fleetffactory : "+ fleetFactory);
-        System.out.println("move : "+ move);
+//        System.out.println("fleetffactory : "+ fleetFactory);
+//        System.out.println("move : "+ move);
 
         // Checking if in objects are null
         if (move == null || fleetFactory == null) {
@@ -118,8 +118,8 @@ public class Grid implements Serializable {
                     break;
             }
 
-            System.out.println("Position : "+Arrays.asList(pos));
-            System.out.println("Overflow ?  : "+overflow);
+//            System.out.println("Position : "+Arrays.asList(pos));
+//            System.out.println("Overflow ?  : "+overflow);
 
             if (!overflow) {
 
@@ -148,7 +148,7 @@ public class Grid implements Serializable {
             }
 
         }
-        System.out.println("UUID GRID : "+res);
+//        System.out.println("UUID GRID : "+res);
         return res;
     }
 
@@ -247,6 +247,7 @@ public class Grid implements Serializable {
         if(player){
             playerGrid[x][y] = GridConstant.FLAG;
         }else {
+            System.out.println("Ennemy flag - x : "+x+" y : "+y);
             ennemyGrid[x][y] = GridConstant.FLAG;
         }
     }
@@ -282,7 +283,7 @@ public class Grid implements Serializable {
 
     public void decreaseAmmo(UUID ship) {
         getShip(ship).decreaseAmmo();
-        System.out.println(getShip(ship));
+//        System.out.println(getShip(ship));
     }
 
     public int getLife() {

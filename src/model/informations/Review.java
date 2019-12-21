@@ -60,7 +60,7 @@ public final class Review {
         return ennemy;
     }
 
-    public boolean isCanAttack() {
+    public boolean ifCanAttack() {
         return canAttack;
     }
 

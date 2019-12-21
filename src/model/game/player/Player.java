@@ -33,7 +33,7 @@ public abstract class Player implements Serializable {
 
     public UUID placeShip(Move move){
         UUID uuid =  grid.placeShip(move, fleetFactory);
-        System.out.println("PlaceShip Player : " +uuid);
+//        System.out.println("PlaceShip Player : " +uuid);
         return uuid;
     }
 

@@ -339,7 +339,6 @@ public class MainView extends PanelView {
             case GET_SHIP_INFO:
                 Ship ship = shipShop.getShip(currentShip);
 
-
                 if(ship.canAttack()){
                     ammo.setFont(new Font("Dialog", Font.PLAIN, 12));
                     ammo.setForeground(Color.BLACK);
@@ -393,6 +392,12 @@ public class MainView extends PanelView {
                 break;
 
             case CAN_NOT_ATTACK:
+
+                break;
+
+            case END_GAME:
+
+                mainObserver.setCurrent(Views.END_GAME);
 
                 break;
 

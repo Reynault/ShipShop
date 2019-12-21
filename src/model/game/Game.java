@@ -174,9 +174,14 @@ public class Game implements Serializable {
                     yEnnemy = res.getyPlayer();
                     ennemy = res.getPlayer();
                     ennemySet = true;
+
+                    if(res.isEnd()){
+                        end = true;
+                    }
                 }
             }else{
                 end = true;
+                System.out.println("qsdqsdqdsqdsqdsqdssqdqdsqdsqdsqdsqdsqdsqsdqsdqsdds");
             }
         }else if(!players[currentPlayer].isHuman()){
             setNext();
@@ -257,12 +262,8 @@ public class Game implements Serializable {
         return players[currentPlayer].getNbShip(cruiser);
     }
 
-    public int getLife() {
-        return players[currentPlayer].getLife();
-    }
-
-    public int getEnnemyLife() {
-        return players[(currentPlayer + 1) % 2].getLife();
+    public int getLife(int num) {
+        return players[num].getLife();
     }
 
     public Player getPlayerHuman() {

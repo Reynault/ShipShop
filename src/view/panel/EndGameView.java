@@ -51,4 +51,10 @@ public class EndGameView extends PanelView {
             mainObserver.setCurrent(Views.MENU);
         }
     }
+
+    @Override
+    public void open() {
+        super.open();
+        message.setText(mainObserver.getEndMessage());
+    }
 }

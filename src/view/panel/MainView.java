@@ -333,11 +333,11 @@ public class MainView extends PanelView {
             case LAUNCH:
                 // Updating the two labels on the top of the two grids
                 playerDescription.setText(
-                        StringConstant.PLAYER_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getLife() + "%"
+                        StringConstant.PLAYER_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getLife(0) + "%"
                 );
 
                 ennemyDescription.setText(
-                        StringConstant.ENNEMY_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getEnnemyLife() + "%"
+                        StringConstant.ENNEMY_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getLife(1) + "%"
                 );
                 break;
 
@@ -401,15 +401,16 @@ public class MainView extends PanelView {
 
             case END_GAME:
 
-                if (shipShop.getLife() > shipShop.getEnnemyLife()){
+                if (shipShop.getLife(0) > shipShop.getLife(1)){
                     mainObserver.setEndMessage(StringConstant.WIN_MESSAGE);
-                }else if(shipShop.getLife() == shipShop.getEnnemyLife()) {
+                }else if(shipShop.getLife(0) == shipShop.getLife(1)) {
                     mainObserver.setEndMessage(StringConstant.EQUALITY_MESSAGE);
                 }else{
                     mainObserver.setEndMessage(StringConstant.LOSE_MESSAGE);
                 }
 
-                mainObserver.setCurrent(Views.END_GAME);
+                System.out.println("END GAME");
+                mainObserver.openView(Views.END_GAME);
 
                 break;
 
@@ -498,11 +499,11 @@ public class MainView extends PanelView {
 
                 // Updating the two labels on the top of the two grids
                 playerDescription.setText(
-                        StringConstant.PLAYER_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getLife() + "%"
+                        StringConstant.PLAYER_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getLife(0) + "%"
                 );
 
                 ennemyDescription.setText(
-                        StringConstant.ENNEMY_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getEnnemyLife() + "%"
+                        StringConstant.ENNEMY_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getLife(1) + "%"
                 );
 
                 ammo.setText(

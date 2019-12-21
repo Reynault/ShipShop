@@ -1,0 +1,180 @@
+@startuml
+
+ class Observable {
+    +setChanged()
+    +notifyObservers(arg: int)
+ }
+
+ package controller <<Folder>>{
+    class GameController {
+        +model: ShipShop
+
+        +GameController(model: ShipShop)
+        +createGame(stringEra: String, stringTactic: String)
+        +loadGame(): void
+        +saveGame(): void
+        +placeShip(move: Move): UUID
+        +endShipPlacement(): void
+        +play(attack: Attack): void
+    }
+ }
+
+ package model <<Folder>> {
+    class ShipShop {
+        -requestedShip: UUID
+        -turnReview: Review
+
+        +createGame(era: Era, tactic: Tactic, humanFirst: boolean): void
+        +placeShip(move: Move): UUID
+        +drawShip(type: ShipType): Image
+        +play(attack: Attack): void
+        +endPlaceShip(): void
+        +save(game: Game): void
+        +load(): void
+    }
+
+    package constant <<Folder>>{
+        enum DirectionConstant {
+            UP
+            LEFT
+            RIGHT
+            DOWN
+            +{static} getRandomDirection(): DirectionConstant
+        }
+
+        enum EraConstant {
+            XVI
+            MODERN
+        }
+
+        enum GridConstant {
+            NONE
+            CROSS
+            FLAG
+        }
+
+        enum ShipType {
+            CRUISER
+            AIRCRAFT
+            TORPEDO
+            SUBMARINE
+        }
+
+        enum UpdateObserver {
+            END_TURN
+            PLACE_SHIP
+            SAVE
+            LOAD
+            CHANGE_TACTIC
+            LAUCH
+            BAD_LAUCH
+            CREATE_GAME
+            GET_SHIP_INFO
+            CAN_NOT_ATTACK
+            END_GAME
+        }
+    }
+
+    package game <<Folder>> {
+        class Game {
+            +{static} GRID_WIDTH = 10 : int
+            +{static} GRID_HEIGHT = 10 : int
+            -currentPlayer : int
+            -p1: Player
+            -p2: Player
+            -players: Player[]
+
+            +Game(era: Era; p1: Player, p2: Player)
+            +setTactic(player: int, tactic: Tactic): void
+            +drawShip(type: ShipType): Image
+            +endPlaceShip(): boolean
+            +placeShip(move: Move): UUID
+            +play(attack: Attack): Review
+            +isFinished(): boolean
+            +whosNext(): Player
+        }
+
+        class GameFactory {
+            +{static} getPVEGame(era: Era): Game
+            +{static} getEVPGame(era: Era): Game
+        }
+
+        package era <<Folder>> {
+            abstract class Era {
+                +{abstract} drawShip(type: ShipType): Image
+            }
+
+            class EraFactory {
+                +{static} modernEra: Era
+                +{static} xviEra: Era
+
+                +{static} getModernEra(): Era
+                +{static} getXVIEra(): Era
+            }
+
+            class ModernEra {
+                +drawShip(type: ShipType): Image
+            }
+
+            class XVIEra {
+                +drawShip(type: ShipType): Image
+            }
+        }
+
+        package grid <<Folder>> {
+            class Grid {
+                -ennemyGrid: GridConstant[][]
+                -playerGrid: GridConstant[][]
+                -grid_width: int
+                -grid_height: int
+                -ships: Map<UUID, Ship>
+                -positions: Map<UUID, List<Position>>
+
+                +Grid(grid_width: int, grid_height: int)
+                +placeShip(move: Move, fleetFactory: FleetFactory): UUID
+                +canAttack(x: int, y: int, ship: UUID): boolean
+                +isDefeated(): boolean
+                +isFlag(x: int, y: int): boolean
+                +isShip(x: int, y: int): boolean
+                +isShip(uuid: UUID): boolean
+                +getShip(uuid: UUID): Ship
+                +getShip(x: int, y: int): Ship
+                +crossTile(x: int, y: int, player: boolean): void
+                +flagTile(x: int, y: int, player: boolean)
+                +hit(x: int, y: int, hit: int): void
+                +decreaseAmmo(ship: UUID): void
+            }
+
+
+        }
+    }
+
+    class Attack {
+        -x: int
+        -y: int
+        -ship: UUID
+
+        +Attack(x: int, y: int, ship: UUID)
+        +getX(): int
+        +getY(): int
+        +getShip(): UUID
+    }
+
+ }
+
+
+
+Observable ^-- ShipShop
+Era ^-- ModernEra
+Era ^-- XVIEra
+
+ShipShop --> "1" GameFactory : gameFactory
+ShipShop --> "1" Game : game
+Game --> "1" Era : era
+
+GameFactory ..> Game : create
+EraFactory ..> Era : create
+
+
+
+@enduml

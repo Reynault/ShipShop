@@ -1,5 +1,6 @@
 package controller;
 
+import model.LiaisonRMI;
 import model.informations.Attack;
 import model.informations.Move;
 import model.ShipShop;
@@ -10,13 +11,15 @@ import model.game.player.tactic.TacticFactory;
 import view.panel.EraView;
 import view.panel.TacticView;
 
+import java.rmi.RemoteException;
+import java.util.Observable;
 import java.util.UUID;
 
 public class GameController {
-    ShipShop model;
+    LiaisonRMI model;
 
 
-    public GameController(ShipShop model) {
+    public GameController(LiaisonRMI model) {
         this.model = model;
     }
 
@@ -51,27 +54,52 @@ public class GameController {
         }
 
         // Creating game
-        model.createGame(era, tactic, true);
+        try {
+            model.createGame(era, tactic, true);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void loadGame() {
-        model.load();
+        try {
+            model.load();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void saveGame() {
-        model.save(model.getGame());
+        try {
+            model.save(model.getGame());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public UUID placeShip(Move move) {
-        return model.placeShip(move);
+        try {
+            return model.placeShip(move);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void endShipPlacement() {
-        model.endPlaceShip();
+        try {
+            model.endPlaceShip();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void play(Attack attack) {
-        model.play(attack);
+        try {
+            model.play(attack);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setTactic(String stringTactic) {
@@ -88,10 +116,18 @@ public class GameController {
                 tactic = TacticFactory.getRandomTactic();
                 break;
         }
-        model.setTactic(1, tactic);
+        try {
+            model.setTactic(1, tactic);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void getShipInformations(UUID currentShip) {
         model.getShipInformations(currentShip);
+    }
+
+    public LiaisonRMI getModel() {
+        return this.model;
     }
 }

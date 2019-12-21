@@ -6,6 +6,9 @@ import model.constant.DirectionConstant;
 import model.constant.GridConstant;
 import model.constant.ShipType;
 import model.constant.UpdateObserver;
+import model.game.Game;
+import model.game.grid.Position;
+import model.game.player.Player;
 import model.game.ship.Ship;
 import model.informations.Attack;
 import model.informations.Move;
@@ -13,6 +16,7 @@ import model.informations.Review;
 import view.constant.StringConstant;
 import view.constant.TextureFactory;
 import view.constant.Views;
+import view.sprite.SpriteFactory;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -23,6 +27,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.UUID;
 
@@ -33,6 +40,9 @@ public class MainView extends PanelView {
 
     // Data
     private final int width_cell, height_cell;
+
+    // Sprite factory
+    private SpriteFactory spriteFactory;
 
     // Data for the movement
     private BufferedImage cursorImage;
@@ -275,250 +285,301 @@ public class MainView extends PanelView {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        UpdateObserver val = (UpdateObserver) arg;
+    public void update(Observable o, Object arg)  {
+        try {
+            UpdateObserver val = (UpdateObserver) arg;
 
-        ShipShop shipShop = (ShipShop) o;
+            LiaisonRMI shipShop = (LiaisonRMI) o;
 
-        switch (val) {
-            // When creating a game
-            case CREATE_GAME:
+            switch (val) {
+                // When creating a game
+                case CREATE_GAME:
 
-                // Setting ship button values
-                shipPlacement[CRUISER].addActionListener(
-                        new ShipListener(
-                                (BufferedImage) shipShop.drawShip(ShipType.CRUISER),
-                                shipShop.getSize(ShipType.CRUISER),
-                                ShipType.CRUISER
-                        )
-                );
+                    spriteFactory = TextureFactory.getInstance().getSpriteFactory(shipShop.getEra());
 
-                shipPlacement[SUBMARINE].addActionListener(
-                        new ShipListener(
-                                (BufferedImage) shipShop.drawShip(ShipType.SUBMARINE),
-                                shipShop.getSize(ShipType.SUBMARINE),
-                                ShipType.SUBMARINE
-                        )
-                );
-
-                shipPlacement[TORPEDO].addActionListener(
-                        new ShipListener(
-                                (BufferedImage) shipShop.drawShip(ShipType.TORPEDO),
-                                shipShop.getSize(ShipType.TORPEDO),
-                                ShipType.TORPEDO
-                        )
-                );
-
-                shipPlacement[AIRCRAFT].addActionListener(
-                        new ShipListener(
-                                (BufferedImage) shipShop.drawShip(ShipType.AIRCRAFT),
-                                shipShop.getSize(ShipType.AIRCRAFT),
-                                ShipType.AIRCRAFT
-                        )
-                );
-
-                majPlacementShip(shipShop);
-
-                break;
-
-            case PLACE_SHIP:
-                majPlacementShip(shipShop);
-                break;
-
-            case LAUNCH:
-                // Updating the two labels on the top of the two grids
-                playerDescription.setText(
-                        StringConstant.PLAYER_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getLife() + "%"
-                );
-
-                ennemyDescription.setText(
-                        StringConstant.ENNEMY_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getEnnemyLife() + "%"
-                );
-                break;
-
-            case GET_SHIP_INFO:
-                Ship ship = shipShop.getShip(currentShip);
-
-                if(ship.canAttack()){
-                    ammo.setFont(new Font("Dialog", Font.PLAIN, 12));
-                    ammo.setForeground(Color.BLACK);
-                    ammo.setText(
-                            StringConstant.AMMO + ship.getAmmo()
+                    // Setting ship button values
+                    shipPlacement[CRUISER].addActionListener(
+                            new ShipListener(
+                                    (BufferedImage) spriteFactory.getCruiser(),
+                                    shipShop.getSize(ShipType.CRUISER),
+                                    ShipType.CRUISER
+                            )
                     );
 
-                    attack.setText(
-                            StringConstant.ATTACK + ship.getDmg()
+                    shipPlacement[SUBMARINE].addActionListener(
+                            new ShipListener(
+                                    (BufferedImage) spriteFactory.getSubmarine(),
+                                    shipShop.getSize(ShipType.SUBMARINE),
+                                    ShipType.SUBMARINE
+                            )
                     );
 
-                    life.setText(
-                            StringConstant.LIFE + ship.getHp()
+                    shipPlacement[TORPEDO].addActionListener(
+                            new ShipListener(
+                                    (BufferedImage) spriteFactory.getTorpedo(),
+                                    shipShop.getSize(ShipType.TORPEDO),
+                                    ShipType.TORPEDO
+                            )
                     );
-                }else{
 
-                    if(!ship.canShoot()) {
+                    shipPlacement[AIRCRAFT].addActionListener(
+                            new ShipListener(
+                                    (BufferedImage) spriteFactory.getAircraft(),
+                                    shipShop.getSize(ShipType.AIRCRAFT),
+                                    ShipType.AIRCRAFT
+                            )
+                    );
+
+                    majPlacementShip(shipShop);
+
+                    break;
+
+                case PLACE_SHIP:
+                    majPlacementShip(shipShop);
+                    break;
+
+                case LAUNCH:
+                    // Updating the two labels on the top of the two grids
+                    playerDescription.setText(
+                            StringConstant.PLAYER_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getLife(0) + "%"
+                    );
+
+                    ennemyDescription.setText(
+                            StringConstant.ENNEMY_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getLife(1) + "%"
+                    );
+                    break;
+
+                case GET_SHIP_INFO:
+                    Ship ship = shipShop.getShip(currentShip);
+
+                    if (ship.canAttack()) {
+                        ammo.setFont(new Font("Dialog", Font.PLAIN, 12));
+                        ammo.setForeground(Color.BLACK);
                         ammo.setText(
-                                StringConstant.CAN_NOT_SHOOT
+                                StringConstant.AMMO + ship.getAmmo()
                         );
 
                         attack.setText(
-                                ""
+                                StringConstant.ATTACK + ship.getDmg()
                         );
 
                         life.setText(
-                                ""
+                                StringConstant.LIFE + ship.getHp()
                         );
-                    }else{
-                        ammo.setText(
-                                StringConstant.DEAD
-                        );
+                    } else {
 
-                        attack.setText(
-                                ""
-                        );
+                        if (!ship.canShoot()) {
+                            ammo.setText(
+                                    StringConstant.CAN_NOT_SHOOT
+                            );
 
-                        life.setText(
-                                ""
-                        );
+                            attack.setText(
+                                    ""
+                            );
+
+                            life.setText(
+                                    ""
+                            );
+                        } else {
+                            ammo.setText(
+                                    StringConstant.DEAD
+                            );
+
+                            attack.setText(
+                                    ""
+                            );
+
+                            life.setText(
+                                    ""
+                            );
+                        }
+
+                        ammo.setFont(new Font("Dialog", Font.PLAIN, 13));
+                        ammo.setForeground(Color.RED);
                     }
 
-                    ammo.setFont(new Font("Dialog", Font.PLAIN, 13));
-                    ammo.setForeground(Color.RED);
-                }
+                    selectedShip.setText(
+                            ship.getShipType() + ""
+                    );
 
-                selectedShip.setText(
-                        ship.getShipType() + ""
-                );
+                    break;
 
-                break;
+                case CAN_NOT_ATTACK:
+                    break;
 
-            case CAN_NOT_ATTACK:
-                break;
+                case END_GAME:
 
-            case END_GAME:
+                    if (shipShop.getLife(0) > shipShop.getLife(1)) {
+                        mainObserver.setEndMessage(StringConstant.WIN_MESSAGE);
+                    } else if (shipShop.getLife(0) == shipShop.getLife(1)) {
+                        mainObserver.setEndMessage(StringConstant.EQUALITY_MESSAGE);
+                    } else {
+                        mainObserver.setEndMessage(StringConstant.LOSE_MESSAGE);
+                    }
 
-                if (shipShop.getLife() > shipShop.getEnnemyLife()){
-                    mainObserver.setEndMessage(StringConstant.WIN_MESSAGE);
-                }else if(shipShop.getLife() == shipShop.getEnnemyLife()) {
-                    mainObserver.setEndMessage(StringConstant.EQUALITY_MESSAGE);
-                }else{
-                    mainObserver.setEndMessage(StringConstant.LOSE_MESSAGE);
-                }
+                    System.out.println("END GAME");
+                    mainObserver.openView(Views.END_GAME);
 
-                mainObserver.setCurrent(Views.END_GAME);
+                    break;
 
-                break;
+                case END_TURN:
+                    plannedAttack = null;
+                    currentShip = null;
 
-            case END_TURN:
-                plannedAttack = null;
-                currentShip = null;
+                    endTurn.setEnabled(false);
 
-                endTurn.setEnabled(false);
+                    Review review = shipShop.getTurnReview();
 
-                Review review = shipShop.getTurnReview();
+                    int x, y, tmp;
+                    GridConstant state;
 
-                int x, y, tmp;
-                GridConstant state;
-
-                // If data are set
-                if(review.isDataSet()){
-                    // Update ennemy grid first
-                    x = review.getxPlayer();
-                    y = review.getyPlayer();
-                    state = review.getPlayer();
+                    // If data are set
+                    if (review.isDataSet()) {
+                        // Update ennemy grid first
+                        x = review.getxPlayer();
+                        y = review.getyPlayer();
+                        state = review.getPlayer();
 
 
-                    System.out.println("value attack on before grid ["+x+","+y+"]");
-                    tmp = x;
-                    x = (WIDTH_PANEL - 1) - y;
-                    y = tmp;
-                    System.out.println("value attack on after convert ["+x+","+y+"]");
+                        System.out.println("value attack on before grid [" + x + "," + y + "]");
+                        tmp = x;
+                        x = (WIDTH_PANEL - 1) - y;
+                        y = tmp;
+                        System.out.println("value attack on after convert [" + x + "," + y + "]");
 //                    int yGrid = x;
 //                    int xGrid = (WIDTH_PANEL - 1) - y;
 
-                    switch (state) {
-                        case FLAG:
-                            ennemy[x][y].setIcon(new ImageIcon(
-                                    TextureFactory.getInstance().getFlagPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)
-                            ));
-                            break;
-                        case CROSS:
-                            ennemy[x][y].setIcon(new ImageIcon(
-                                    TextureFactory.getInstance().getCrossPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)
-                            ));
-                            break;
+                        switch (state) {
+                            case FLAG:
+                                ennemy[x][y].setIcon(new ImageIcon(
+                                        TextureFactory.getInstance().getFlagPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)
+                                ));
+                                break;
+                            case CROSS:
+                                ennemy[x][y].setIcon(new ImageIcon(
+                                        TextureFactory.getInstance().getCrossPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)
+                                ));
+                                break;
+                        }
+
+                        // Update player grid
+                        x = review.getxEnnemy();
+                        y = review.getyEnnemy();
+                        state = review.getEnnemy();
+
+                        tmp = x;
+                        x = (WIDTH_PANEL - 1) - y;
+                        y = tmp;
+
+                        ImageIcon image = (ImageIcon) player[x][y].getIcon();
+
+                        BufferedImage buffer = new BufferedImage(width_cell, height_cell, BufferedImage.TYPE_INT_ARGB);
+
+                        if (image != null) {
+                            buffer = (BufferedImage) image.getImage();
+                        }
+
+                        switch (state) {
+                            case FLAG:
+                                buffer.getGraphics().drawImage(
+                                        TextureFactory.getInstance().getFlagEnnemy(),
+                                        0,
+                                        0,
+                                        width_cell,
+                                        height_cell,
+                                        null
+                                );
+                                break;
+                            case CROSS:
+                                buffer.getGraphics().drawImage(
+                                        TextureFactory.getInstance().getCrossEnnemy(),
+                                        0,
+                                        0,
+                                        width_cell,
+                                        height_cell,
+                                        null
+                                );
+                                break;
+                        }
+
+                        player[x][y].setIcon(new ImageIcon(buffer));
                     }
 
-                    // Update player grid
-                    x = review.getxEnnemy();
-                    y = review.getyEnnemy();
-                    state = review.getEnnemy();
+                    // Updating the two labels on the top of the two grids
+                    playerDescription.setText(
+                            StringConstant.PLAYER_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getLife(0) + "%"
+                    );
 
-                    tmp = x;
-                    x = (WIDTH_PANEL - 1) - y;
-                    y = tmp;
+                    ennemyDescription.setText(
+                            StringConstant.ENNEMY_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getLife(1) + "%"
+                    );
 
-                    ImageIcon image = (ImageIcon) player[x][y].getIcon();
+                    ammo.setText(
+                            StringConstant.AMMO + "-"
+                    );
 
-                    BufferedImage buffer = new BufferedImage(width_cell, height_cell, BufferedImage.TYPE_INT_ARGB);
+                    attack.setText(
+                            StringConstant.ATTACK + "-"
+                    );
 
-                    if (image != null) {
-                        buffer = (BufferedImage) image.getImage();
+                    life.setText(
+                            StringConstant.LIFE + "-"
+                    );
+
+                    selectedShip.setText(StringConstant.SELECTED_SHIP);
+
+                    break;
+                case LOAD: {
+                    System.out.println(shipShop);
+                    Map<UUID, List<Position>> bateau_joueur;
+                    Map<UUID, Ship> ships;
+                    Player playerHuman = shipShop.getGame().getPlayerHuman();
+                    bateau_joueur = playerHuman.getGrid().getPositions();
+                    ships = playerHuman.getGrid().getShipID();
+
+                    for (Map.Entry<UUID, List<Position>> bateau : bateau_joueur.entrySet()) {
+                        UUID uuid = bateau.getKey();
+                        List<Position> positions = bateau.getValue();
+
+                        //TODO: placer les bateau case par case...
                     }
 
-                    switch (state) {
-                        case FLAG:
-                            buffer.getGraphics().drawImage(
-                                    TextureFactory.getInstance().getFlagEnnemy(),
-                                    0,
-                                    0,
-                                    width_cell,
-                                    height_cell,
-                                    null
-                            );
-                            break;
-                        case CROSS:
-                            buffer.getGraphics().drawImage(
-                                    TextureFactory.getInstance().getCrossEnnemy(),
-                                    0,
-                                    0,
-                                    width_cell,
-                                    height_cell,
-                                    null
-                            );
-                            break;
+                    for (int i = 0; i < WIDTH_PANEL; i++) {
+                        for (int j = 0; j < HEIGHT_PANEL; j++) {
+                            if (playerHuman.getGrid().isFlag(i, j)) {
+                                //TODO: CHANGER LES COORDONEES POUR LES BONNES
+                                player[i][j].setIcon(new ImageIcon(
+                                        TextureFactory.getInstance().getFlagPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                            }
+                            if (playerHuman.getGrid().isCross(i, j)) {
+                                player[i][j].setIcon(new ImageIcon(
+                                        TextureFactory.getInstance().getCrossPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                            }
+                            if (playerHuman.getGrid().isCrossEnemie(i, j)) {
+                                ennemy[i][j].setIcon(new ImageIcon(
+                                        TextureFactory.getInstance().getCrossEnnemy().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                            }
+                            if (playerHuman.getGrid().isFlagEnemie(i, j)) {
+                                ennemy[i][j].setIcon(new ImageIcon(
+                                        TextureFactory.getInstance().getFlagEnnemy().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                            }
+                        }
                     }
+                    changeStep();
+                    update(shipShop, UpdateObserver.LAUNCH);
 
-                    player[x][y].setIcon(new ImageIcon(buffer));
+                    break;
                 }
-
-                // Updating the two labels on the top of the two grids
-                playerDescription.setText(
-                        StringConstant.PLAYER_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getLife() + "%"
-                );
-
-                ennemyDescription.setText(
-                        StringConstant.ENNEMY_TITLE + " - " + StringConstant.REMAINING_TITLE + shipShop.getEnnemyLife() + "%"
-                );
-
-                ammo.setText(
-                        StringConstant.AMMO + "-"
-                );
-
-                attack.setText(
-                        StringConstant.ATTACK + "-"
-                );
-
-                life.setText(
-                        StringConstant.LIFE + "-"
-                );
-
-                selectedShip.setText(StringConstant.SELECTED_SHIP);
-
-                break;
+                default: {
+                    break;
+                }
+            }
+        }catch (RemoteException e){
+            e.printStackTrace();
         }
     }
 
-    private void majPlacementShip(ShipShop shipShop) {
+    private void majPlacementShip(LiaisonRMI shipShop) throws RemoteException{
         int nbCruiser = shipShop.getNbShip(ShipType.CRUISER);
         shipPlacement[CRUISER].setText(
                 StringConstant.CRUISER + nbCruiser

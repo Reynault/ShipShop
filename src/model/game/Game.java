@@ -1,5 +1,6 @@
 package model.game;
 
+import model.constant.EraConstant;
 import model.constant.GridConstant;
 import model.constant.ShipType;
 import model.game.era.Era;
@@ -42,10 +43,6 @@ public class Game implements Serializable {
 
     public void setTactic(int player, Tactic tactic) {
         players[player].setTactic(tactic);
-    }
-
-    public Image drawShip(ShipType type) {
-        return era.drawShip(type);
     }
 
     /**
@@ -174,9 +171,14 @@ public class Game implements Serializable {
                     yEnnemy = res.getyPlayer();
                     ennemy = res.getPlayer();
                     ennemySet = true;
+
+                    if(res.isEnd()){
+                        end = true;
+                    }
                 }
             }else{
                 end = true;
+                System.out.println("qsdqsdqdsqdsqdsqdssqdqdsqdsqdsqdsqdsqdsqsdqsdqsdds");
             }
         }else if(!players[currentPlayer].isHuman()){
             setNext();
@@ -257,11 +259,15 @@ public class Game implements Serializable {
         return players[currentPlayer].getNbShip(cruiser);
     }
 
-    public int getLife() {
-        return players[currentPlayer].getLife();
+    public int getLife(int num) {
+        return players[num].getLife();
     }
 
-    public int getEnnemyLife() {
-        return players[(currentPlayer + 1) % 2].getLife();
+    public EraConstant getEra() {
+        return era.getName();
+    }
+
+    public Player getPlayerHuman() {
+        return (p1.isHuman())? p1: p2;
     }
 }

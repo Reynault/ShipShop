@@ -1,0 +1,75 @@
+@startuml
+
+title Classes - Class Diagram
+
+
+class FleetFactory {
+    -nbCruiser: int
+    -nbSubmarine: int
+    -nbTorpedo: int
+    -nbAircraft: int
+
+    +HP_CRUISER: int
+    +HP_SUBMARINE: int
+    +HP_TORPEDO: int
+    +HP_AIRCRAFT: int
+
+    +AMMO_CRUISER: int
+    +AMMO_SUBMARINE: int
+    +AMMO_TORPEDO: int
+    +AMMO_AIRCRAFT: int
+
+    +DMG_CRUISER: int
+    +DMG_SUBMARINE: int
+    +DMG_TORPEDO: int
+    +DMG_AIRCRAFT: int
+
+    +NBTILES_CRUISER: int
+    +NBTILES_SUBMARINE: int
+    +NBTILES_TORPEDO: int
+    +NBTILES_AIRCRAFT: int
+
+    +FleetFactory(nbCruiser: int, nbSubmarine: int, nbTorpedo: int, nbAircraft: int)
+    +{static} getFactory(era: EraConstant, nbAircraft: int, nbCruiser: int, nbSubmarine: int, nbTorpedo: int): FleetFactory
+    +hasShip(shipType: ShipType): boolean
+    +getShip(shipType: ShipType, direction: DirectionConstant): Ship
+    +getSize(shipType: ShipType): int
+    +getNbShip(cruiser: ShipType): int
+
+}
+
+class ModernFleet{
+    +ModernFleet(nbCruiser: int, nbSubmarine: int, nbTorpedo: int, nbAircraft: int)
+}
+
+class XVIFleet{
+    +XVIFleet(nbCruiser: int, nbSubmarine: int, nbTorpedo: int, nbAircraft: int)
+}
+
+class Ship{
+    -maxHp: int
+    -hp: int
+    -ammo: int
+    -dmg: int
+    -nbTiles: int
+    -direction:  DirectionConstant
+    -shipType: ShipType
+
+    +Ship(hp: int, ammo: int, dmg: int, nbTiles: int, direction: DirectionCOnstant, shipTYpe: ShipType)
+    +place(constant: DirectionConstant): void
+    +hasSunk(): boolean
+    +canShoot(): boolean
+    +canAttack(): boolean
+    +getAmmo(): int
+    +getHp(): int
+    +hit(dmg: int): void
+    +decreaseAmmo(): void
+    +getShipType(): ShipType
+    +getDmg(): int
+    +toString(): String
+}
+
+FleetFactory ^-- ModernFleet
+FleetFactory ^-- XVIFleet
+
+@enduml

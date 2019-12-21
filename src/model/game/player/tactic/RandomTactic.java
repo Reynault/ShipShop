@@ -31,7 +31,7 @@ public class RandomTactic implements Tactic, Serializable {
                 // Selecting another
                 attack = selectRandomAttack(ships, width, height);
             }
-            System.out.println(" ? ");
+//            System.out.println(" ? ");
         }
 
         return attack;
@@ -44,7 +44,7 @@ public class RandomTactic implements Tactic, Serializable {
         x = rand.nextInt(width);
         y = rand.nextInt(height);
         id = (UUID)ships[rand.nextInt(ships.length)];
-        System.out.println(id);
+//        System.out.println(id);
 
         return new Attack(x, y, id);
     }

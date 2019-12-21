@@ -86,7 +86,7 @@ public class TacticView extends PanelView{
             if(mainObserver.isCurrentView(Views.MAIN)){
                 mainObserver.closeView(Views.TACTIC);
             }else {
-                mainObserver.setCurrent(Views.MENU);
+                mainObserver.setCurrent(Views.ERA);
             }
         }
     }

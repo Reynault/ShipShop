@@ -11,7 +11,6 @@ import model.informations.Attack;
 import model.informations.Move;
 import model.informations.Review;
 
-import javax.sound.midi.Soundbank;
 import java.awt.*;
 import java.io.*;
 import java.io.File;
@@ -61,11 +60,12 @@ public class ShipShop extends Observable {
     public void play(Attack attack) {
         turnReview = game.play(attack);
 
-        if(turnReview.isCanAttack()) {
-            setChanged();
+        setChanged();
+        if(turnReview.isEnd()){
+            notifyObservers(END_GAME);
+        }else if(turnReview.ifCanAttack()) {
             notifyObservers(END_TURN);
         }else{
-            setChanged();
             notifyObservers(UpdateObserver.CAN_NOT_ATTACK);
         }
     }
@@ -153,7 +153,7 @@ public class ShipShop extends Observable {
     }
 
     public int getLife() {
-        System.out.println("VIE : "+ game.getLife());
+//        System.out.println("VIE : "+ game.getLife());
         return game.getLife();
     }
 

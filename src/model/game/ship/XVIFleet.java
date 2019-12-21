@@ -9,20 +9,20 @@ public class XVIFleet extends FleetFactory implements Serializable {
         super(nbCruiser, nbSubmarine, nbTorpedo, nbAircraft);
 
         // Setting values
-        this.HP_SUBMARINE = 3;
-        this.HP_AIRCRAFT = 5;
+        this.HP_SUBMARINE = 2;
+        this.HP_AIRCRAFT = 3;
         this.HP_TORPEDO = 2;
-        this.HP_CRUISER = 4;
+        this.HP_CRUISER = 2;
 
-        this.AMMO_SUBMARINE = 5;
-        this.AMMO_AIRCRAFT = 5;
-        this.AMMO_TORPEDO = 5;
-        this.AMMO_CRUISER = 5;
+        this.AMMO_SUBMARINE = 1;
+        this.AMMO_AIRCRAFT = 3;
+        this.AMMO_TORPEDO = 1;
+        this.AMMO_CRUISER = 6;
 
-        this.DMG_SUBMARINE = 2;
-        this.DMG_AIRCRAFT = 4;
+        this.DMG_SUBMARINE = 1;
+        this.DMG_AIRCRAFT = 3;
         this.DMG_TORPEDO = 1;
-        this.DMG_CRUISER = 3;
+        this.DMG_CRUISER = 1;
 
         this.NBTILES_SUBMARINE = 3;
         this.NBTILES_AIRCRAFT = 5;

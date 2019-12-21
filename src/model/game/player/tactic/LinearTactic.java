@@ -22,10 +22,15 @@ public class LinearTactic implements Tactic, Serializable {
         int j = 0;
 
         Object[] ships = attacker.getShips();
-        UUID ship = (UUID) ships[rand.nextInt(ships.length)];
+        UUID tmp, ship = null;
+        int k = 0;
 
-        while (! attacker.getShip(ship).canAttack()){
-            ship = (UUID) ships[rand.nextInt(ships.length)];
+        while(k < ships.length && ship == null){
+            tmp = (UUID) ships[k];
+            if(attacker.getShip(tmp).canAttack()){
+                ship = tmp;
+            }
+            k++;
         }
 
         boolean found = false;
@@ -39,7 +44,10 @@ public class LinearTactic implements Tactic, Serializable {
             i++;
         }
 
-        return new Attack(i-1, j-1, ship);
+        System.out.println("J : " + (j-1));
+        System.out.println("I : " + (i-1));
+
+        return new Attack(j-1, i-1, ship);
     }
 
 }

@@ -71,7 +71,7 @@ public class Game implements Serializable {
 
     public UUID placeShip(Move move) {
         UUID uuid = players[currentPlayer].placeShip(move);
-        System.out.println("PlaceShip Game : " + uuid);
+//        System.out.println("PlaceShip Game : " + uuid);
         return uuid;
     }
 
@@ -118,41 +118,34 @@ public class Game implements Serializable {
                 // --------PRINT---------
 //                System.out.println("Other Player have a ship at the position.");
 
-                //Test if the Ship has sunk or not
-                if (!targetGrid.getShip(x, y).hasSunk()) {
+                alreadySunk = targetGrid.getShip(x, y).hasSunk();
 
-                    // --------PRINT---------
+                // --------PRINT---------
 //                    System.out.println("Other Player ship's have " + targetGrid.getShip(x, y).getHp() + " hp.");
 
-                    // --------PRINT---------
+                // --------PRINT---------
 //                    System.out.println("The Player can attack! Fire!");
 //                    System.out.println("The attack make " + players[currentPlayer].getDmg(ship) + " damage.");
 
-                    //Hit the ennemy Ship (decrease his hp of the global ship)
-                    nextPlayer.hit(x, y, players[currentPlayer].getDmg(ship));
+                //Hit the ennemy Ship (decrease his hp of the global ship)
+                nextPlayer.hit(x, y, players[currentPlayer].getDmg(ship));
 
-                    // --------PRINT---------
+                // --------PRINT---------
 //                    System.out.println("The Player ship have " + players[currentPlayer].getAmmo(ship) + " ammo left.");
 //                    System.out.println("The attack hit the ennemy ship ! " + targetGrid.getShip(x, y).getHp() + " hp left.");
 
-                    //Flag the tile who just be the target (you can't target it anymore)
-                    players[currentPlayer].getGrid().flagTile(x, y, false);
-                    nextPlayer.getGrid().flagTile(x, y, true);
+                //Flag the tile who just be the target (you can't target it anymore)
+                players[currentPlayer].getGrid().flagTile(x, y, false);
+                nextPlayer.getGrid().flagTile(x, y, true);
 
-                    // --------PRINT---------
+                // --------PRINT---------
 //                    System.out.println("The tile at position (" + x + "," + y + ") was flag as hit\n");
-
-                } else {
-                    // --------PRINT---------
-//                    System.out.println("The ennemy Ship has already sunk...\n");
-                    alreadySunk = true;
-                    System.out.println("SUNK ???");
-                }
 
                 xPlayer = x;
                 yPlayer = y;
                 player = GridConstant.FLAG;
                 playerSet = true;
+
             } else {
                 //If the next player doesn't have a Ship in the target tile, the tile is flag as already hit
                 //The tile can't be target anymore
@@ -183,6 +176,8 @@ public class Game implements Serializable {
             }else{
                 end = true;
             }
+        }else if(!players[currentPlayer].isHuman()){
+            setNext();
         }
 
         return new Review(canAttack, alreadySunk, ennemySet && playerSet, end, xPlayer, yPlayer, xEnnemy, yEnnemy, player, ennemy);

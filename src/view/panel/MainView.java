@@ -392,7 +392,6 @@ public class MainView extends PanelView {
                 break;
 
             case CAN_NOT_ATTACK:
-
                 break;
 
             case END_GAME:
@@ -427,12 +426,14 @@ public class MainView extends PanelView {
                     y = review.getyPlayer();
                     state = review.getPlayer();
 
-                    tmp = x;
-                    //x = (WIDTH_PANEL - 1) - y;
-                    //y = tmp;
 
-                    //y = y;
-                    x = (WIDTH_PANEL - 1) - x;
+                    System.out.println("value attack on before grid ["+x+","+y+"]");
+                    tmp = x;
+                    x = (WIDTH_PANEL - 1) - y;
+                    y = tmp;
+                    System.out.println("value attack on after convert ["+x+","+y+"]");
+//                    int yGrid = x;
+//                    int xGrid = (WIDTH_PANEL - 1) - y;
 
                     switch (state) {
                         case FLAG:
@@ -598,7 +599,7 @@ public class MainView extends PanelView {
 
         int x, y;
 
-        public EnnemyTileListener(int y, int x) {
+        public EnnemyTileListener(int x, int y) {
             this.x = x;
             this.y = y;
         }
@@ -620,18 +621,18 @@ public class MainView extends PanelView {
                     }
 
                     // Then, we can generate an attack
-                    int yGrid = x;
-                    int xGrid = (WIDTH_PANEL - 1) - y;
+                    int xGrid = y;
+                    int yGrid = (WIDTH_PANEL - 1) - x;
                     System.out.println("placed atack on grid [" + x + ", " + y + "]");
                     System.out.println("placed atack after convert [" + xGrid + ", " + yGrid + "]");
 
                     plannedAttack = new Attack(xGrid, yGrid, currentShip);
-                    xTarget = y;
-                    yTarget = x;
+                    xTarget = x;
+                    yTarget = y;
 
 
                     // Adding new icon
-                    ennemy[y][x].setIcon(new ImageIcon(
+                    ennemy[x][y].setIcon(new ImageIcon(
                             TextureFactory.getInstance().getPlannedAttack().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)
                     ));
 

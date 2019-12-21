@@ -1,5 +1,6 @@
 package model.game.player;
 
+import model.Attack;
 import model.Move;
 import model.ShipType;
 import model.game.grid.Grid;
@@ -44,7 +45,7 @@ public abstract class Player implements Serializable {
 
     public abstract boolean isHuman();
 
-    public Move getBestMove(){
+    public Attack getBestMove(){
         return null;
     }
 

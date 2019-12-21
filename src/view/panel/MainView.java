@@ -4,6 +4,7 @@ import controller.GameController;
 import model.*;
 import model.game.ship.Ship;
 import view.constant.StringConstant;
+import view.constant.TextureFactory;
 import view.constant.Views;
 
 import javax.swing.*;
@@ -35,6 +36,8 @@ public class MainView extends PanelView {
 
     // Data for an attack
     private UUID currentShip;
+    private int xTarget, yTarget;
+    private Attack plannedAttack;
 
     // Game review
     private JPanel gameReview;
@@ -64,8 +67,6 @@ public class MainView extends PanelView {
 
     private JButton[][] ennemy;
     private JButton[][] player;
-    private JPanel ennemyGrid;
-    private JPanel playerGrid;
 
     // Constants
     private final int WIDTH_PANEL = 10;
@@ -136,7 +137,7 @@ public class MainView extends PanelView {
         // Setting ennemy grid
         ennemyDescription = new JLabel(StringConstant.ENNEMY_TITLE, SwingConstants.CENTER);
 
-        ennemyGrid = new JPanel();
+        JPanel ennemyGrid = new JPanel();
         ennemyGrid.setLayout(new GridLayout(WIDTH_PANEL, HEIGHT_PANEL));
         ennemyGrid.setBorder(new EmptyBorder(10, 10, 10, 10));
 
@@ -166,7 +167,7 @@ public class MainView extends PanelView {
         // Setting player grid
         playerDescription = new JLabel(StringConstant.PLAYER_TITLE, SwingConstants.CENTER);
 
-        playerGrid = new JPanel();
+        JPanel playerGrid = new JPanel();
         playerGrid.setLayout(new GridLayout(WIDTH_PANEL, HEIGHT_PANEL));
         playerGrid.setBorder(new EmptyBorder(10, 10, 10, 10));
 
@@ -345,8 +346,15 @@ public class MainView extends PanelView {
                 );
 
                 selectedShip.setText(
-                        ship.getShipType()+""
+                        ship.getShipType() + ""
                 );
+
+                break;
+
+            case END_TURN:
+                plannedAttack = null;
+                currentShip = null;
+
 
                 break;
         }
@@ -440,7 +448,31 @@ public class MainView extends PanelView {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            // If we are in the second part of the game, and if there is a ship selected
+            if (inGame && currentShip != null) {
 
+                // If there is already one, we erase
+                if (plannedAttack != null) {
+                    ennemy[xTarget][yTarget].setIcon(null);
+                }
+
+                // Then, we can generate an attack
+                int xGrid = y;
+                int yGrid = 9 - x;
+
+                plannedAttack = new Attack(xGrid, yGrid, currentShip);
+                xTarget = x;
+                yTarget = y;
+
+
+                // Adding new icon
+                ennemy[x][y].setIcon(new ImageIcon(
+                        TextureFactory.getInstance().getPlannedAttack().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)
+                ));
+
+                // And finally, the player can attack
+                endTurn.setEnabled(true);
+            }
         }
     }
 
@@ -471,25 +503,6 @@ public class MainView extends PanelView {
 
                 }
             }
-
-//                 else {
-//                ImageIcon imageIcon = (ImageIcon) player[x][y].getIcon();
-//
-//                if (imageIcon != null) {
-//                    tmp = (BufferedImage) imageIcon.getImage();
-//
-//                    g = (Graphics2D) tmp.getGraphics();
-//
-//                    g.drawImage(
-//                            TextureFactory.getInstance().getCross_ennemy(),
-//                            0,
-//                            0,
-//                            tmp.getWidth(),
-//                            tmp.getHeight(),
-//                            null
-//                    );
-//                }
-//            }
 
             // What happen in the ship placement step
             if (select) {
@@ -640,7 +653,8 @@ public class MainView extends PanelView {
     private class EndTurnListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            ennemy[xTarget][yTarget].setIcon(null);
+            controller.play(plannedAttack);
         }
     }
 

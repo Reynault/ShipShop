@@ -77,18 +77,18 @@ public class Game implements Serializable {
      */
     public void play(Attack attack){
         //Get the next player (Who play after the current)
-        Player otherCurrentPlayer = whosNext();
+        Player nextPlayer = whosNext();
 
         System.out.println("Attack start at (X,Y) by player : "+ players[currentPlayer] + " ");
         System.out.println("Attack on position ("+ attack.getX()+ "," +  attack.getY() + ")");
 
         //Test if the target at X and Y position is a ship
-        if(otherCurrentPlayer.getGrid().isShip(attack.getX(),attack.getY())){
+        if(nextPlayer.getGrid().isShip(attack.getX(),attack.getY())){
             System.out.println("Other Player have a ship at the position.");
 
             //Test if the Ship is sunk or not
-            if(otherCurrentPlayer.getGrid().getShip(attack.getX(), attack.getY()).hasSunk()) {
-                System.out.println("Other Player ship's have "+ otherCurrentPlayer.getGrid().getShip(attack.getX(),attack.getY()).getHp() + " hp.");
+            if(nextPlayer.getGrid().getShip(attack.getX(), attack.getY()).hasSunk()) {
+                System.out.println("Other Player ship's have "+ nextPlayer.getGrid().getShip(attack.getX(),attack.getY()).getHp() + " hp.");
 
                 //Test if the current Player Ship can fire
                 if(players[currentPlayer].canAttack(attack.getShip())){
@@ -96,13 +96,13 @@ public class Game implements Serializable {
 
                     System.out.println("The attack make " + players[currentPlayer].getDmg(attack.getShip()) + " damage.");
                     //Hit the ennemy Ship (decrease his hp of the global ship)
-                    otherCurrentPlayer.hit(attack.getX(), attack.getY(), players[currentPlayer].getDmg(attack.getShip()));
+                    nextPlayer.hit(attack.getX(), attack.getY(), players[currentPlayer].getDmg(attack.getShip()));
 
                     //Decrease ammo of the ship who fire
                     players[currentPlayer].decreaseAmmo(attack.getShip());
                     System.out.println("The Player ship have "+players[currentPlayer].getAmmo(attack.getShip())+" ammo left.");
 
-                    System.out.println("The attack hit the ennemy ship ! " + otherCurrentPlayer.getGrid().getShip(attack.getX(), attack.getY()).getHp() + " hp left.");
+                    System.out.println("The attack hit the ennemy ship ! " + nextPlayer.getGrid().getShip(attack.getX(), attack.getY()).getHp() + " hp left.");
 
                     //Flag the tile who just be the target (you can't target it anymore)
                     players[currentPlayer].getGrid().flagTile(attack.getX(), attack.getY());
@@ -123,6 +123,26 @@ public class Game implements Serializable {
             players[currentPlayer].getGrid().crossTile(attack.getX(),attack.getY());
             System.out.println("The attack at position ("+ attack.getX()+","+attack.getY()+") miss...\n");
         }
+
+        currentPlayer = (currentPlayer+1)%2;
+
+        // Verifying if the game is finished
+        if(!isFinished()){
+            // If not, we let the other player to play
+            if(!nextPlayer.isHuman()){
+                play(nextPlayer.getBestMove());
+            }
+        }
+    }
+
+    private boolean isFinished() {
+        boolean res = false;
+        if(players[currentPlayer].getLife() == 0 || players[(currentPlayer+1)%2].getLife() == 0){
+            res = true;
+        }else{
+
+        }
+        return res;
     }
 
     public Ship getShip(UUID uuid){

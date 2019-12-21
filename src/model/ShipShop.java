@@ -19,7 +19,7 @@ import java.util.UUID;
 
 import static model.constant.UpdateObserver.*;
 
-public class ShipShop extends Observable {
+public class ShipShop extends Observable implements Serializable{
     private String SAVE_PATH = "save.ser";
 
     private UUID requestedShip;
@@ -152,13 +152,9 @@ public class ShipShop extends Observable {
         return game.getNbShip(cruiser);
     }
 
-    public int getLife() {
+    public int getLife(int num) {
 //        System.out.println("VIE : "+ game.getLife());
-        return game.getLife();
-    }
-
-    public int getEnnemyLife() {
-        return game.getEnnemyLife();
+        return game.getLife(num);
     }
 
     public void getShipInformations(UUID currentShip) {

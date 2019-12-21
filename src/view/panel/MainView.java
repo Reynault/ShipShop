@@ -612,6 +612,7 @@ public class MainView extends PanelView {
                 ImageIcon image = (ImageIcon) ennemy[x][y].getIcon();
 
                 if(image == null) {
+                    System.out.println("image :" +image);
 
                     // If there is already one, we erase
                     if (plannedAttack != null) {

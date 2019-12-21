@@ -33,11 +33,15 @@ public class LinearTactic implements Tactic, Serializable {
             k++;
         }
 
+        int x = 0,y = 0;
+
         boolean found = false;
         while(i < victim.getWidth() && ! found){
             while(j < victim.getHeight() && ! found){
                 if(attacker.canAttack(j, i, ship)){
                     found = true;
+                    x = j;
+                    y = i;
                     System.out.println("real J : " + (j));
                     System.out.println("real I : " + (i));
                 }
@@ -51,7 +55,7 @@ public class LinearTactic implements Tactic, Serializable {
         System.out.println("J : " + (j-1));
         System.out.println("I : " + (i-1));
 
-        return new Attack(j-1, i-1, ship);
+        return new Attack(x, y, ship);
     }
 
 }

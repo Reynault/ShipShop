@@ -154,7 +154,7 @@ public class Grid implements Serializable {
 
     public boolean canAttack(int x, int y, UUID ship) {
         System.out.println("test atack [" + x + ", " + y + "]");
-        return ennemyGrid[y][x] == GridConstant.NONE
+        return ennemyGrid[x][y] == GridConstant.NONE
                 && ships.containsKey(ship)
                 && ships.get(ship).canAttack();
     }

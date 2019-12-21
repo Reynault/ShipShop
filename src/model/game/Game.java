@@ -105,6 +105,8 @@ public class Game implements Serializable {
         UUID ship = attack.getShip();
         Grid targetGrid = nextPlayer.getGrid();
 
+        System.out.println("VALEUR X : "+x);
+        System.out.println("VALEUR Y : "+y);
         // Testing if the current ship can actually attack
         if(players[currentPlayer].canAttack(x, y, ship)){
             canAttack = true;

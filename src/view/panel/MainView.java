@@ -340,17 +340,51 @@ public class MainView extends PanelView {
                 Ship ship = shipShop.getShip(currentShip);
 
 
-                ammo.setText(
-                        StringConstant.AMMO + ship.getAmmo()
-                );
+                if(ship.canAttack()){
+                    ammo.setFont(new Font("Dialog", Font.PLAIN, 12));
+                    ammo.setForeground(Color.BLACK);
+                    ammo.setText(
+                            StringConstant.AMMO + ship.getAmmo()
+                    );
 
-                attack.setText(
-                        StringConstant.ATTACK + ship.getDmg()
-                );
+                    attack.setText(
+                            StringConstant.ATTACK + ship.getDmg()
+                    );
 
-                life.setText(
-                        StringConstant.LIFE + ship.getHp()
-                );
+                    life.setText(
+                            StringConstant.LIFE + ship.getHp()
+                    );
+                }else{
+
+                    if(!ship.canShoot()) {
+                        ammo.setText(
+                                StringConstant.CAN_NOT_SHOOT
+                        );
+
+                        attack.setText(
+                                ""
+                        );
+
+                        life.setText(
+                                ""
+                        );
+                    }else{
+                        ammo.setText(
+                                StringConstant.DEAD
+                        );
+
+                        attack.setText(
+                                ""
+                        );
+
+                        life.setText(
+                                ""
+                        );
+                    }
+
+                    ammo.setFont(new Font("Dialog", Font.PLAIN, 13));
+                    ammo.setForeground(Color.RED);
+                }
 
                 selectedShip.setText(
                         ship.getShipType() + ""
@@ -375,17 +409,16 @@ public class MainView extends PanelView {
 
                 // If data are set
                 if(review.isDataSet()){
-
                     // Update ennemy grid first
                     x = review.getxPlayer();
                     y = review.getyPlayer();
                     state = review.getPlayer();
 
                     tmp = x;
-                    x = (WIDTH_PANEL-1) - y;
+                    x = (WIDTH_PANEL - 1) - y;
                     y = tmp;
 
-                    switch (state){
+                    switch (state) {
                         case FLAG:
                             ennemy[x][y].setIcon(new ImageIcon(
                                     TextureFactory.getInstance().getFlagPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)
@@ -404,37 +437,36 @@ public class MainView extends PanelView {
                     state = review.getEnnemy();
 
                     tmp = x;
-                    x = (WIDTH_PANEL-1) - y;
+                    x = (WIDTH_PANEL - 1) - y;
                     y = tmp;
 
                     ImageIcon image = (ImageIcon) player[x][y].getIcon();
 
-                    System.out.println("Image icon : "+image);
                     BufferedImage buffer = new BufferedImage(width_cell, height_cell, BufferedImage.TYPE_INT_ARGB);
 
-                    if(image != null){
+                    if (image != null) {
                         buffer = (BufferedImage) image.getImage();
                     }
 
-                    switch (state){
+                    switch (state) {
                         case FLAG:
                             buffer.getGraphics().drawImage(
-                                TextureFactory.getInstance().getFlagEnnemy(),
-                                0,
-                                0,
-                                width_cell,
-                                height_cell,
-                                null
+                                    TextureFactory.getInstance().getFlagEnnemy(),
+                                    0,
+                                    0,
+                                    width_cell,
+                                    height_cell,
+                                    null
                             );
                             break;
                         case CROSS:
                             buffer.getGraphics().drawImage(
-                                TextureFactory.getInstance().getCrossEnnemy(),
-                                0,
-                                0,
-                                width_cell,
-                                height_cell,
-                                null
+                                    TextureFactory.getInstance().getCrossEnnemy(),
+                                    0,
+                                    0,
+                                    width_cell,
+                                    height_cell,
+                                    null
                             );
                             break;
                     }
@@ -560,27 +592,33 @@ public class MainView extends PanelView {
             // If we are in the second part of the game, and if there is a ship selected
             if (inGame && currentShip != null) {
 
-                // If there is already one, we erase
-                if (plannedAttack != null) {
-                    ennemy[xTarget][yTarget].setIcon(null);
+                // If the current button is already checked
+                ImageIcon image = (ImageIcon) ennemy[x][y].getIcon();
+
+                if(image == null) {
+
+                    // If there is already one, we erase
+                    if (plannedAttack != null) {
+                        ennemy[xTarget][yTarget].setIcon(null);
+                    }
+
+                    // Then, we can generate an attack
+                    int xGrid = y;
+                    int yGrid = (WIDTH_PANEL - 1) - x;
+
+                    plannedAttack = new Attack(xGrid, yGrid, currentShip);
+                    xTarget = x;
+                    yTarget = y;
+
+
+                    // Adding new icon
+                    ennemy[x][y].setIcon(new ImageIcon(
+                            TextureFactory.getInstance().getPlannedAttack().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)
+                    ));
+
+                    // And finally, the player can attack
+                    endTurn.setEnabled(true);
                 }
-
-                // Then, we can generate an attack
-                int xGrid = y;
-                int yGrid = (WIDTH_PANEL-1) - x;
-
-                plannedAttack = new Attack(xGrid, yGrid, currentShip);
-                xTarget = x;
-                yTarget = y;
-
-
-                // Adding new icon
-                ennemy[x][y].setIcon(new ImageIcon(
-                        TextureFactory.getInstance().getPlannedAttack().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)
-                ));
-
-                // And finally, the player can attack
-                endTurn.setEnabled(true);
             }
         }
     }

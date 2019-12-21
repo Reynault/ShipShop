@@ -420,8 +420,11 @@ public class MainView extends PanelView {
                     state = review.getPlayer();
 
                     tmp = x;
-                    x = (WIDTH_PANEL - 1) - y;
-                    y = tmp;
+                    //x = (WIDTH_PANEL - 1) - y;
+                    //y = tmp;
+
+                    //y = y;
+                    x = (WIDTH_PANEL - 1) - x;
 
                     switch (state) {
                         case FLAG:
@@ -587,7 +590,7 @@ public class MainView extends PanelView {
 
         int x, y;
 
-        public EnnemyTileListener(int x, int y) {
+        public EnnemyTileListener(int y, int x) {
             this.x = x;
             this.y = y;
         }
@@ -608,16 +611,18 @@ public class MainView extends PanelView {
                     }
 
                     // Then, we can generate an attack
-                    int xGrid = y;
-                    int yGrid = (WIDTH_PANEL - 1) - x;
+                    int yGrid = x;
+                    int xGrid = (WIDTH_PANEL - 1) - y;
+                    System.out.println("placed atack on grid [" + x + ", " + y + "]");
+                    System.out.println("placed atack after convert [" + xGrid + ", " + yGrid + "]");
 
                     plannedAttack = new Attack(xGrid, yGrid, currentShip);
-                    xTarget = x;
-                    yTarget = y;
+                    xTarget = y;
+                    yTarget = x;
 
 
                     // Adding new icon
-                    ennemy[x][y].setIcon(new ImageIcon(
+                    ennemy[y][x].setIcon(new ImageIcon(
                             TextureFactory.getInstance().getPlannedAttack().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)
                     ));
 
@@ -663,7 +668,7 @@ public class MainView extends PanelView {
 
                 // Creating move
                 int xGrid = y;
-                int yGrid = 9 - x;
+                int yGrid = (WIDTH_PANEL - 1) - x;
                 DirectionConstant constant = direction[toward];
                 ShipType type = currentType;
 

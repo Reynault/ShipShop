@@ -38,9 +38,12 @@ public class LinearTactic implements Tactic, Serializable {
             while(j < victim.getHeight() && ! found){
                 if(attacker.canAttack(i, j, ship)){
                     found = true;
+                    System.out.println("real J : " + (j));
+                    System.out.println("real I : " + (i));
                 }
                 j++;
             }
+            j = 0;
             i++;
         }
 

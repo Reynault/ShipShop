@@ -119,7 +119,7 @@ public abstract class Player implements Serializable {
         return grid.getGridHeight();
     }
 
-    public UUID[] getShips() {
+    public Object[] getShips() {
         return grid.getShips();
     }
 }

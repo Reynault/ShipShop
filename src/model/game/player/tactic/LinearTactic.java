@@ -21,7 +21,7 @@ public class LinearTactic implements Tactic, Serializable {
         int i = 0;
         int j = 0;
 
-        UUID[] ships = attacker.getShips();
+        UUID[] ships = (UUID[]) attacker.getShips();
         UUID ship = ships[rand.nextInt(ships.length)];
 
         while (! attacker.getShip(ship).canAttack()){

@@ -1,5 +1,6 @@
 package model.game;
 
+import model.constant.GridConstant;
 import model.constant.ShipType;
 import model.game.era.Era;
 import model.game.grid.Grid;
@@ -8,6 +9,7 @@ import model.game.player.tactic.Tactic;
 import model.game.ship.Ship;
 import model.informations.Attack;
 import model.informations.Move;
+import model.informations.Review;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -78,8 +80,15 @@ public class Game implements Serializable {
      *
      * @param attack
      */
-    public Attack play(Attack attack) {
-        Attack res = null;
+    public Review play(Attack attack) {
+        boolean playerSet = false;
+        boolean ennemySet = false;
+        boolean end = false;
+        int xPlayer = 0;
+        int yPlayer = 0;
+        int xEnnemy = 0;
+        int yEnnemy = 0;
+        GridConstant player = GridConstant.NONE, ennemy = GridConstant.NONE;
 
         //Get the next player (Who play after the current)
         Player nextPlayer = whosNext();
@@ -127,6 +136,11 @@ public class Game implements Serializable {
                     players[currentPlayer].getGrid().flagTile(x, y, false);
                     nextPlayer.getGrid().flagTile(x, y, true);
 
+                    xPlayer = x;
+                    yPlayer = y;
+                    player = GridConstant.FLAG;
+                    playerSet = true;
+
                     // --------PRINT---------
                     System.out.println("The tile at position (" + x + "," + y + ") was flag as hit\n");
 
@@ -145,6 +159,11 @@ public class Game implements Serializable {
             players[currentPlayer].getGrid().crossTile(x, y, false);
             nextPlayer.getGrid().crossTile(x, y, true);
 
+            xPlayer = x;
+            yPlayer = y;
+            player = GridConstant.CROSS;
+            playerSet = true;
+
             // --------PRINT---------
             System.out.println("The attack at position (" + x + "," + y + ") miss...\n");
         }
@@ -155,11 +174,17 @@ public class Game implements Serializable {
         if (!isFinished()) {
             // If not, we let the other player to play
             if (!nextPlayer.isHuman()) {
-                res = play(nextPlayer.getBestMove(this, whosNext()));
+                Review res = play(nextPlayer.getBestMove(this, whosNext()));
+                xEnnemy = res.getxPlayer();
+                yEnnemy = res.getyPlayer();
+                ennemy = res.getPlayer();
+                ennemySet = true;
             }
+        }else{
+            end = true;
         }
 
-        return res;
+        return new Review(ennemySet && playerSet, end, xPlayer, yPlayer, xEnnemy, yEnnemy, player, ennemy);
     }
 
     private boolean isFinished() {

@@ -17,7 +17,7 @@ public class RandomTactic implements Tactic, Serializable {
 
     @Override
     public Attack applyTactic(Game game, Player attacker, Player victim) {
-        UUID[] ships = attacker.getShips();
+        Object[] ships = attacker.getShips();
 
         int width = victim.getWidth();
         int height = victim.getHeight();
@@ -25,22 +25,26 @@ public class RandomTactic implements Tactic, Serializable {
         // Selecting one random attack movement
         Attack attack = selectRandomAttack(ships, width, height);
 
-        // While this one isn't valid
-        while(attacker.canAttack(attack.getX(), attack.getY(), attack.getShip())){
-            // Selecting another
-            attack = selectRandomAttack(ships, width, height);
+        if(!attacker.isDefeated()) {
+            // While this one isn't valid
+            while (!attacker.canAttack(attack.getX(), attack.getY(), attack.getShip())) {
+                // Selecting another
+                attack = selectRandomAttack(ships, width, height);
+            }
+            System.out.println(" ? ");
         }
 
         return attack;
     }
 
-    private Attack selectRandomAttack(UUID[] ships, int width, int height) {
+    private Attack selectRandomAttack(Object[] ships, int width, int height) {
         int x, y;
         UUID id;
 
         x = rand.nextInt(width);
         y = rand.nextInt(height);
-        id = ships[rand.nextInt(ships.length)];
+        id = (UUID)ships[rand.nextInt(ships.length)];
+        System.out.println(id);
 
         return new Attack(x, y, id);
     }

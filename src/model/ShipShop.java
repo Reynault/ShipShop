@@ -8,6 +8,7 @@ import model.game.player.tactic.Tactic;
 import model.game.ship.Ship;
 import model.informations.Attack;
 import model.informations.Move;
+import model.informations.Review;
 
 import java.awt.*;
 import java.io.*;
@@ -21,19 +22,9 @@ public class ShipShop extends Observable {
     private String SAVE_PATH = "save.ser";
 
     private UUID requestedShip;
-    private Attack requestAttack;
+    private Review turnReview;
     private GameFactory gameFactory;
     protected Game game;
-
-    public ShipShop() {
-    }
-
-    public ShipShop(UUID requestedShip, Attack requestAttack, GameFactory gameFactory, Game game) {
-        this.requestedShip = requestedShip;
-        this.requestAttack = requestAttack;
-        this.gameFactory = gameFactory;
-        this.game = game;
-    }
 
     public void createGame(Era era, Tactic tactic, boolean humanFirst) {
         if (humanFirst) {
@@ -66,7 +57,7 @@ public class ShipShop extends Observable {
     }
 
     public void play(Attack attack) {
-        requestAttack = game.play(attack);
+        turnReview = game.play(attack);
         setChanged();
         notifyObservers(END_TURN);
     }
@@ -166,7 +157,7 @@ public class ShipShop extends Observable {
         notifyObservers(GET_SHIP_INFO);
     }
 
-    public Attack getRequestAttack() {
-        return requestAttack;
+    public Review getTurnReview() {
+        return turnReview;
     }
 }

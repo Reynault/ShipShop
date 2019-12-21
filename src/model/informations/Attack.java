@@ -2,11 +2,11 @@ package model.informations;
 
 import java.util.UUID;
 
-public class Attack {
+public final class Attack {
 
-    private int x;
-    private int y;
-    private UUID ship;
+    private final int x;
+    private final int y;
+    private final UUID ship;
 
     public Attack(int x, int y, UUID ship) {
         this.x = x;

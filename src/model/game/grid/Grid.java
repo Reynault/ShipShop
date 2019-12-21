@@ -153,7 +153,9 @@ public class Grid implements Serializable {
     }
 
     public boolean canAttack(int x, int y, UUID ship) {
-        return ennemyGrid[x][y] == GridConstant.NONE && ships.get(ship).canAttack();
+        return ennemyGrid[x][y] == GridConstant.NONE
+                && ships.containsKey(ship)
+                && ships.get(ship).canAttack();
     }
 
     public int getDmg(UUID id) {
@@ -298,7 +300,8 @@ public class Grid implements Serializable {
         return res * 100 / max;
     }
 
-    public UUID[] getShips() {
-        return (UUID[]) ships.keySet().toArray();
+    public Object[] getShips() {
+        Set<UUID> keys = ships.keySet();
+        return keys.toArray();
     }
 }

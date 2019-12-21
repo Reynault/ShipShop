@@ -3,11 +3,13 @@ package view.panel;
 import controller.GameController;
 import model.*;
 import model.constant.DirectionConstant;
+import model.constant.GridConstant;
 import model.constant.ShipType;
 import model.constant.UpdateObserver;
 import model.game.ship.Ship;
 import model.informations.Attack;
 import model.informations.Move;
+import model.informations.Review;
 import view.constant.StringConstant;
 import view.constant.TextureFactory;
 import view.constant.Views;
@@ -360,15 +362,82 @@ public class MainView extends PanelView {
                 plannedAttack = null;
                 currentShip = null;
 
-                Attack attack = shipShop.getRequestAttack();
-                if(attack != null){
-                    int x = (width_cell-1) - attack.getY();
-                    int y = attack.getX();
-                    player[x][y].setIcon(new ImageIcon(
-                            TextureFactory.getInstance().getCrossEnnemy().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)
-                    ));
+                endTurn.setEnabled(false);
 
+                Review review = shipShop.getTurnReview();
+
+                int x, y, tmp;
+                GridConstant state;
+
+                // If data are set
+                if(review.isDataSet()){
+
+                    // Update ennemy grid first
+                    x = review.getxPlayer();
+                    y = review.getyPlayer();
+                    state = review.getPlayer();
+
+                    tmp = x;
+                    x = (WIDTH_PANEL-1) - y;
+                    y = tmp;
+
+                    switch (state){
+                        case FLAG:
+                            ennemy[x][y].setIcon(new ImageIcon(
+                                    TextureFactory.getInstance().getFlagPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)
+                            ));
+                            break;
+                        case CROSS:
+                            ennemy[x][y].setIcon(new ImageIcon(
+                                    TextureFactory.getInstance().getCrossPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)
+                            ));
+                            break;
+                    }
+
+                    // Update player grid
+                    x = review.getxEnnemy();
+                    y = review.getyEnnemy();
+                    state = review.getEnnemy();
+
+                    tmp = x;
+                    x = (WIDTH_PANEL-1) - y;
+                    y = tmp;
+
+                    ImageIcon image = (ImageIcon) player[x][y].getIcon();
+
+                    System.out.println("Image icon : "+image);
+                    BufferedImage buffer = new BufferedImage(width_cell, height_cell, BufferedImage.TYPE_INT_ARGB);
+
+                    if(image != null){
+                        buffer = (BufferedImage) image.getImage();
+                    }
+
+                    switch (state){
+                        case FLAG:
+                            buffer.getGraphics().drawImage(
+                                TextureFactory.getInstance().getFlagEnnemy(),
+                                0,
+                                0,
+                                width_cell,
+                                height_cell,
+                                null
+                            );
+                            break;
+                        case CROSS:
+                            buffer.getGraphics().drawImage(
+                                TextureFactory.getInstance().getCrossEnnemy(),
+                                0,
+                                0,
+                                width_cell,
+                                height_cell,
+                                null
+                            );
+                            break;
+                    }
+
+                    player[x][y].setIcon(new ImageIcon(buffer));
                 }
+
                 break;
         }
     }
@@ -471,7 +540,7 @@ public class MainView extends PanelView {
 
                 // Then, we can generate an attack
                 int xGrid = y;
-                int yGrid = (width_cell-1) - x;
+                int yGrid = (WIDTH_PANEL-1) - x;
 
                 plannedAttack = new Attack(xGrid, yGrid, currentShip);
                 xTarget = x;

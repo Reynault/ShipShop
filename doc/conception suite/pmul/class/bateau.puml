@@ -1,9 +1,6 @@
 @startuml
 
-title Classes - Class Diagram
-
-
-class FleetFactory {
+ abstract class FleetFactory {
     -nbCruiser: int
     -nbSubmarine: int
     -nbTorpedo: int

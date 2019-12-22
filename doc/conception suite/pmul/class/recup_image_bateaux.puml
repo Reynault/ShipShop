@@ -1,0 +1,27 @@
+@startuml
+
+class TextureFactory <<Singleton>>{
+    + getSpriteFactory(EraConstant eraConstant): SpriteFactory
+    + getCrossPlayer(): BufferedImage
+    + getFlagPlayer(): BufferedImage
+    + getCrossEnnemy(): BufferedImage
+    + getFlagEnnemy(): BufferedImage
+    + getPlannedAttack(): BufferedImage
+}
+
+interface SpriteFactory{
+    + {abstract} getSprite(ShipType shipType): Image
+}
+
+class ModernFactory{
+    + getSprite(ShipType shipType): Image
+}
+
+class XVIFactory{
+    + getSprite(ShipType shipType): Image
+}
+
+ModernFactory ..|> SpriteFactory
+XVIFactory ..|> SpriteFactory
+
+@enduml

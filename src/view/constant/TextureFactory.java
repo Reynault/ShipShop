@@ -22,11 +22,11 @@ public class TextureFactory {
 
     private TextureFactory() {
         try {
-            crossPlayer = ImageIO.read(ClassLoader.getSystemResource("sprite/cross-player.png"));
-            flagPlayer = ImageIO.read(ClassLoader.getSystemResource("sprite/flag-player.png"));
-            crossEnnemy = ImageIO.read(ClassLoader.getSystemResource("sprite/cross-ennemy.png"));
-            flagEnnemy = ImageIO.read(ClassLoader.getSystemResource("sprite/flag-ennemy.png"));
-            plannedAttack = ImageIO.read(ClassLoader.getSystemResource("sprite/planned-attack.png"));
+            crossPlayer = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprite/cross-player.png"));
+            flagPlayer = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprite/flag-player.png"));
+            crossEnnemy = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprite/cross-ennemy.png"));
+            flagEnnemy = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprite/flag-ennemy.png"));
+            plannedAttack = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprite/planned-attack.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

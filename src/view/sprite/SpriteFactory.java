@@ -1,13 +1,10 @@
 package view.sprite;
 
+import model.constant.ShipType;
+
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public interface SpriteFactory {
-    Image getCruiser();
-
-    Image getSubmarine();
-
-    Image getTorpedo();
-
-    Image getAircraft();
+    Image getSprite(ShipType shipType);
 }

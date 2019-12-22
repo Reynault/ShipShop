@@ -86,6 +86,10 @@ public class Ship implements Serializable {
         return shipType;
     }
 
+    public DirectionConstant getDirection() {
+        return direction;
+    }
+
     public int getDmg() {
         return dmg;
     }

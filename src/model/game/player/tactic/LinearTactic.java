@@ -42,18 +42,18 @@ public class LinearTactic implements Tactic, Serializable {
                     found = true;
                     x = j;
                     y = i;
-                    System.out.println("real J : " + (j));
-                    System.out.println("real I : " + (i));
+//                    System.out.println("real J : " + (j));
+//                    System.out.println("real I : " + (i));
                 }
-                System.out.println("Trouvé : (i,j) "+ i + " " + j);
+//                System.out.println("Trouvé : (i,j) "+ i + " " + j);
                 j++;
             }
             j = 0;
             i++;
         }
 
-        System.out.println("J : " + (j-1));
-        System.out.println("I : " + (i-1));
+//        System.out.println("J : " + (j-1));
+//        System.out.println("I : " + (i-1));
 
         return new Attack(x, y, ship);
     }

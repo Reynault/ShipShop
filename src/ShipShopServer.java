@@ -1,5 +1,3 @@
-package model.rmi;
-
 import model.ShipShop;
 
 import javax.naming.NamingException;

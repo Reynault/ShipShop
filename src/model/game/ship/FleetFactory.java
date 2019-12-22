@@ -85,7 +85,7 @@ public abstract class FleetFactory implements Serializable {
                         AMMO_SUBMARINE,
                         DMG_SUBMARINE,
                         NBTILES_SUBMARINE,
-                        DirectionConstant.UP,
+                        direction,
                         ShipType.SUBMARINE
                 );
                 break;
@@ -96,7 +96,7 @@ public abstract class FleetFactory implements Serializable {
                         AMMO_AIRCRAFT,
                         DMG_AIRCRAFT,
                         NBTILES_AIRCRAFT,
-                        DirectionConstant.UP,
+                        direction,
                         ShipType.AIRCRAFT
                 );
                 break;
@@ -107,7 +107,7 @@ public abstract class FleetFactory implements Serializable {
                         AMMO_TORPEDO,
                         DMG_TORPEDO,
                         NBTILES_TORPEDO,
-                        DirectionConstant.UP,
+                        direction,
                         ShipType.TORPEDO
                 );
                 break;
@@ -118,7 +118,7 @@ public abstract class FleetFactory implements Serializable {
                         AMMO_CRUISER,
                         DMG_CRUISER,
                         NBTILES_CRUISER,
-                        DirectionConstant.UP,
+                        direction,
                         ShipType.CRUISER
                 );
                 break;

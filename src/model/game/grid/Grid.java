@@ -153,7 +153,7 @@ public class Grid implements Serializable {
     }
 
     public boolean canAttack(int x, int y, UUID ship) {
-        System.out.println("test atack [" + x + ", " + y + "]");
+//        System.out.println("test atack [" + x + ", " + y + "]");
         return ennemyGrid[x][y] == GridConstant.NONE
                 && ships.containsKey(ship)
                 && ships.get(ship).canAttack();
@@ -258,7 +258,7 @@ public class Grid implements Serializable {
         if(player){
             playerGrid[x][y] = GridConstant.FLAG;
         }else {
-            System.out.println("Ennemy flag - x : "+x+" y : "+y);
+//            System.out.println("Ennemy flag - x : "+x+" y : "+y);
             ennemyGrid[x][y] = GridConstant.FLAG;
         }
     }

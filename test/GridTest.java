@@ -71,7 +71,7 @@ class GridTest {
             @Test
             void place_ship_left() {
 
-                System.out.println(fleetFactory.getSize(ShipType.CRUISER));
+//                System.out.println(fleetFactory.getSize(ShipType.CRUISER));
 
                 Move move = new Move(
                         fleetFactory.getSize(ShipType.CRUISER)-1,0, DirectionConstant.LEFT, ShipType.CRUISER

@@ -1,5 +1,3 @@
-package model.rmi;
-
 import controller.GameController;
 import model.LiaisonRMI;
 import model.ShipShopInterface;

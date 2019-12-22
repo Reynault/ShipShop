@@ -28,10 +28,8 @@ import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.rmi.RemoteException;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import java.util.UUID;
 
 import static view.constant.GraphicConstant.HEIGHT_MAIN;
 import static view.constant.GraphicConstant.WIDTH_MAIN;
@@ -133,7 +131,7 @@ public class MainView extends PanelView {
 
 
         menu.add(changeTactic);
-        menu.add(save);
+//        menu.add(save);
         menu.add(exit);
 
         this.add(menuBar, BorderLayout.NORTH);
@@ -273,6 +271,9 @@ public class MainView extends PanelView {
         // Indicate to the model that we change the current state
         controller.endShipPlacement();
 
+        // Adding the save button
+        menu.add(save);
+
         // Select is now false (no more ship selected)
         select = false;
         inGame = true;
@@ -300,7 +301,7 @@ public class MainView extends PanelView {
                     // Setting ship button values
                     shipPlacement[CRUISER].addActionListener(
                             new ShipListener(
-                                    (BufferedImage) spriteFactory.getCruiser(),
+                                    (BufferedImage) spriteFactory.getSprite(ShipType.CRUISER),
                                     shipShop.getSize(ShipType.CRUISER),
                                     ShipType.CRUISER
                             )
@@ -308,7 +309,7 @@ public class MainView extends PanelView {
 
                     shipPlacement[SUBMARINE].addActionListener(
                             new ShipListener(
-                                    (BufferedImage) spriteFactory.getSubmarine(),
+                                    (BufferedImage) spriteFactory.getSprite(ShipType.SUBMARINE),
                                     shipShop.getSize(ShipType.SUBMARINE),
                                     ShipType.SUBMARINE
                             )
@@ -316,7 +317,7 @@ public class MainView extends PanelView {
 
                     shipPlacement[TORPEDO].addActionListener(
                             new ShipListener(
-                                    (BufferedImage) spriteFactory.getTorpedo(),
+                                    (BufferedImage) spriteFactory.getSprite(ShipType.TORPEDO),
                                     shipShop.getSize(ShipType.TORPEDO),
                                     ShipType.TORPEDO
                             )
@@ -324,7 +325,7 @@ public class MainView extends PanelView {
 
                     shipPlacement[AIRCRAFT].addActionListener(
                             new ShipListener(
-                                    (BufferedImage) spriteFactory.getAircraft(),
+                                    (BufferedImage) spriteFactory.getSprite(ShipType.AIRCRAFT),
                                     shipShop.getSize(ShipType.AIRCRAFT),
                                     ShipType.AIRCRAFT
                             )
@@ -417,7 +418,7 @@ public class MainView extends PanelView {
                         mainObserver.setEndMessage(StringConstant.LOSE_MESSAGE);
                     }
 
-                    System.out.println("END GAME");
+//                    System.out.println("END GAME");
                     mainObserver.openView(Views.END_GAME);
 
                     break;
@@ -441,11 +442,11 @@ public class MainView extends PanelView {
                         state = review.getPlayer();
 
 
-                        System.out.println("value attack on before grid [" + x + "," + y + "]");
+//                        System.out.println("value attack on before grid [" + x + "," + y + "]");
                         tmp = x;
                         x = (WIDTH_PANEL - 1) - y;
                         y = tmp;
-                        System.out.println("value attack on after convert [" + x + "," + y + "]");
+//                        System.out.println("value attack on after convert [" + x + "," + y + "]");
 //                    int yGrid = x;
 //                    int xGrid = (WIDTH_PANEL - 1) - y;
 
@@ -530,38 +531,106 @@ public class MainView extends PanelView {
 
                     break;
                 case LOAD: {
-                    System.out.println(shipShop);
-                    Map<UUID, List<Position>> bateau_joueur;
-                    Map<UUID, Ship> ships;
+
                     Player playerHuman = shipShop.getGame().getPlayerHuman();
-                    bateau_joueur = playerHuman.getGrid().getPositions();
-                    ships = playerHuman.getGrid().getShipID();
 
-                    for (Map.Entry<UUID, List<Position>> bateau : bateau_joueur.entrySet()) {
-                        UUID uuid = bateau.getKey();
-                        List<Position> positions = bateau.getValue();
+                    spriteFactory = TextureFactory.getInstance().getSpriteFactory(shipShop.getEra());
 
-                        //TODO: placer les bateau case par case...
+                    UUID uuid;
+                    List<Position> pos;
+                    Map<UUID, List<Position>> bateau_joueur = playerHuman.getGrid().getPositions();
+                    Map<UUID, Ship> ships = playerHuman.getGrid().getShipID();
+
+                    Iterator<UUID> iterator = ships.keySet().iterator();
+                    while(iterator.hasNext()){
+                        uuid = iterator.next();
+
+                        pos = bateau_joueur.get(uuid);
+
+                        Position p = pos.get(0);
+                        Ship s = ships.get(uuid);
+
+                        BufferedImage i = (BufferedImage) spriteFactory.getSprite(s.getShipType());
+
+                        i = rotateImage(s.getDirection(), i);
+
+                        placeShip(s.getDirection(), (WIDTH_PANEL - 1) - p.getY(),p.getX(), shipShop.getSize(s.getShipType()), uuid, i);
                     }
+
+                    int xGrid, yGrid;
 
                     for (int i = 0; i < WIDTH_PANEL; i++) {
                         for (int j = 0; j < HEIGHT_PANEL; j++) {
+                            xGrid = (WIDTH_PANEL - 1) - j;
+                            yGrid = i;
+
                             if (playerHuman.getGrid().isFlag(i, j)) {
-                                //TODO: CHANGER LES COORDONEES POUR LES BONNES
-                                player[i][j].setIcon(new ImageIcon(
-                                        TextureFactory.getInstance().getFlagPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                                ImageIcon icon = (ImageIcon) player[xGrid][yGrid].getIcon();
+                                if(icon == null) {
+                                    player[xGrid][yGrid].setIcon(new ImageIcon(
+                                            TextureFactory.getInstance().getFlagEnnemy().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                                }else {
+                                    BufferedImage buffer = (BufferedImage) icon.getImage();
+                                    buffer.getGraphics().drawImage(
+                                            TextureFactory.getInstance().getFlagEnnemy(),
+                                            0,
+                                            0,
+                                            width_cell,
+                                            height_cell,
+                                            null
+                                    );
+                                }
                             }
                             if (playerHuman.getGrid().isCross(i, j)) {
-                                player[i][j].setIcon(new ImageIcon(
-                                        TextureFactory.getInstance().getCrossPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                                ImageIcon icon = (ImageIcon) player[xGrid][yGrid].getIcon();
+                                if(icon == null) {
+                                    player[xGrid][yGrid].setIcon(new ImageIcon(
+                                            TextureFactory.getInstance().getCrossEnnemy().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                                }else {
+                                    BufferedImage buffer = (BufferedImage) icon.getImage();
+                                    buffer.getGraphics().drawImage(
+                                            TextureFactory.getInstance().getCrossEnnemy(),
+                                            0,
+                                            0,
+                                            width_cell,
+                                            height_cell,
+                                            null
+                                    );
+                                }
                             }
                             if (playerHuman.getGrid().isCrossEnemie(i, j)) {
-                                ennemy[i][j].setIcon(new ImageIcon(
-                                        TextureFactory.getInstance().getCrossEnnemy().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                                ImageIcon icon = (ImageIcon) ennemy[xGrid][yGrid].getIcon();
+                                if(icon == null) {
+                                    ennemy[xGrid][yGrid].setIcon(new ImageIcon(
+                                            TextureFactory.getInstance().getCrossPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                                }else {
+                                    BufferedImage buffer = (BufferedImage) icon.getImage();
+                                    buffer.getGraphics().drawImage(
+                                            TextureFactory.getInstance().getCrossPlayer(),
+                                            0,
+                                            0,
+                                            width_cell,
+                                            height_cell,
+                                            null
+                                    );
+                                }
                             }
                             if (playerHuman.getGrid().isFlagEnemie(i, j)) {
-                                ennemy[i][j].setIcon(new ImageIcon(
-                                        TextureFactory.getInstance().getFlagEnnemy().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                                ImageIcon icon = (ImageIcon) ennemy[xGrid][yGrid].getIcon();
+                                if(icon == null) {
+                                    ennemy[xGrid][yGrid].setIcon(new ImageIcon(
+                                            TextureFactory.getInstance().getFlagPlayer().getScaledInstance(width_cell, height_cell, Image.SCALE_DEFAULT)));
+                                }else {
+                                    BufferedImage buffer = (BufferedImage) icon.getImage();
+                                    buffer.getGraphics().drawImage(
+                                            TextureFactory.getInstance().getFlagPlayer(),
+                                            0,
+                                            0,
+                                            width_cell,
+                                            height_cell,
+                                            null
+                                    );
+                                }
                             }
                         }
                     }
@@ -674,7 +743,7 @@ public class MainView extends PanelView {
                 ImageIcon image = (ImageIcon) ennemy[x][y].getIcon();
 
                 if(image == null) {
-                    System.out.println("image :" +image);
+//                    System.out.println("image :" +image);
 
                     // If there is already one, we erase
                     if (plannedAttack != null) {
@@ -684,8 +753,8 @@ public class MainView extends PanelView {
                     // Then, we can generate an attack
                     int xGrid = y;
                     int yGrid = (WIDTH_PANEL - 1) - x;
-                    System.out.println("placed atack on grid [" + x + ", " + y + "]");
-                    System.out.println("placed atack after convert [" + xGrid + ", " + yGrid + "]");
+//                    System.out.println("placed atack on grid [" + x + ", " + y + "]");
+//                    System.out.println("placed atack after convert [" + xGrid + ", " + yGrid + "]");
 
                     plannedAttack = new Attack(xGrid, yGrid, currentShip);
                     xTarget = x;
@@ -734,8 +803,6 @@ public class MainView extends PanelView {
 
             // What happen in the ship placement step
             if (select) {
-                BufferedImage tmp, resizedImage;
-                Graphics2D g;
 
                 // Creating move
                 int xGrid = y;
@@ -748,113 +815,7 @@ public class MainView extends PanelView {
 
                 if (res != null) {
 
-                    // Setting image depending on the direction
-                    switch (direction[toward]) {
-                        case DOWN:
-                        case UP:
-                            resizedImage = new BufferedImage(width_cell, currentSize * height_cell, BufferedImage.TYPE_INT_ARGB);
-                            g = resizedImage.createGraphics();
-                            g.drawImage(cursorImage, 0, 0, width_cell, currentSize * height_cell, null);
-                            g.dispose();
-                            break;
-                        case RIGHT:
-                        case LEFT:
-                            resizedImage = new BufferedImage(width_cell * currentSize, height_cell, BufferedImage.TYPE_INT_ARGB);
-                            g = resizedImage.createGraphics();
-                            g.drawImage(cursorImage, 0, 0, width_cell * currentSize, height_cell, null);
-                            g.dispose();
-                            break;
-                        default:
-                            resizedImage = new BufferedImage(width_cell * currentSize, height_cell, BufferedImage.TYPE_INT_ARGB);
-                            break;
-                    }
-
-                    // Adding image on buttons depending on the direction
-                    switch (direction[toward]) {
-                        case DOWN:
-                            if ((x - currentSize) + 1 >= 0) {
-                                for (int i = 0; i < currentSize; i++) {
-                                    tmp = resizedImage.getSubimage(
-                                            0,
-                                            i * height_cell,
-                                            width_cell,
-                                            height_cell
-                                    );
-
-                                    ImageIcon imageIcon = new ImageIcon(tmp);
-
-                                    player[x - i][y].setIcon(imageIcon);
-
-                                    PlayerTileListener a = (PlayerTileListener) (player[x - i][y].getActionListeners()[0]);
-                                    a.setRelatedShip(res);
-                                }
-                                select = false;
-                                setCursor(Cursor.getDefaultCursor());
-                            }
-                            break;
-                        case UP:
-                            if (x + currentSize <= player.length) {
-                                for (int i = 0; i < currentSize; i++) {
-                                    tmp = resizedImage.getSubimage(
-                                            0,
-                                            (currentSize - (i + 1)) * height_cell,
-                                            width_cell,
-                                            height_cell
-                                    );
-
-                                    ImageIcon imageIcon = new ImageIcon(tmp);
-
-                                    player[x + i][y].setIcon(imageIcon);
-                                    PlayerTileListener a = (PlayerTileListener) (player[x + i][y].getActionListeners()[0]);
-                                    a.setRelatedShip(res);
-                                }
-                                select = false;
-                                setCursor(Cursor.getDefaultCursor());
-                            }
-                            break;
-                        case RIGHT:
-                            if (y + currentSize <= player.length) {
-                                for (int i = 0; i < currentSize; i++) {
-                                    tmp = resizedImage.getSubimage(
-                                            i * height_cell,
-                                            0,
-                                            width_cell,
-                                            height_cell
-                                    );
-
-
-                                    ImageIcon imageIcon = new ImageIcon(tmp);
-
-                                    player[x][y + i].setIcon(imageIcon);
-                                    PlayerTileListener a = (PlayerTileListener) (player[x][y + i].getActionListeners()[0]);
-                                    a.setRelatedShip(res);
-                                }
-                                select = false;
-                                setCursor(Cursor.getDefaultCursor());
-                            }
-                            break;
-                        case LEFT:
-                            if ((y - currentSize + 1) >= 0) {
-                                for (int i = 0; i < currentSize; i++) {
-                                    tmp = resizedImage.getSubimage(
-                                            (currentSize - (i + 1)) * height_cell,
-                                            0,
-                                            width_cell,
-                                            height_cell
-                                    );
-
-                                    ImageIcon imageIcon = new ImageIcon(tmp);
-
-                                    player[x][y - i].setIcon(imageIcon);
-
-                                    PlayerTileListener a = (PlayerTileListener) (player[x][y - i].getActionListeners()[0]);
-                                    a.setRelatedShip(res);
-                                }
-                                select = false;
-                                setCursor(Cursor.getDefaultCursor());
-                            }
-                            break;
-                    }
+                    placeShip(direction[toward], x, y, currentSize, res, cursorImage);
 
                 }
             }
@@ -902,28 +863,7 @@ public class MainView extends PanelView {
 
                     Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-                    // Rotating the form
-                    double theta = Math.PI / 2;
-                    double cos = Math.abs(Math.cos(theta));
-                    double sin = Math.abs(Math.sin(theta));
-                    double width = cursorImage.getWidth();
-                    double height = cursorImage.getHeight();
-                    int w = (int) (width * cos + height * sin);
-                    int h = (int) (width * sin + height * cos);
-
-                    BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-
-                    Graphics2D g2 = out.createGraphics();
-                    double x = w / 2;
-                    double y = h / 2;
-                    AffineTransform at = AffineTransform.getRotateInstance(theta, x, y);
-                    x = (w - width) / 2;
-                    y = (h - height) / 2;
-                    at.translate(x, y);
-                    g2.drawRenderedImage(cursorImage, at);
-                    g2.dispose();
-
-                    cursorImage = out;
+                    cursorImage = rotateImage(DirectionConstant.RIGHT, cursorImage);
 
                     setCursor(toolkit.createCustomCursor(cursorImage, new Point(getX(),
                             getY()), "img"));
@@ -952,5 +892,157 @@ public class MainView extends PanelView {
         public void actionPerformed(ActionEvent e) {
             controller.saveGame();
         }
+    }
+
+    private BufferedImage rotateImage(DirectionConstant direction, BufferedImage image){
+
+        // Rotating the form
+        double theta = 0;
+        switch (direction){
+            case RIGHT:
+                theta = Math.PI / 2;
+                break;
+            case DOWN:
+                theta = Math.PI;
+                break;
+            case LEFT:
+                theta = -(Math.PI / 2);
+                break;
+        }
+
+        double cos = Math.abs(Math.cos(theta));
+        double sin = Math.abs(Math.sin(theta));
+        double width = image.getWidth();
+        double height = image.getHeight();
+        int w = (int) (width * cos + height * sin);
+        int h = (int) (width * sin + height * cos);
+
+        BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2 = out.createGraphics();
+        double x = w / 2;
+        double y = h / 2;
+        AffineTransform at = AffineTransform.getRotateInstance(theta, x, y);
+        x = (w - width) / 2;
+        y = (h - height) / 2;
+        at.translate(x, y);
+        g2.drawRenderedImage(image, at);
+        g2.dispose();
+
+        return out;
+    }
+
+    private void placeShip(DirectionConstant direction, int x, int y, int size, UUID res, BufferedImage image){
+        BufferedImage tmp, resizedImage;
+        Graphics2D g;
+
+        // Setting image depending on the direction
+        switch (direction) {
+            case DOWN:
+            case UP:
+                resizedImage = new BufferedImage(width_cell, size * height_cell, BufferedImage.TYPE_INT_ARGB);
+                g = resizedImage.createGraphics();
+                g.drawImage(image, 0, 0, width_cell, size * height_cell, null);
+                g.dispose();
+                break;
+            case RIGHT:
+            case LEFT:
+                resizedImage = new BufferedImage(width_cell * size, height_cell, BufferedImage.TYPE_INT_ARGB);
+                g = resizedImage.createGraphics();
+                g.drawImage(image, 0, 0, width_cell * size, height_cell, null);
+                g.dispose();
+                break;
+            default:
+                resizedImage = new BufferedImage(width_cell * size, height_cell, BufferedImage.TYPE_INT_ARGB);
+                break;
+        }
+
+        // Adding image on buttons depending on the direction
+        switch (direction) {
+            case DOWN:
+                if ((x - size) + 1 >= 0) {
+                    for (int i = 0; i < size; i++) {
+                        tmp = resizedImage.getSubimage(
+                                0,
+                                i * height_cell,
+                                width_cell,
+                                height_cell
+                        );
+
+                        ImageIcon imageIcon = new ImageIcon(tmp);
+
+                        player[x - i][y].setIcon(imageIcon);
+
+                        PlayerTileListener a = (PlayerTileListener) (player[x - i][y].getActionListeners()[0]);
+                        a.setRelatedShip(res);
+                    }
+                    select = false;
+                    setCursor(Cursor.getDefaultCursor());
+                }
+                break;
+            case UP:
+                if (x + size <= player.length) {
+                    for (int i = 0; i < size; i++) {
+                        tmp = resizedImage.getSubimage(
+                                0,
+                                (size - (i + 1)) * height_cell,
+                                width_cell,
+                                height_cell
+                        );
+
+                        ImageIcon imageIcon = new ImageIcon(tmp);
+
+                        player[x + i][y].setIcon(imageIcon);
+                        PlayerTileListener a = (PlayerTileListener) (player[x + i][y].getActionListeners()[0]);
+                        a.setRelatedShip(res);
+                    }
+                    select = false;
+                    setCursor(Cursor.getDefaultCursor());
+                }
+                break;
+            case RIGHT:
+                if (y + size <= player.length) {
+                    for (int i = 0; i < size; i++) {
+                        tmp = resizedImage.getSubimage(
+                                i * height_cell,
+                                0,
+                                width_cell,
+                                height_cell
+                        );
+
+
+                        ImageIcon imageIcon = new ImageIcon(tmp);
+
+                        player[x][y + i].setIcon(imageIcon);
+                        PlayerTileListener a = (PlayerTileListener) (player[x][y + i].getActionListeners()[0]);
+                        a.setRelatedShip(res);
+                    }
+                    select = false;
+                    setCursor(Cursor.getDefaultCursor());
+                }
+                break;
+            case LEFT:
+                if ((y - size + 1) >= 0) {
+                    for (int i = 0; i < size; i++) {
+                        tmp = resizedImage.getSubimage(
+                                (size - (i + 1)) * height_cell,
+                                0,
+                                width_cell,
+                                height_cell
+                        );
+
+                        ImageIcon imageIcon = new ImageIcon(tmp);
+
+                        player[x][y - i].setIcon(imageIcon);
+
+                        PlayerTileListener a = (PlayerTileListener) (player[x][y - i].getActionListeners()[0]);
+                        a.setRelatedShip(res);
+                    }
+                    select = false;
+                    setCursor(Cursor.getDefaultCursor());
+                }
+                break;
+        }
+
     }
 }

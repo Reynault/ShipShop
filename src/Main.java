@@ -13,12 +13,7 @@ import java.rmi.registry.Registry;
 
 public class Main {
     public static void main(String[] args)  throws NamingException, RemoteException, NotBoundException {
-        Thread server = new Thread(new Task() {
-            @Override
-            public void cancel() {
-
-            }
-
+        Thread server = new Thread(){
             @Override
             public void run() {
                 try {
@@ -38,7 +33,7 @@ public class Main {
                     e.printStackTrace();
                 }
             }
-        });
+        };
 
         server.run();
 

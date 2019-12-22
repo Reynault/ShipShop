@@ -1,6 +1,6 @@
 <project name="ShipShop" basedir="." default="all">
 
-    <target name="all" depends="init, clean, compile, jar, test, run_server, run_client"/>
+    <target name="all" depends="init, clean, compile, jar, run"/>
 
     <!-- Naming all used properties -->
     <target name="init">
@@ -28,47 +28,20 @@
                classpath="${class.path}"/>
     </target>
 
-    <!-- Running tests -->
-    <target name="test" depends="compile">
-        <mkdir dir="${test.report.path}"/>
-        <junit printsummary="yes" fork="yes" haltonfailure="yes">
-            <classpath>
-                <pathelement location="${class.path}"/>
-            </classpath>
-
-            <batchtest fork="yes" todir="${test.report.path}">
-                <fileset dir="${class.path}">
-                    <include name="*Test.class" />
-                </fileset>
-            </batchtest>
-        </junit>
-    </target>
-
     <!-- Creating jar -->
-    <target name="jar" depends="test">
-        <jar jarfile="${jar.path}/${app.name}_server.jar" basedir="${class.path}">
+    <target name="jar" depends="compile">
+        <jar jarfile="${jar.path}/${app.name}.jar" basedir="${class.path}">
             <manifest>
-                <attribute name="Main-class" value="ShipShopServer"/>
-            </manifest>
-            <fileset dir="${res.path}" />
-        </jar>
-
-
-        <jar jarfile="${jar.path}/${app.name}_client.jar" basedir="${class.path}">
-            <manifest>
-                <attribute name="Main-class" value="ShipShopClient"/>
+                <attribute name="Main-class" value="Main"/>
             </manifest>
             <fileset dir="${res.path}" />
         </jar>
     </target>
 
     <!-- Running jar -->
-    <target name="run_server" depends="jar">
+    <target name="run" depends="jar">
         <java jar="${jar.path}/${app.name}.jar" fork="true"/>
     </target>
 
-    <target name="run_client" depends="run_server">
-        <java jar="${jar.path}/${app.name}.jar" fork="true"/>
-    </target>
 
 </project>

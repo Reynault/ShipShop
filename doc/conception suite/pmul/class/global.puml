@@ -103,7 +103,8 @@
 
         package era <<Folder>> {
             abstract class Era {
-                +{abstract} drawShip(type: ShipType): Image
+                +{abstract} getFleetFactory(type: ShipType): Image
+                +{abstract} getName(): String
             }
 
             class EraFactory {
@@ -114,12 +115,14 @@
                 +{static} getXVIEra(): Era
             }
 
-            class ModernEra {
-                +drawShip(type: ShipType): Image
+            class Modern {
+                +getFleetFactory(type: ShipType): Image
+                +getName(): String
             }
 
-            class XVIEra {
-                +drawShip(type: ShipType): Image
+            class XVI {
+                +getFleetFactory(type: ShipType): Image
+                +getName(): String
             }
         }
 
@@ -322,24 +325,14 @@
         }
     }
 
-    package rmi <<Folder>> {
-        class ShipShopClient {
-            +{static} main(args: String[]): void
-        }
-
-        class ShipShopServer {
-            +{static} main(args: String[]): void
-        }
-    }
-
  }
 
 
 Observable ^-- LiaisonRMI
 Observable ^-- ShipShop
 ShipShopInterface ^-- ShipShop
-Era ^-- ModernEra
-Era ^-- XVIEra
+Era ^-- Modern
+Era ^-- XVI
 Player ^-- Human
 Player ^-- IA
 Tactic ^-- LinearTactic
@@ -350,12 +343,16 @@ FleetFactory ^-- XVIFleet
 ShipShop --> "1" GameFactory : gameFactory
 ShipShop --> "1" Game : game
 ShipShop --> "1" Review : turnReview
+
 Game --> "1" Era : era
+
 LiaisonRMI --> "1" Review : turnReview
 LiaisonRMI --> "1" ShipShopInterface : interfaceRMI
+
 Game --> "1" Player : p1
 Game --> "1" Player : p2
 Game --> "*" Player : players
+
 Player --> "1" FleetFactory : fleetFactory
 Player --> "1" Grid : grid
 Player --> "1" Tactic : tactic

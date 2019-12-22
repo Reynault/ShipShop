@@ -1,18 +1,31 @@
 @startuml
 
- package rmi <<Folder>> {
-        class ShipShopClient {
-            +{static} main(args: String[]): void
-        }
+    interface ShipShopInterface{
+        + {abstract} LiaisonRMI(interfaceRMI: ShipShopInterface)
+        + {abstract} createGame(era: Era, tactic: Tactic, humanFirst: boolean): void
+        + {abstract} placeShip(move: Move): UUID
+        + {abstract} drawShip(type: ShipType): Image
+        + {abstract} play(attack: Attack): void
+        + {abstract} endPlaceShip(): void
+        + {abstract} save(game: Game): void
+        + {abstract} load(): void
 
-        class ShipShopServer {
-            +{static} main(args: String[]): void
-        }
+    }
+
+    class ShipShop{
+        +LiaisonRMI(interfaceRMI: ShipShopInterface)
+        +createGame(era: Era, tactic: Tactic, humanFirst: boolean): void
+        +placeShip(move: Move): UUID
+        +drawShip(type: ShipType): Image
+        +play(attack: Attack): void
+        +endPlaceShip(): void
+        +save(game: Game): void
+        +load(): void
+
     }
 
     class LiaisonRMI {
         +turnReview: Review
-        +interfaceRMI: ShipShopInterface
 
         +LiaisonRMI(interfaceRMI: ShipShopInterface)
         +createGame(era: Era, tactic: Tactic, humanFirst: boolean): void
@@ -25,5 +38,12 @@
 
     }
 
+
+    LiaisonRMI --> "1" ShipShop : - interface
+
+    ShipShop ..|> ShipShopInterface
+
+    ShipShop --|> UnicastRemoteObject
+    ShipShopInterface --|> Remote
 
 @enduml
